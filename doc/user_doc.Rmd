@@ -1,0 +1,71 @@
+---
+title: "16S Visualization Pipeline"
+output:
+  html_document:
+    mathjax: null
+    section_divs: false
+    smart: false
+    highlight: null
+    theme: null
+    template: /Users/subramanianp4/git/nephele2/misc_examples/docs/user_doc_template.html
+    toc: false
+  github_document:
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
+# knitr::knit_hooks$set(document = function(x){
+#   gsub("```\n+\\s*``` r", "", x, perl = TRUE)
+# })
+dparams <- getOption("dparams")
+```
+
+## ampvis2 and Plotly
+Nephele uses the [ampvis2 R package](https://madsalbertsen.github.io/ampvis2/) for statistical computation.  We also make use of the [Plotly R interface](https://plot.ly/r/) for the [plotly.js](https://plot.ly) charting library.  The plots can be minimally edited interactively.  However, they also have a link to export the data to the [Plotly Chart Studio](https://plot.ly/online-chart-maker/) which allows for [making a variety of charts](https://help.plot.ly/tutorials/).
+
+## Plots
+### Rarefaction Curve
+The rarefaction curves are made with the [amp_rarecurve](https://madsalbertsen.github.io/ampvis2/reference/amp_rarecurve.html) function.  The table is written to *rarecurve.txt* and the plot to *rarecurve.html*.
+```{r}
+rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
+```
+
+### PCoA
+Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html).  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed.  The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis PCoA, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy) from the vegan R package.  At least 3 samples are needed in the OTU table for the plot to be generated.  The tables are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.
+```{r}
+amp <- amp_subset_samples(amp, minreads = sampdepth)
+pcoa_binomial <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "binomial", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
+otu <- rrarefy(t(amp$abund), sampdepth)
+amp$abund <- t(otu)
+pcoa_bray <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "bray", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
+```
+
+### Alpha diversity
+The Shannon diversity and Chao species richness are computed using [amp_alphadiv](https://madsalbertsen.github.io/ampvis2/reference/amp_alphadiv.html). Samples which fall below the specified sampling depth are removed, and the OTU table is rarefied to the sampling depth before the diversity computation.  The table is written to *alphadiv.txt*, and boxplots are output to *alphadiv.html*.  At least 3 samples are needed to produce these plots.
+
+```{r}
+alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = sampdepth)
+```
+
+### Heatmap
+The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R) developed at the Broad Institute.  A [tutorial](https://software.broadinstitute.org/morpheus/tutorial.html) for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/).
+
+The OTU table is first normalized using amp_subset_samples before the heatmap is made with morpheus.  In order for the heatmap to be generated, the OTU table must be at least 2x2.  The heatmaps are made from the raw OTU table (*seq_heatmap.html*) and also at the family level (*Family_heatmap.html*).
+```{r}
+    amp <- amp_subset_samples(amp, normalise = TRUE)
+    heatmap <- morpheus(amptax$abund,colorScheme = list(scalingMode="fixed", values=values, colors=colors, stepped=FALSE), columnAnnotations = amptax$metadata[,tg:desc])
+```
+
+
+## Tools and References
+```{r, echo=FALSE,eval=TRUE, results = 'asis'}
+print(citation("ampvis2"), style="html")
+print(citation("morpheus"), style="html")
+print(citation("plotly"), style="html")
+bmf <- citation("biomformat")
+bmf$url <- as.list(strsplit(bmf$note, ", ")[[1]])
+bmf$note <- NULL
+print(bmf, style = "html")
+```
