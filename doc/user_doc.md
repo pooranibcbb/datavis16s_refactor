@@ -31,12 +31,10 @@ Principal coordinates analysis using binomial and Bray-Curtis distances is carri
 
 ``` r
 amp <- amp_subset_samples(amp, minreads = sampdepth)
-pcoa_binomial <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure = "binomial", 
-    sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform = "none")
+pcoa_binomial <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "binomial", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
 otu <- rrarefy(t(amp$abund), sampdepth)
 amp$abund <- t(otu)
-pcoa_bray <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure = "bray", 
-    sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform = "none")
+pcoa_bray <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "bray", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
 ```
 
 ### Alpha diversity
@@ -44,7 +42,7 @@ pcoa_bray <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure
 The Shannon diversity and Chao species richness are computed using [amp\_alphadiv](https://madsalbertsen.github.io/ampvis2/reference/amp_alphadiv.html). Samples which fall below the specified sampling depth are removed, and the OTU table is rarefied to the sampling depth before the diversity computation. The table is written to *alphadiv.txt*, and boxplots are output to *alphadiv.html*. At least 3 samples are needed to produce these plots.
 
 ``` r
-alphadiv <- amp_alphadiv(amp, measure = "shannon", richness = TRUE, rarefy = sampdepth)
+alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = sampdepth)
 ```
 
 ### Heatmap
@@ -54,9 +52,8 @@ The interactive heatmap is implemented using the [morpheus R API](https://github
 The OTU table is first normalized using amp\_subset\_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmaps are made from the raw OTU table (*seq\_heatmap.html*) and also at the family level (*Family\_heatmap.html*).
 
 ``` r
-amp <- amp_subset_samples(amp, normalise = TRUE)
-heatmap <- morpheus(amptax$abund, colorScheme = list(scalingMode = "fixed", values = values, 
-    colors = colors, stepped = FALSE), columnAnnotations = amptax$metadata[, tg:desc])
+    amp <- amp_subset_samples(amp, normalise = TRUE)
+    heatmap <- morpheus(amptax$abund,colorScheme = list(scalingMode="fixed", values=values, colors=colors, stepped=FALSE), columnAnnotations = amptax$metadata[,tg:desc])
 ```
 
 Tools and References
@@ -65,8 +62,14 @@ Tools and References
 <p>
 M A, SM K, AS Z, RH K and PH N (2015). “Back to Basics - The Influence of DNA Extraction and Primer Choice on Phylogenetic Analysis of Activated Sludge Communities.” <em>PLoS ONE</em>, <b>10</b>(7), pp. e0132783. <a href="http://dx.plos.org/10.1371/journal.pone.0132783">http://dx.plos.org/10.1371/journal.pone.0132783</a>.
 </p>
+    ## Warning in citation("morpheus"): no date field in DESCRIPTION file of
+    ## package 'morpheus'
+
+    ## Warning in citation("morpheus"): could not determine year for 'morpheus'
+    ## from package DESCRIPTION file
+
 <p>
-Gould J (2018). <em>morpheus: Interactive heat maps using 'morpheus.js' and 'htmlwidgets'</em>. R package version 0.1.1.1, <a href="https://github.com/cmap/morpheus.R">https://github.com/cmap/morpheus.R</a>.
+person) (????). <em>morpheus: Interactive heat maps using 'morpheus.js' and 'htmlwidgets'</em>. R package version 0.1.1.1, <a href="https://github.com/cmap/morpheus.R">https://github.com/cmap/morpheus.R</a>.
 </p>
 <p>
 Sievert C, Parmer C, Hocking T, Chamberlain S, Ram K, Corvellec M and Despouy P (2017). <em>plotly: Create Interactive Web Graphics via 'plotly.js'</em>. R package version 4.7.1, <a href="https://CRAN.R-project.org/package=plotly">https://CRAN.R-project.org/package=plotly</a>.

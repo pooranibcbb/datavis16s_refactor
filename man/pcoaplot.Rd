@@ -5,7 +5,7 @@
 \title{PCoA plots}
 \usage{
 pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
-  distm = "binomial", filter_species = 0.01, rarefy = FALSE,
+  distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, ...)
 }
 \arguments{

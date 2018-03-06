@@ -1,4 +1,4 @@
-dataviz16s
+datavis16s
 ================
 
 -   [DESCRIPTION](#description)
@@ -11,7 +11,7 @@ dataviz16s
     -   [`readindata`](#readindata)
     -   [`trygraphwrapper`](#trygraphwrapper)
 -   [Internal](#internal)
-    -   [`dataviz16s-package`](#dataviz16s-package)
+    -   [`datavis16s-package`](#datavis16s-package)
     -   [`filterlowabund`](#filterlowabund)
     -   [`gridCode`](#gridcode)
     -   [`highertax`](#highertax)
@@ -21,12 +21,12 @@ dataviz16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 04, 2018
+March 06, 2018
 
 DESCRIPTION
 ===========
 
-    Package: dataviz16s
+    Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
     Authors@R: person("Poorani", "Subramanian", email = "poorani.subramanian@nih.gov", role = c("aut", "cre"))
@@ -215,7 +215,7 @@ PCoA plots
 
 ``` r
 pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
-  distm = "binomial", filter_species = 0.01, rarefy = FALSE,
+  distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, ...)
 ```
 
@@ -441,7 +441,7 @@ trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user
  ## Not run: 
 trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user_uploads/job_id/outputs/out.biom",
 "/mnt/EFS/user_uploads/job_id/outputs/", allgraphs, sampdepth = 30000)
-# example with optional arguments sampdepth 
+# example with optional argument sampdepth 
 ## End(Not run) 
  
 ```
@@ -449,7 +449,7 @@ trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user
 Internal
 ========
 
-`dataviz16s-package`
+`datavis16s-package`
 --------------------
 
 dataviz16s: A package for Nephele 16S pipeline visualization

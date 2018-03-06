@@ -25,7 +25,7 @@ body {
 
 <body>
 
-<h1 id="dataviz16s">dataviz16s</h1>
+<h1 id="datavis16s">datavis16s</h1>
 <ul>
 <li><a href="#description">DESCRIPTION</a></li>
 <li><a href="#exported">Exported</a>
@@ -40,7 +40,7 @@ body {
 </ul></li>
 <li><a href="#internal">Internal</a>
 <ul>
-<li><a href="#dataviz16s-package"><code>dataviz16s-package</code></a></li>
+<li><a href="#datavis16s-package"><code>datavis16s-package</code></a></li>
 <li><a href="#filterlowabund"><code>filterlowabund</code></a></li>
 <li><a href="#gridcode"><code>gridCode</code></a></li>
 <li><a href="#highertax"><code>highertax</code></a></li>
@@ -51,9 +51,9 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 04, 2018</p>
+<p>March 06, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
-<pre><code>Package: dataviz16s
+<pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.0
 Authors@R: person(&quot;Poorani&quot;, &quot;Subramanian&quot;, email = &quot;poorani.subramanian@nih.gov&quot;, role = c(&quot;aut&quot;, &quot;cre&quot;))
@@ -239,7 +239,7 @@ Imports:
 <p>PCoA plots</p>
 <h3 id="usage-3">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(mapfile, datafile, outdir, amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
-  <span class="dt">distm =</span> <span class="st">&quot;binomial&quot;</span>, <span class="dt">filter_species =</span> <span class="fl">0.01</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>,
+  <span class="dt">distm =</span> <span class="st">&quot;binomial&quot;</span>, <span class="dt">filter_species =</span> <span class="fl">0.1</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>,
   <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-3">Arguments</h3>
 <table style="width:43%;">
@@ -445,11 +445,11 @@ Imports:
  ## Not run: 
 <span class="kw">trygraphwrapper</span>(<span class="st">&quot;/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/mnt/EFS/user_uploads/job_id/outputs/out.biom&quot;</span>,
 <span class="st">&quot;/mnt/EFS/user_uploads/job_id/outputs/&quot;</span>, allgraphs, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
-<span class="co"># example with optional arguments sampdepth </span>
+<span class="co"># example with optional argument sampdepth </span>
 ## End(Not run) 
  </code></pre></div>
 <h1 id="internal">Internal</h1>
-<h2 id="dataviz16s-package"><code>dataviz16s-package</code></h2>
+<h2 id="datavis16s-package"><code>datavis16s-package</code></h2>
 <p>dataviz16s: A package for Nephele 16S pipeline visualization</p>
 <h3 id="description-8">Description</h3>
 <p>dataviz16s: A package for Nephele 16S pipeline visualization</p>
