@@ -99,14 +99,17 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
 
   if (is.null(title)) {
     title <- tools::file_path_sans_ext(basename(filename))
+    tl <- tagList(jq, html, javascript, ht)
+  } else {
+    title <- tags$h2(title, style = "font-family: sans-serif; text-align: center;")
+    tl <- tagList(title,jq, html, javascript, ht)
   }
-  title <- tags$h2(title, style = "font-family: sans-serif; text-align: center;")
   outfile <- file.path(tools:::file_path_as_absolute(dirname(filename)), basename(filename))
 
   outlib <- file.path(dirname(outfile), basename(outlib))
 
   logoutput(paste("Saving plot to", outfile))
-  save_html(tagList(title,jq, html, javascript, ht), file= outfile, lib=outlib)
+  save_html(tl, file= outfile, lib=outlib)
 }
 
 
@@ -135,7 +138,7 @@ gridCode <- function(data) {
   ll <- toJSON(ll)
 
   jq <- HTML('<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>')
-  html <- HTML(text = '<a href=\"#\" id=\"plotly-data-export\" target=\"_blank\" style=\"font-family:sans-serif;\">Export Data to Plotly</a>')
+  html <- HTML(text = '<a href=\"#\" id=\"plotly-data-export\" target=\"_blank\" style=\"font-family:\'Open Sans\',sans-serif;\">Export Data to Plotly</a>')
 
   javascript <- HTML(paste('<script>',
                            'function getPlotlyGridData(){',
@@ -159,4 +162,34 @@ gridCode <- function(data) {
                            "});",
                            "</script>", sep = "\n"))
   return(list(jq=jq, html=html, javascript=javascript))
+}
+
+
+#' Save an HTML object to a file
+#'
+#' @param html HTML content to print
+#' @param file File to write content to
+#' @param background Background color for web page
+#' @param libdir Directory to copy dependenies to
+#' @param bodystyle html style string
+#'
+#' @return save html to file
+#'
+save_fillhtml <- function (html, file, background = "white", libdir = "lib", bodystyle="")
+{
+  dir <- dirname(file)
+  oldwd <- setwd(dir)
+  on.exit(setwd(oldwd), add = TRUE)
+  rendered <- htmltools::renderTags(html)
+  deps <- lapply(rendered$dependencies, function(dep) {
+    dep <- htmltools::copyDependencyToDir(dep, libdir, FALSE)
+    dep <- htmltools::makeDependencyRelative(dep, dir, FALSE)
+    dep
+  })
+  html <- c("<!DOCTYPE html>", "<html>", "<head>", "<meta charset=\"utf-8\"/>",
+            htmltools::renderDependencies(deps, c("href", "file")), rendered$head,
+            "</head>", sprintf("<body style=\"background-color:%s;%s\">",
+                               htmltools::htmlEscape(background), bodystyle), rendered$html, "</body>",
+            "</html>")
+  writeLines(html, file, useBytes = TRUE)
 }

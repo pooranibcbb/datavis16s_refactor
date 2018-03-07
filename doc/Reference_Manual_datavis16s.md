@@ -17,11 +17,12 @@ datavis16s
     -   [`highertax`](#highertax)
     -   [`logoutput`](#logoutput)
     -   [`plotlyGrid`](#plotlygrid)
+    -   [`save_fillhtml`](#save_fillhtml)
     -   [`shortnames`](#shortnames)
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 06, 2018
+March 07, 2018
 
 DESCRIPTION
 ===========
@@ -661,6 +662,36 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 
 html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
 
+`save_fillhtml`
+---------------
+
+Save an HTML object to a file
+
+### Description
+
+Save an HTML object to a file
+
+### Usage
+
+``` r
+save_fillhtml(html, file, background = "white", libdir = "lib",
+  bodystyle = "")
+```
+
+### Arguments
+
+| Argument     | Description                      |
+|--------------|----------------------------------|
+| `html`       | HTML content to print            |
+| `file`       | File to write content to         |
+| `background` | Background color for web page    |
+| `libdir`     | Directory to copy dependenies to |
+| `bodystyle`  | html style string                |
+
+### Value
+
+save html to file
+
 `shortnames`
 ------------
 
@@ -699,16 +730,17 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth, rarefy = FALSE)
+subsetamp(amp, sampdepth, rarefy = FALSE, ...)
 ```
 
 ### Arguments
 
-| Argument    | Description                                    |
-|-------------|------------------------------------------------|
-| `amp`       | ampvis2 object                                 |
-| `sampdepth` | sampling depth. See details.                   |
-| `rarefy`    | rarefy the OTU table in addition to subsetting |
+| Argument    | Description                                      |
+|-------------|--------------------------------------------------|
+| `amp`       | ampvis2 object                                   |
+| `sampdepth` | sampling depth. See details.                     |
+| `rarefy`    | rarefy the OTU table in addition to subsetting   |
+| `...`       | other parameters to pass to amp\_subset\_samples |
 
 ### Details
 
