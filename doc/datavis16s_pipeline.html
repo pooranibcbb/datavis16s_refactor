@@ -21,7 +21,7 @@ pcoa_bray &lt;- amp_ordinate(amp,filter_species = 0.01, type=&quot;PCOA&quot;, d
 <pre class="r"><code>alphadiv &lt;- amp_alphadiv(amp, measure=&quot;shannon&quot;, richness = TRUE, rarefy = sampdepth)</code></pre>
 <h3 id="heatmap">Heatmap</h3>
 <p>The interactive heatmap is implemented using the <a href="https://github.com/cmap/morpheus.R">morpheus R API</a> developed at the Broad Institute. A <a href="https://software.broadinstitute.org/morpheus/tutorial.html">tutorial</a> for how to use the heatmap can be found on the <a href="https://software.broadinstitute.org/morpheus/">morpheus website</a>.</p>
-<p>The OTU table is first normalized using amp_subset_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmaps are made from the raw OTU table (<em>seq_heatmap.html</em>) and also at the family level (<em>Family_heatmap.html</em>).</p>
+<p>The OTU table is first normalized to represent the relative abundances using amp_subset_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmaps are made from the raw OTU table (<em>seq_heatmap.html</em>) and also at the family level (<em>Family_heatmap.html</em>).</p>
 <pre class="r"><code>    amp &lt;- amp_subset_samples(amp, normalise = TRUE)
     heatmap &lt;- morpheus(amptax$abund,colorScheme = list(scalingMode=&quot;fixed&quot;, values=values, colors=colors, stepped=FALSE), columnAnnotations = amptax$metadata[,tg:desc])</code></pre>
 <h2 id="tools-and-references">Tools and References</h2>

@@ -46,12 +46,13 @@ body {
 <li><a href="#highertax"><code>highertax</code></a></li>
 <li><a href="#logoutput"><code>logoutput</code></a></li>
 <li><a href="#plotlygrid"><code>plotlyGrid</code></a></li>
+<li><a href="#save_fillhtml"><code>save_fillhtml</code></a></li>
 <li><a href="#shortnames"><code>shortnames</code></a></li>
 <li><a href="#subsetamp"><code>subsetamp</code></a></li>
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 06, 2018</p>
+<p>March 07, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
@@ -635,13 +636,53 @@ Imports:
 </table>
 <h3 id="value-10">Value</h3>
 <p>html plot is saved to filename. external libraries are saved to outlib in same directory as filename.</p>
+<h2 id="save_fillhtml"><code>save_fillhtml</code></h2>
+<p>Save an HTML object to a file</p>
+<h3 id="description-13">Description</h3>
+<p>Save an HTML object to a file</p>
+<h3 id="usage-12">Usage</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_fillhtml</span>(html, file, <span class="dt">background =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>,
+  <span class="dt">bodystyle =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+<h3 id="arguments-12">Arguments</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>html</code></td>
+<td>HTML content to print</td>
+</tr>
+<tr class="even">
+<td><code>file</code></td>
+<td>File to write content to</td>
+</tr>
+<tr class="odd">
+<td><code>background</code></td>
+<td>Background color for web page</td>
+</tr>
+<tr class="even">
+<td><code>libdir</code></td>
+<td>Directory to copy dependenies to</td>
+</tr>
+<tr class="odd">
+<td><code>bodystyle</code></td>
+<td>html style string</td>
+</tr>
+</tbody>
+</table>
+<h3 id="value-11">Value</h3>
+<p>save html to file</p>
 <h2 id="shortnames"><code>shortnames</code></h2>
 <p>shortnames for SILVA taxonomy</p>
-<h3 id="description-13">Description</h3>
+<h3 id="description-14">Description</h3>
 <p>shortnames for SILVA taxonomy</p>
-<h3 id="usage-12">Usage</h3>
+<h3 id="usage-13">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shortnames</span>(taxtable, <span class="dt">taxa =</span> <span class="st">&quot;Species&quot;</span>)</code></pre></div>
-<h3 id="arguments-12">Arguments</h3>
+<h3 id="arguments-13">Arguments</h3>
 <table>
 <thead>
 <tr class="header">
@@ -660,15 +701,15 @@ Imports:
 </tr>
 </tbody>
 </table>
-<h3 id="value-11">Value</h3>
+<h3 id="value-12">Value</h3>
 <p>Vector of shortened names for each seqvar/otu.</p>
 <h2 id="subsetamp"><code>subsetamp</code></h2>
 <p>Subset and rarefy OTU table.</p>
-<h3 id="description-14">Description</h3>
+<h3 id="description-15">Description</h3>
 <p>Subset and/or rarefy OTU table.</p>
-<h3 id="usage-13">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, sampdepth, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<h3 id="arguments-13">Arguments</h3>
+<h3 id="usage-14">Usage</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, sampdepth, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
+<h3 id="arguments-14">Arguments</h3>
 <table>
 <thead>
 <tr class="header">
@@ -689,11 +730,15 @@ Imports:
 <td><code>rarefy</code></td>
 <td>rarefy the OTU table in addition to subsetting</td>
 </tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>other parameters to pass to amp_subset_samples</td>
+</tr>
 </tbody>
 </table>
 <h3 id="details-2">Details</h3>
 <p><code>sampdepth</code> will be used to filter out samples with fewer than this number of reads. If rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function rrarefy.</p>
-<h3 id="value-12">Value</h3>
+<h3 id="value-13">Value</h3>
 <p>ampvis2 object</p>
 
 </body>

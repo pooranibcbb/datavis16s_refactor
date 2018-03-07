@@ -5,6 +5,7 @@
 #' @param amp  ampvis2 object
 #' @param sampdepth  sampling depth.  See details.
 #' @param rarefy  rarefy the OTU table in addition to subsetting
+#' @param ... other parameters to pass to amp_subset_samples
 #'
 #' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
 #' rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function
@@ -14,16 +15,17 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth, rarefy=FALSE) {
-  cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth)'
-  logoutput(cmnd)
-  eval(parse(text=cmnd))
-  if (rarefy) {
+subsetamp <- function(amp, sampdepth, rarefy=FALSE, ...) {
+  if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
     eval(parse(text=cmnd))
     amp$abund <- as.data.frame(t(otu))
   }
+
+  cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth, ...)'
+  logoutput(cmnd)
+  eval(parse(text=cmnd))
 
   ampvis2:::print.ampvis2(amp)
   writeLines('')
@@ -67,12 +69,20 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
     otu <- as.data.frame(as.matrix(biom_data(biom)))
     tax <- observation_metadata(biom)
 
+    ## qiime biom file
+    if (class(tax) == "list") {
+      tax <- t(sapply(tax, "[", i=1:7))
+    }
+
     ## Check if tax has 7 columns
     if (ncol(tax) != 7) {
       stop("taxonomy does not have 7 levels.")
     }
     colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-    tax[tax == "none"] <- NA
+    ## greengenes
+    tax <- apply(tax, 2, function(x) { v <- grep("_unclassified$", x); x[v] <- NA; x })
+    tax <- apply(tax, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
+    tax[which(tax %in% c("", "none"))] <- NA
     otu <- cbind(otu, tax)
   }
 
@@ -117,7 +127,14 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
   on.exit(graphics.off())
 
   if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values=colors)
-  rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
+
+  ## suppress ggplotly warning to install dev version of ggplot2, as it is out of date
+  withCallingHandlers({
+    rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
+  }, message=function(c) {
+    if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
+      invokeRestart("muffleMessage")
+  })
 
   df <- plotly_data(rarecurve)
   df_new <- split(df, df$SampleID)
@@ -170,9 +187,7 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #  for (distm in distmeasures) {
 #    graphics.off()
 
-    transform = "none"
-    if (distm == "bray") transform = "normalize"
-    cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="', transform, ')')
+    cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")')
     logoutput(cmnd)
     eval(parse(text=cmnd))
     if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values=colors) + ggtitle(paste("PCoA with", distm, "distance"))
@@ -208,7 +223,7 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #'  the heatmap with no collapsing of taxonomic levels.
 #'
 #' @importFrom morpheus morpheus
-#' @importFrom htmlwidgets saveWidget
+#' @importFrom htmlwidgets saveWidget appendContent
 #'
 #' @examples
 #' \dontrun{
@@ -263,7 +278,10 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
     outdir <- tools:::file_path_as_absolute(outdir)
     outfile <- file.path(outdir, paste0(tl, "_heatmap.html"))
     logoutput(paste("Saving plot to", outfile))
-    saveWidget(heatmap, file = outfile, selfcontained = FALSE, lib=file.path(outdir, "lib"))
+    heatmap$width = '100%'
+    heatmap$height = '90%'
+    tt <- tags$div(heatmap, style="position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
+    save_fillhtml(tt, file=outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
   }
 
   for (t in taxlevel) {
@@ -325,7 +343,7 @@ adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors
   divwidget <- unlist(lapply(colnames(amp$metadata)[tg:desc], function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
   tt <- tags$div(
     style = "display: grid; grid-template-columns: 1fr 1fr;",
-    lapply(divwidget, function(x) tags$div(x))
+    lapply(divwidget, function(x) { x$width = '90%'; x$height='100%'; tags$div(x) })
   )
 
   htmlGrid(tt, file=file.path(outdir, "alphadiv.html"),  data=alphadiv, title="species diversity", jquery = TRUE)
@@ -366,7 +384,7 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
   try(eval(parse(text=cmnd)))
 
   ## Heatmap
-  logoutput('Heatmap', 1)
+  logoutput('Relative abundance Heatmap', 1)
   cmnd <- 'morphheatmap(outdir = outdir, amp = amp, taxlevel = c("Family", "seq"))'
   logoutput(cmnd)
   try(eval(parse(text=cmnd)))
@@ -394,8 +412,8 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 
   if (!is.null(sampdepth)) {
     ## Rarefy table
-    logoutput(paste('Rarefying OTU Table to', sampdepth, 'reads'))
-    amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE)
+    logoutput(paste('Rarefying OTU Table to', sampdepth, 'reads, and normalizing to 100.'))
+    amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE)
   }
 
   ## bray-curtis PCoA

@@ -4,7 +4,7 @@
 \alias{subsetamp}
 \title{Subset and rarefy OTU table.}
 \usage{
-subsetamp(amp, sampdepth, rarefy = FALSE)
+subsetamp(amp, sampdepth, rarefy = FALSE, ...)
 }
 \arguments{
 \item{amp}{ampvis2 object}
@@ -12,6 +12,8 @@ subsetamp(amp, sampdepth, rarefy = FALSE)
 \item{sampdepth}{sampling depth.  See details.}
 
 \item{rarefy}{rarefy the OTU table in addition to subsetting}
+
+\item{...}{other parameters to pass to amp_subset_samples}
 }
 \value{
 ampvis2 object

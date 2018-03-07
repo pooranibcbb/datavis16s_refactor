@@ -31,10 +31,12 @@ Principal coordinates analysis using binomial and Bray-Curtis distances is carri
 
 ``` r
 amp <- amp_subset_samples(amp, minreads = sampdepth)
-pcoa_binomial <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "binomial", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
+pcoa_binomial <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure = "binomial", 
+    sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform = "none")
 otu <- rrarefy(t(amp$abund), sampdepth)
 amp$abund <- t(otu)
-pcoa_bray <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "bray", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
+pcoa_bray <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure = "bray", 
+    sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform = "none")
 ```
 
 ### Alpha diversity
@@ -42,18 +44,19 @@ pcoa_bray <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = 
 The Shannon diversity and Chao species richness are computed using [amp\_alphadiv](https://madsalbertsen.github.io/ampvis2/reference/amp_alphadiv.html). Samples which fall below the specified sampling depth are removed, and the OTU table is rarefied to the sampling depth before the diversity computation. The table is written to *alphadiv.txt*, and boxplots are output to *alphadiv.html*. At least 3 samples are needed to produce these plots.
 
 ``` r
-alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = sampdepth)
+alphadiv <- amp_alphadiv(amp, measure = "shannon", richness = TRUE, rarefy = sampdepth)
 ```
 
 ### Heatmap
 
 The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R) developed at the Broad Institute. A [tutorial](https://software.broadinstitute.org/morpheus/tutorial.html) for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/).
 
-The OTU table is first normalized using amp\_subset\_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmaps are made from the raw OTU table (*seq\_heatmap.html*) and also at the family level (*Family\_heatmap.html*).
+The OTU table is first normalized to represent the relative abundances using amp\_subset\_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmaps are made from the raw OTU table (*seq\_heatmap.html*) and also at the family level (*Family\_heatmap.html*).
 
 ``` r
-    amp <- amp_subset_samples(amp, normalise = TRUE)
-    heatmap <- morpheus(amptax$abund,colorScheme = list(scalingMode="fixed", values=values, colors=colors, stepped=FALSE), columnAnnotations = amptax$metadata[,tg:desc])
+amp <- amp_subset_samples(amp, normalise = TRUE)
+heatmap <- morpheus(amptax$abund, colorScheme = list(scalingMode = "fixed", values = values, 
+    colors = colors, stepped = FALSE), columnAnnotations = amptax$metadata[, tg:desc])
 ```
 
 Tools and References
