@@ -21,16 +21,16 @@
 - There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4.  See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
 - **Sampling depth**
   - The sampling depth argument, `sampdepth`, is optional for all functions.  
-  - If specified, it is used to remove samples with few reads.  
-  - For functions with a rarefy argument set to TRUE, it will also be used to rarefy the OTU table.   
+  - If specified, it is used to remove samples with read counts below `sampdepth`.  
+  - For functions with `rarefy` argument, setting to TRUE will rarefy the OTU table to `sampdepth` reads.   
   - The alpha diversity boxplot requires a value to rarefy the OTU table.  If you do not specify `sampdepth`, it will use the number of reads from the smallest sample.
 
 <sub><sup>1</sup>Can optionally pass tab-delimited text file to each of the functions instead of the biom file.  See [`readindata`](doc/Reference_Manual_datavis16s.md#readindata) for more details.</sub>
 
 ### Outputs
 
--  `trygraphwrapper` function creates a subdirectory "graphs" in output directory, and passes that as the output directory to the individual functions.  The individual graph functions just use the specified output directory passed to them.
-- Creates html files in outdir as well as subdirectory "lib" which contains the external js,css,etc files for the graphs.
+-  `trygraphwrapper` creates a subdirectory "graphs" in output directory, and passes that as the output directory to the individual functions.  The individual graph functions just use the specified output directory passed to them.
+- Creates html files in outdir as well as subdirectory "lib" which contains the external js,css,etc files for the graphs.  See [user doc](doc/user_doc.md) for more info.
 
 ### Installation
 
