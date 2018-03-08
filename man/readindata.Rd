@@ -3,6 +3,9 @@
 \name{readindata}
 \alias{readindata}
 \title{Read in data}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 readindata(mapfile, datafile, tsvfile = FALSE, mincount = 10)
 }

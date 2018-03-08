@@ -3,6 +3,9 @@
 \name{adivboxplot}
 \alias{adivboxplot}
 \title{Alpha diversity boxplot}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 adivboxplot(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL,
   ...)

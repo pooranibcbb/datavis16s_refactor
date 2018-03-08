@@ -3,6 +3,9 @@
 \name{pcoaplot}
 \alias{pcoaplot}
 \title{PCoA plots}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,

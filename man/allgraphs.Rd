@@ -3,6 +3,9 @@
 \name{allgraphs}
 \alias{allgraphs}
 \title{Pipeline function}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 }

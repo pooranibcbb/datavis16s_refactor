@@ -3,6 +3,9 @@
 \name{highertax}
 \alias{highertax}
 \title{return tables at higher tax level}
+\source{
+[utilities.R](../R/utilities.R)
+}
 \usage{
 highertax(amp, taxlevel = NULL)
 }
