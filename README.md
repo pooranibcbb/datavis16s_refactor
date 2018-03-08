@@ -16,9 +16,12 @@
   - The generic wrapper function to be called from rpy2 is [`trygraphwrapper`](doc/Reference_Manual_datavis16s.md#trygraphwrapper).  It returns 0 for success and 1 for failure.  See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.  
   - Must pass the full paths for the output directory, mapping file, biom file<sup>1</sup>.
   - `trygraphwrapper`, by default, prints the R sessionInfo to the logfile before it runs the function.  If you do not want it to do this (e.g. if you are calling the function multiple times in the same script), you can pass `info = FALSE`.
+
 - **R**
   - You can use `readindata` to create an ampvis2 object, and pass that instead of the mapping file and biom file.
+
 - There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4.  See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
+
 - **Sampling depth**
   - The sampling depth argument, `sampdepth`, is optional for all functions.  
   - If specified, it is used to remove samples with read counts below `sampdepth`.  
