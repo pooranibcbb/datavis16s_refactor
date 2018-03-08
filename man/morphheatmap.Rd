@@ -31,7 +31,8 @@ c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  
 Saves heatmaps to outdir.
 }
 \description{
-Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.
+Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.  The heatmaps are made
+using relative abundances.
 }
 \details{
 For the \code{taxlevel} parameter, each level is made into a separate heatmap.  "seq" makes

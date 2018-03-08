@@ -52,7 +52,7 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 07, 2018</p>
+<p>March 08, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
@@ -168,7 +168,7 @@ Imports:
 <h2 id="morphheatmap"><code>morphheatmap</code></h2>
 <p>Morpheus heatmap</p>
 <h3 id="description-3">Description</h3>
-<p>Creates heatmaps using Morpheus R API <a href="https://software.broadinstitute.org/morpheus/" class="uri">https://software.broadinstitute.org/morpheus/</a> .</p>
+<p>Creates heatmaps using Morpheus R API <a href="https://software.broadinstitute.org/morpheus/" class="uri">https://software.broadinstitute.org/morpheus/</a> . The heatmaps are made using relative abundances.</p>
 <h3 id="usage-2">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(mapfile, datafile, outdir, amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
   <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, <span class="dt">filter_level =</span> <span class="fl">0.1</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;seq&quot;</span>), ...)</code></pre></div>
@@ -438,16 +438,21 @@ Imports:
 <h3 id="examples-1">Examples</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> 
  ## Not run: 
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/mnt/EFS/user_uploads/job_id/outputs/out.biom&quot;</span>,
-<span class="st">&quot;/mnt/EFS/user_uploads/job_id/outputs/&quot;</span>, allgraphs)
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/path/to/job_id/outputs/out.biom&quot;</span>,
+<span class="st">&quot;/path/to/job_id/outputs/&quot;</span>, allgraphs)
 <span class="co"># example with no optional arguments for running allgraphs </span>
 ## End(Not run) 
  
  ## Not run: 
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/mnt/EFS/user_uploads/job_id/outputs/out.biom&quot;</span>,
-<span class="st">&quot;/mnt/EFS/user_uploads/job_id/outputs/&quot;</span>, allgraphs, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
-<span class="co"># example with optional argument sampdepth </span>
+<span class="co"># example with optional argument sampdepth</span>
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/path/to/outputs/out.biom&quot;</span>,
+<span class="st">&quot;/path/to/job_id/outputs/&quot;</span>, allgraphs, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
+
+<span class="co"># example of making heatmap with optional arguments</span>
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;mapfile.txt&quot;</span>, <span class="st">&quot;taxa_species.biom&quot;</span>, <span class="st">&quot;outputs/graphs&quot;</span>, morphheatmap, <span class="dt">sampdepth =</span> <span class="dv">30000</span>,
+<span class="dt">filter_level=</span><span class="fl">0.01</span>, <span class="dt">taxlevel=</span><span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, <span class="st">&quot;seq&quot;</span>)) 
 ## End(Not run) 
+ 
  </code></pre></div>
 <h1 id="internal">Internal</h1>
 <h2 id="datavis16s-package"><code>datavis16s-package</code></h2>
