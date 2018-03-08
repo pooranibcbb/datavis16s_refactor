@@ -2,12 +2,12 @@ library(devtools)
 library(rmarkdown)
 
 ## Build package
-# document(roclets=c('rd', 'collate', 'namespace'))
-# install(args = c("--preclean", "--no-multiarch", "--with-keep.source"))
-#
-# ## Imported packages - can check DESCRIPTION
-# ns <- scan("NAMESPACE", sep="\n", what = character())
-# importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
+document(roclets=c('rd', 'collate', 'namespace'))
+install(args = c("--preclean", "--no-multiarch", "--with-keep.source"))
+
+## Imported packages - can check DESCRIPTION
+ns <- scan("NAMESPACE", sep="\n", what = character())
+importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
 
 ## Documentation
 
