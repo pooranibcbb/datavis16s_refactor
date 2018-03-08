@@ -3,6 +3,9 @@
 \name{subsetamp}
 \alias{subsetamp}
 \title{Subset and rarefy OTU table.}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 subsetamp(amp, sampdepth, rarefy = FALSE, ...)
 }

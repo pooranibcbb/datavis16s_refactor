@@ -3,6 +3,9 @@
 \name{rarefactioncurve}
 \alias{rarefactioncurve}
 \title{Make rarefaction curve graph}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 rarefactioncurve(mapfile, datafile, outdir, amp, colors = NULL, ...)
 }

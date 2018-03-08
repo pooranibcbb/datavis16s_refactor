@@ -18,6 +18,7 @@
 #'
 #' @return html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
 #'
+#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #' @rdname plotlyGrid
 #' @name plotlyGrid
 #'
@@ -63,6 +64,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 #'
 #' @importFrom htmlwidgets prependContent saveWidget
 #'
+#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #' @rdname plotlyGrid
 #'
 nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib="lib") {
@@ -98,6 +100,7 @@ nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib
 #'
 #' @importFrom htmltools tagList save_html tags
 #'
+#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #' @rdname plotlyGrid
 #'
 htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib") {
@@ -134,6 +137,7 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
 #' @importFrom jsonlite toJSON
 #' @importFrom htmltools HTML
 #'
+#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #'
 gridCode <- function(data) {
 
@@ -181,6 +185,8 @@ gridCode <- function(data) {
 #' @param bodystyle html style string
 #'
 #' @return save html to file
+#'
+#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #'
 save_fillhtml <- function (html, file, background = "white", libdir = "lib", bodystyle="")
 {

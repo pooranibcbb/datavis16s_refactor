@@ -3,6 +3,9 @@
 \name{trygraphwrapper}
 \alias{trygraphwrapper}
 \title{Wrapper for any graph function}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
   info = TRUE, ...)

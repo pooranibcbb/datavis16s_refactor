@@ -6,6 +6,8 @@
 #' @param bline Number of blank lines to precede output.
 #' @param aline Number of blank lines to follow output.
 #'
+#' @source [utilities.R](../R/utilities.R)
+#'
 logoutput <- function(c, bline = 0, aline = 0) {
 
   lo <- paste0("[", date(), "] ", c)
@@ -19,6 +21,8 @@ logoutput <- function(c, bline = 0, aline = 0) {
 #' @param taxa  taxonomic level at which to retrieve the names
 #'
 #' @return Vector of shortened names for each seqvar/otu.
+#'
+#' @source [utilities.R](../R/utilities.R)
 #'
 shortnames <- function(taxtable, taxa="Species") {
 
@@ -48,6 +52,8 @@ shortnames <- function(taxtable, taxa="Species") {
 #' @return  ampvis2 object with otu table and taxa summed up to the taxlevel
 #'
 #' @importFrom data.table data.table
+#'
+#' @source [utilities.R](../R/utilities.R)
 #'
 highertax <- function(amp, taxlevel=NULL) {
 
@@ -86,6 +92,8 @@ highertax <- function(amp, taxlevel=NULL) {
 #' @param abs  is level an absolute count? if false, will use level as relative percent.
 #'
 #' @return filtered ampvis2 object
+#'
+#' @source [utilities.R](../R/utilities.R)
 #'
 filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
 

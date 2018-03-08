@@ -3,6 +3,9 @@
 \name{shortnames}
 \alias{shortnames}
 \title{shortnames for SILVA taxonomy}
+\source{
+[utilities.R](../R/utilities.R)
+}
 \usage{
 shortnames(taxtable, taxa = "Species")
 }

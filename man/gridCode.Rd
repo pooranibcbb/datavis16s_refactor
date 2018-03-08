@@ -3,6 +3,9 @@
 \name{gridCode}
 \alias{gridCode}
 \title{Format plotly grid code}
+\source{
+[plotlyGrid.R](../R/plotlyGrid.R)
+}
 \usage{
 gridCode(data)
 }

@@ -3,6 +3,9 @@
 \name{morphheatmap}
 \alias{morphheatmap}
 \title{Morpheus heatmap}
+\source{
+[graphs.R](../R/graphs.R)
+}
 \usage{
 morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
   rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"), ...)

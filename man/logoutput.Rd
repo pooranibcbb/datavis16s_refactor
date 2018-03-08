@@ -3,6 +3,9 @@
 \name{logoutput}
 \alias{logoutput}
 \title{write log output}
+\source{
+[utilities.R](../R/utilities.R)
+}
 \usage{
 logoutput(c, bline = 0, aline = 0)
 }

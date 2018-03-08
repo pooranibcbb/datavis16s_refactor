@@ -3,6 +3,9 @@
 \name{filterlowabund}
 \alias{filterlowabund}
 \title{Filter low abundant taxa}
+\source{
+[utilities.R](../R/utilities.R)
+}
 \usage{
 filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
 }

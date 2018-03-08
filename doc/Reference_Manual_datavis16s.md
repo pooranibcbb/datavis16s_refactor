@@ -86,6 +86,10 @@ adivboxplot(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL,
 
 Save alpha diversity boxplots to outdir.
 
+### Source
+
+[graphs.R](../R/graphs.R)
+
 `allgraphs`
 -----------
 
@@ -114,6 +118,10 @@ allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 ### Value
 
 graphs are saved to outdir
+
+### Source
+
+[graphs.R](../R/graphs.R)
 
 `morphheatmap`
 --------------
@@ -203,6 +211,10 @@ sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
  
 ```
 
+### Source
+
+[graphs.R](../R/graphs.R)
+
 `pcoaplot`
 ----------
 
@@ -281,6 +293,10 @@ pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
 
 Saves pcoa plots to outdir.
 
+### Source
+
+[graphs.R](../R/graphs.R)
+
 `rarefactioncurve`
 ------------------
 
@@ -341,6 +357,10 @@ rarefactioncurve(mapfile, datafile, outdir, amp, colors = NULL, ...)
 
 Saves rarefaction curve plot to output directory.
 
+### Source
+
+[graphs.R](../R/graphs.R)
+
 `readindata`
 ------------
 
@@ -397,6 +417,10 @@ datafile may be either biom file or text file. If text file, it should have ampv
 
 ampvis2 object
 
+### Source
+
+[graphs.R](../R/graphs.R)
+
 `trygraphwrapper`
 -----------------
 
@@ -451,6 +475,10 @@ filter_level=0.01, taxlevel=c("Family", "seq"))
  
  
 ```
+
+### Source
+
+[graphs.R](../R/graphs.R)
 
 Internal
 ========
@@ -516,6 +544,10 @@ filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
 
 filtered ampvis2 object
 
+### Source
+
+[utilities.R](../R/utilities.R)
+
 `gridCode`
 ----------
 
@@ -540,6 +572,10 @@ list of 3 values:
 -   `jq` optional jquery script
 -   `html` html for plotly export link
 -   `javascript` js function for exporting data
+
+### Source
+
+[plotlyGrid.R](../R/plotlyGrid.R)
 
 `highertax`
 -----------
@@ -567,6 +603,10 @@ highertax(amp, taxlevel = NULL)
 
 ampvis2 object with otu table and taxa summed up to the taxlevel
 
+### Source
+
+[utilities.R](../R/utilities.R)
+
 `logoutput`
 -----------
 
@@ -589,6 +629,10 @@ logoutput(c, bline = 0, aline = 0)
 | `c`      | String. Log message/command to print.    |
 | `bline`  | Number of blank lines to precede output. |
 | `aline`  | Number of blank lines to follow output.  |
+
+### Source
+
+[utilities.R](../R/utilities.R)
 
 `plotlyGrid`
 ------------
@@ -667,6 +711,14 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 
 html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
 
+### Source
+
+[plotlyGrid.R](../R/plotlyGrid.R)
+
+[plotlyGrid.R](../R/plotlyGrid.R)
+
+[plotlyGrid.R](../R/plotlyGrid.R)
+
 `save_fillhtml`
 ---------------
 
@@ -697,6 +749,10 @@ save_fillhtml(html, file, background = "white", libdir = "lib",
 
 save html to file
 
+### Source
+
+[plotlyGrid.R](../R/plotlyGrid.R)
+
 `shortnames`
 ------------
 
@@ -722,6 +778,10 @@ shortnames(taxtable, taxa = "Species")
 ### Value
 
 Vector of shortened names for each seqvar/otu.
+
+### Source
+
+[utilities.R](../R/utilities.R)
 
 `subsetamp`
 -----------
@@ -754,3 +814,7 @@ subsetamp(amp, sampdepth, rarefy = FALSE, ...)
 ### Value
 
 ampvis2 object
+
+### Source
+
+[graphs.R](../R/graphs.R)

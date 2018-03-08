@@ -1,7 +1,7 @@
 #' Subset and rarefy OTU table.
 #'
 #' @description Subset and/or rarefy OTU table.
-#'
+#' @source [graphs.R](../R/graphs.R)
 #' @param amp  ampvis2 object
 #' @param sampdepth  sampling depth.  See details.
 #' @param rarefy  rarefy the OTU table in addition to subsetting
@@ -45,6 +45,8 @@ subsetamp <- function(amp, sampdepth, rarefy=FALSE, ...) {
 #' format \url{https://madsalbertsen.github.io/ampvis2/reference/amp_load.html#the-otu-table}. If the
 #' number of reads is less than mincount, the function will give an error, as we cannot make graphs
 #' with so few counts.
+#'
+#' @source [graphs.R](../R/graphs.R)
 #'
 #' @export
 #'
@@ -116,6 +118,8 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 #' @importFrom plotly ggplotly plotly_data
 #' @importFrom ggplot2 scale_color_manual
 #'
+#' @source [graphs.R](../R/graphs.R)
+#'
 rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
   if (missing(amp)) {
     cmnd <- 'amp <- readindata(mapfile=mapfile, datafile=datafile, ...)'
@@ -168,6 +172,8 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
 #' @return Saves pcoa plots to outdir.
 #'
 #' @importFrom ggplot2 scale_color_manual ggtitle
+#'
+#' @source [graphs.R](../R/graphs.R)
 #'
 #' @export
 #'
@@ -225,6 +231,8 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #'
 #' @importFrom morpheus morpheus
 #' @importFrom htmlwidgets saveWidget appendContent
+#'
+#' @source [graphs.R](../R/graphs.R)
 #'
 #' @examples
 #' \dontrun{
@@ -311,6 +319,8 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
 #' @return Save alpha diversity boxplots to outdir.
 #' @export
 #'
+#' @source [graphs.R](../R/graphs.R)
+#'
 #' @importFrom bpexploder bpexploder
 #'
 adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL, ...) {
@@ -362,6 +372,9 @@ adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return graphs are saved to outdir
+#'
+#' @source [graphs.R](../R/graphs.R)
+#'
 #' @export
 #'
 allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
@@ -438,6 +451,8 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #'
 #' @return Returns 0 if FUN succeeds and 1 if it returns an error.
 #' @export
+#'
+#' @source [graphs.R](../R/graphs.R)
 #'
 #' @examples
 #'

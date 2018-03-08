@@ -3,6 +3,9 @@
 \name{save_fillhtml}
 \alias{save_fillhtml}
 \title{Save an HTML object to a file}
+\source{
+[plotlyGrid.R](../R/plotlyGrid.R)
+}
 \usage{
 save_fillhtml(html, file, background = "white", libdir = "lib",
   bodystyle = "")
