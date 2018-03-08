@@ -23,8 +23,15 @@
 #'
 plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 
-  if ("ggplot" %in% class(pplot)) pplot <- ggplotly(pplot)
+  if ("ggplot" %in% class(pplot)) {
 
+    withCallingHandlers({
+      pplot <- ggplotly(pplot)
+    }, message=function(c) {
+      if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
+        invokeRestart("muffleMessage")
+    })
+  }
   pp <- plotly_build(pplot)
 
   if (is.null(data)) {
