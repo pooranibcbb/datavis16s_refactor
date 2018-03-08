@@ -203,7 +203,8 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 
 #' Morpheus heatmap
 #'
-#' @description Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.
+#' @description Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.  The heatmaps are made
+#' using relative abundances.
 #'
 #' @param mapfile full path to mapping file
 #' @param datafile  full path to input OTU file
@@ -430,8 +431,8 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' @param mapfile full path to map file
 #' @param datafile full path input OTU file
 #' @param outdir  output directory for graphs
-#' @param logfilename logfilename
 #' @param FUN function you would like to run
+#' @param logfilename logfilename
 #' @param info print sessionInfo to logfile
 #' @param ...  parameters needed to pass to FUN
 #'
@@ -441,16 +442,21 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' @examples
 #'
 #' \dontrun{
-#' trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user_uploads/job_id/outputs/out.biom",
-#' "/mnt/EFS/user_uploads/job_id/outputs/", allgraphs)
+#' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/job_id/outputs/out.biom",
+#' "/path/to/job_id/outputs/", allgraphs)
 #' # example with no optional arguments for running allgraphs
 #' }
 #'
 #' \dontrun{
-#' trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user_uploads/job_id/outputs/out.biom",
-#' "/mnt/EFS/user_uploads/job_id/outputs/", allgraphs, sampdepth = 30000)
 #' # example with optional argument sampdepth
+#' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
+#' "/path/to/job_id/outputs/", allgraphs, sampdepth = 30000)
+#'
+#' # example of making heatmap with optional arguments
+#' trygraphwrapper("mapfile.txt", "taxa_species.biom", "outputs/graphs", morphheatmap, sampdepth = 30000,
+#' filter_level=0.01, taxlevel=c("Family", "seq"))
 #' }
+#'
 #'
 trygraphwrapper <- function(mapfile, datafile, outdir, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
   ## open log file

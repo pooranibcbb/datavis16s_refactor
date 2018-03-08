@@ -22,7 +22,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 07, 2018
+March 08, 2018
 
 DESCRIPTION
 ===========
@@ -122,7 +122,7 @@ Morpheus heatmap
 
 ### Description
 
-Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morpheus/> .
+Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morpheus/> . The heatmaps are made using relative abundances.
 
 ### Usage
 
@@ -434,16 +434,21 @@ Returns 0 if FUN succeeds and 1 if it returns an error.
 ``` r
  
  ## Not run: 
-trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user_uploads/job_id/outputs/out.biom",
-"/mnt/EFS/user_uploads/job_id/outputs/", allgraphs)
+trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/job_id/outputs/out.biom",
+"/path/to/job_id/outputs/", allgraphs)
 # example with no optional arguments for running allgraphs 
 ## End(Not run) 
  
  ## Not run: 
-trygraphwrapper("/mnt/EFS/user_uploads/job_id/inputs/mapfile.txt","/mnt/EFS/user_uploads/job_id/outputs/out.biom",
-"/mnt/EFS/user_uploads/job_id/outputs/", allgraphs, sampdepth = 30000)
-# example with optional argument sampdepth 
+# example with optional argument sampdepth
+trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
+"/path/to/job_id/outputs/", allgraphs, sampdepth = 30000)
+
+# example of making heatmap with optional arguments
+trygraphwrapper("mapfile.txt", "taxa_species.biom", "outputs/graphs", morphheatmap, sampdepth = 30000,
+filter_level=0.01, taxlevel=c("Family", "seq")) 
 ## End(Not run) 
+ 
  
 ```
 
