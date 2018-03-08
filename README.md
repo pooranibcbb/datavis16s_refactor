@@ -1,6 +1,6 @@
 # datavis16s
 
-#### Dependencies
+### Dependencies
 
 - To install all dependencies, run the commands in [dependencies.R](scripts/dependencies.R).  You may need to change the path to the datavis16s directory.
 
@@ -10,7 +10,7 @@
     source("scripts/build.R")
     ```
 
-#### Usage
+### Usage
 
 - **Python with rpy2**
   - The generic wrapper function to be called from rpy2 is [`trygraphwrapper`](doc/Reference_Manual_datavis16s.md#trygraphwrapper).  It returns 0 for success and 1 for failure.  See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.  
@@ -27,12 +27,12 @@
 
 <sub><sup>1</sup>Can optionally pass tab-delimited text file to each of the functions instead of the biom file.  See [`readindata`](doc/Reference_Manual_datavis16s.md#readindata) for more details</sub>.
 
-#### Outputs
+### Outputs
 
 -  `trygraphwrapper` function creates a subdirectory "graphs" in output directory, and passes that as the output directory to the individual functions.  The individual graph functions just use the specified output directory passed to them.
 - Creates html files in outdir as well as subdirectory "lib" which contains the external js,css,etc files for the graphs.
 
-#### Installation
+### Installation
 
 -   You can install this package, datavis16s, with devtools within R from a locally cloned repository (may need to change directory):
 
