@@ -35,8 +35,8 @@ subsetamp <- function(amp, sampdepth, rarefy=FALSE, ...) {
 #' Read in data
 #'
 #' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
-#' @param datafile  full path to input data file.  must be either biom file or tab delimited text file
-#' OTU table with 7 level taxonomy.
+#' @param datafile  full path to input data file.  must be either biom file or tab delimited text file.
+#' See details.
 #' @param tsvfile  Logical.  Is datafile a tab-delimited text file? See details.
 #' @param mincount  minimum number of reads
 #' @return ampvis2 object
@@ -104,7 +104,7 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 #' Make rarefaction curve graph
 #'
 #' @param mapfile  full path mapping file
-#' @param datafile full path to OTU file
+#' @param datafile ffull path to input OTU file (biom or see \link{readindata})
 #' @param outdir full path to output directory
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
@@ -153,7 +153,7 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
 #' PCoA plots
 #'
 #' @param mapfile  full path to map file
-#' @param datafile full path to input OTU file
+#' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
 #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth  sampling depth
@@ -207,7 +207,7 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #' using relative abundances.
 #'
 #' @param mapfile full path to mapping file
-#' @param datafile  full path to input OTU file
+#' @param datafile  full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth sampling depth
@@ -356,7 +356,7 @@ adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors
 #' @description Make all 4 types of graphs
 #'
 #' @param mapfile  full path to map file
-#' @param datafile full path to input OTU file
+#' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
 #' @param sampdepth  sampling depth
 #' @param ... other parameters to pass to \link{readindata}
@@ -429,7 +429,7 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' @description This is a wrapper for any of the graph functions meant to be called using rpy2 in python.
 #'
 #' @param mapfile full path to map file
-#' @param datafile full path input OTU file
+#' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  output directory for graphs
 #' @param FUN function you would like to run
 #' @param logfilename logfilename

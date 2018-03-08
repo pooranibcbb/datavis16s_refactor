@@ -103,13 +103,13 @@ allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 
 ### Arguments
 
-| Argument    | Description                                           |
-|-------------|-------------------------------------------------------|
-| `mapfile`   | full path to map file                                 |
-| `datafile`  | full path to input OTU file                           |
-| `outdir`    | full path to output directory                         |
-| `sampdepth` | sampling depth                                        |
-| `...`       | other parameters to pass to [readindata](#readindata) |
+| Argument    | Description                                                          |
+|-------------|----------------------------------------------------------------------|
+| `mapfile`   | full path to map file                                                |
+| `datafile`  | full path to input OTU file (biom or see [readindata](#readindata) ) |
+| `outdir`    | full path to output directory                                        |
+| `sampdepth` | sampling depth                                                       |
+| `...`       | other parameters to pass to [readindata](#readindata)                |
 
 ### Value
 
@@ -151,7 +151,7 @@ morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
 </tr>
 <tr class="even">
 <td><code>datafile</code></td>
-<td>full path to input OTU file</td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
 <tr class="odd">
 <td><code>outdir</code></td>
@@ -240,7 +240,7 @@ pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
 </tr>
 <tr class="even">
 <td><code>datafile</code></td>
-<td>full path to input OTU file</td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
 <tr class="odd">
 <td><code>outdir</code></td>
@@ -316,7 +316,7 @@ rarefactioncurve(mapfile, datafile, outdir, amp, colors = NULL, ...)
 </tr>
 <tr class="even">
 <td><code>datafile</code></td>
-<td>full path to OTU file</td>
+<td>ffull path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
 <tr class="odd">
 <td><code>outdir</code></td>
@@ -376,7 +376,7 @@ readindata(mapfile, datafile, tsvfile = FALSE, mincount = 10)
 </tr>
 <tr class="even">
 <td><code>datafile</code></td>
-<td>full path to input data file. must be either biom file or tab delimited text file OTU table with 7 level taxonomy.</td>
+<td>full path to input data file. must be either biom file or tab delimited text file. See details.</td>
 </tr>
 <tr class="odd">
 <td><code>tsvfile</code></td>
@@ -415,15 +415,15 @@ trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
 
 ### Arguments
 
-| Argument      | Description                      |
-|---------------|----------------------------------|
-| `mapfile`     | full path to map file            |
-| `datafile`    | full path input OTU file         |
-| `outdir`      | output directory for graphs      |
-| `FUN`         | function you would like to run   |
-| `logfilename` | logfilename                      |
-| `info`        | print sessionInfo to logfile     |
-| `...`         | parameters needed to pass to FUN |
+| Argument      | Description                                                          |
+|---------------|----------------------------------------------------------------------|
+| `mapfile`     | full path to map file                                                |
+| `datafile`    | full path to input OTU file (biom or see [readindata](#readindata) ) |
+| `outdir`      | output directory for graphs                                          |
+| `FUN`         | function you would like to run                                       |
+| `logfilename` | logfilename                                                          |
+| `info`        | print sessionInfo to logfile                                         |
+| `...`         | parameters needed to pass to FUN                                     |
 
 ### Value
 

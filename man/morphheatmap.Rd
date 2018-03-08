@@ -10,7 +10,7 @@ morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
 \arguments{
 \item{mapfile}{full path to mapping file}
 
-\item{datafile}{full path to input OTU file}
+\item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{full path to output directory}
 

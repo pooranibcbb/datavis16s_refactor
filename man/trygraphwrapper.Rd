@@ -10,7 +10,7 @@ trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
 \arguments{
 \item{mapfile}{full path to map file}
 
-\item{datafile}{full path input OTU file}
+\item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{output directory for graphs}
 
