@@ -9,8 +9,8 @@ readindata(mapfile, datafile, tsvfile = FALSE, mincount = 10)
 \arguments{
 \item{mapfile}{full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns}
 
-\item{datafile}{full path to input data file.  must be either biom file or tab delimited text file
-OTU table with 7 level taxonomy.}
+\item{datafile}{full path to input data file.  must be either biom file or tab delimited text file.
+See details.}
 
 \item{tsvfile}{Logical.  Is datafile a tab-delimited text file? See details.}
 
