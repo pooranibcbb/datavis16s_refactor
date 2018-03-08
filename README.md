@@ -25,7 +25,7 @@
   - For functions with a rarefy argument set to TRUE, it will also be used to rarefy the OTU table.   
   - The alpha diversity boxplot requires a value to rarefy the OTU table.  If you do not specify `sampdepth`, it will use the number of reads from the smallest sample.
 
-<sub><sup>1</sup>Can optionally pass tab-delimited text file to each of the functions instead of the biom file.  See [`readindata`](doc/Reference_Manual_datavis16s.md#readindata) for more details</sub>.
+<sub><sup>1</sup>Can optionally pass tab-delimited text file to each of the functions instead of the biom file.  See [`readindata`](doc/Reference_Manual_datavis16s.md#readindata) for more details.</sub>
 
 ### Outputs
 
