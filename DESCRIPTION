@@ -2,7 +2,7 @@ Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.0
 Authors@R: person("Poorani", "Subramanian", email = "poorani.subramanian@nih.gov", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: betterbetterplots!
 Depends: R (>= 3.4.1)
 License: none
 Encoding: UTF-8

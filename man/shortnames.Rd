@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{shortnames}
 \alias{shortnames}
-\title{shortnames for SILVA taxonomy}
+\title{shortnames for taxonomy}
 \source{
 [utilities.R](../R/utilities.R)
 }
@@ -18,5 +18,5 @@ shortnames(taxtable, taxa = "Species")
 Vector of shortened names for each seqvar/otu.
 }
 \description{
-shortnames for SILVA taxonomy
+shortnames for taxonomy
 }

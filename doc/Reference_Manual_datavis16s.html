@@ -58,7 +58,7 @@ body {
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.0
 Authors@R: person(&quot;Poorani&quot;, &quot;Subramanian&quot;, email = &quot;poorani.subramanian@nih.gov&quot;, role = c(&quot;aut&quot;, &quot;cre&quot;))
-Description: What the package does (one paragraph).
+Description: betterbetterplots!
 Depends: R (&gt;= 3.4.1)
 License: none
 Encoding: UTF-8
@@ -232,12 +232,10 @@ Imports:
 <h3 id="value-2">Value</h3>
 <p>Saves heatmaps to outdir.</p>
 <h3 id="examples">Examples</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> ## Not run: 
-<span class="kw">morphheatmap</span>(<span class="dt">mapfile=</span><span class="st">&quot;mapfile.txt&quot;</span>, <span class="dt">datafile=</span><span class="st">&quot;OTU_table.txt&quot;</span>, <span class="dt">outdir=</span><span class="st">&quot;outputs/graphs&quot;</span>,
-<span class="dt">sampdepth =</span> <span class="dv">25000</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, <span class="st">&quot;seq&quot;</span>), <span class="dt">tsvfile=</span><span class="ot">TRUE</span>) 
-## End(Not run) 
- 
- </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run:
+<span class="kw">morphheatmap</span>(<span class="dt">mapfile =</span> <span class="st">&quot;mapfile.txt&quot;</span>, <span class="dt">datafile =</span> <span class="st">&quot;OTU_table.txt&quot;</span>, <span class="dt">outdir =</span> <span class="st">&quot;outputs/graphs&quot;</span>, 
+    <span class="dt">sampdepth =</span> <span class="dv">25000</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, <span class="st">&quot;seq&quot;</span>), <span class="dt">tsvfile =</span> <span class="ot">TRUE</span>)
+## End(Not run)</code></pre></div>
 <h3 id="source-2">Source</h3>
 <p><a href="../R/graphs.R">graphs.R</a></p>
 <h2 id="pcoaplot"><code>pcoaplot</code></h2>
@@ -448,24 +446,21 @@ Imports:
 <h3 id="value-6">Value</h3>
 <p>Returns 0 if FUN succeeds and 1 if it returns an error.</p>
 <h3 id="examples-1">Examples</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> 
- ## Not run: 
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/path/to/outputs/out.biom&quot;</span>,
-<span class="st">&quot;/path/to/outputs/&quot;</span>, allgraphs)
-<span class="co"># example with no optional arguments for running allgraphs </span>
-## End(Not run) 
- 
- ## Not run: 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run:
+
+<span class="co"># example with no optional arguments for running allgraphs</span>
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, 
+    allgraphs)
+
 <span class="co"># example with optional argument sampdepth</span>
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>,<span class="st">&quot;/path/to/outputs/out.biom&quot;</span>,
-<span class="st">&quot;/path/to/outputs/&quot;</span>, allgraphs, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, 
+    allgraphs, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
 
 <span class="co"># example of making heatmap with optional arguments</span>
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/taxa_species.biom&quot;</span>, <span class="st">&quot;/path/to/outputs&quot;</span>, morphheatmap, <span class="dt">sampdepth =</span> <span class="dv">30000</span>,
-<span class="dt">filter_level=</span><span class="fl">0.01</span>, <span class="dt">taxlevel=</span><span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, <span class="st">&quot;seq&quot;</span>)) 
-## End(Not run) 
- 
- </code></pre></div>
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/taxa_species.biom&quot;</span>, 
+    <span class="st">&quot;/path/to/outputs&quot;</span>, morphheatmap, <span class="dt">sampdepth =</span> <span class="dv">30000</span>, <span class="dt">filter_level =</span> <span class="fl">0.01</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, 
+        <span class="st">&quot;seq&quot;</span>))
+## End(Not run)</code></pre></div>
 <h3 id="source-6">Source</h3>
 <p><a href="../R/graphs.R">graphs.R</a></p>
 <h1 id="internal">Internal</h1>
@@ -710,9 +705,9 @@ Imports:
 <h3 id="source-12">Source</h3>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <h2 id="shortnames"><code>shortnames</code></h2>
-<p>shortnames for SILVA taxonomy</p>
+<p>shortnames for taxonomy</p>
 <h3 id="description-14">Description</h3>
-<p>shortnames for SILVA taxonomy</p>
+<p>shortnames for taxonomy</p>
 <h3 id="usage-13">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shortnames</span>(taxtable, <span class="dt">taxa =</span> <span class="st">&quot;Species&quot;</span>)</code></pre></div>
 <h3 id="arguments-13">Arguments</h3>

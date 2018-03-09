@@ -34,19 +34,17 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 \examples{
 
 \dontrun{
-trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-"/path/to/outputs/", allgraphs)
-# example with no optional arguments for running allgraphs
-}
 
-\dontrun{
+# example with no optional arguments for running allgraphs
+trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
+ "/path/to/outputs/", allgraphs)
+
 # example with optional argument sampdepth
 trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
 "/path/to/outputs/", allgraphs, sampdepth = 30000)
 
 # example of making heatmap with optional arguments
-trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", morphheatmap, sampdepth = 30000,
-filter_level=0.01, taxlevel=c("Family", "seq"))
+trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", morphheatmap, sampdepth = 30000, filter_level=0.01, taxlevel=c("Family", "seq"))
 }
 
 

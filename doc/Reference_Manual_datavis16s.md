@@ -31,7 +31,7 @@ DESCRIPTION
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
     Authors@R: person("Poorani", "Subramanian", email = "poorani.subramanian@nih.gov", role = c("aut", "cre"))
-    Description: What the package does (one paragraph).
+    Description: betterbetterplots!
     Depends: R (>= 3.4.1)
     License: none
     Encoding: UTF-8
@@ -203,12 +203,10 @@ Saves heatmaps to outdir.
 ### Examples
 
 ``` r
- ## Not run: 
-morphheatmap(mapfile="mapfile.txt", datafile="OTU_table.txt", outdir="outputs/graphs",
-sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE) 
-## End(Not run) 
- 
- 
+## Not run:
+morphheatmap(mapfile = "mapfile.txt", datafile = "OTU_table.txt", outdir = "outputs/graphs", 
+    sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile = TRUE)
+## End(Not run)
 ```
 
 ### Source
@@ -456,24 +454,21 @@ Returns 0 if FUN succeeds and 1 if it returns an error.
 ### Examples
 
 ``` r
- 
- ## Not run: 
-trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-"/path/to/outputs/", allgraphs)
-# example with no optional arguments for running allgraphs 
-## End(Not run) 
- 
- ## Not run: 
+## Not run:
+
+# example with no optional arguments for running allgraphs
+trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/out.biom", "/path/to/outputs/", 
+    allgraphs)
+
 # example with optional argument sampdepth
-trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-"/path/to/outputs/", allgraphs, sampdepth = 30000)
+trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/out.biom", "/path/to/outputs/", 
+    allgraphs, sampdepth = 30000)
 
 # example of making heatmap with optional arguments
-trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", morphheatmap, sampdepth = 30000,
-filter_level=0.01, taxlevel=c("Family", "seq")) 
-## End(Not run) 
- 
- 
+trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", 
+    "/path/to/outputs", morphheatmap, sampdepth = 30000, filter_level = 0.01, taxlevel = c("Family", 
+        "seq"))
+## End(Not run)
 ```
 
 ### Source
@@ -756,11 +751,11 @@ save html to file
 `shortnames`
 ------------
 
-shortnames for SILVA taxonomy
+shortnames for taxonomy
 
 ### Description
 
-shortnames for SILVA taxonomy
+shortnames for taxonomy
 
 ### Usage
 
