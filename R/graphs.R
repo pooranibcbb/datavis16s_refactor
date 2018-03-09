@@ -50,8 +50,6 @@ subsetamp <- function(amp, sampdepth, rarefy=FALSE, ...) {
 #'
 #' @export
 #'
-#' @importFrom biomformat read_biom biom_data observation_metadata
-#'
 readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
   logoutput(paste("Reading in map file", mapfile))
   map <- read.delim(mapfile, check.names = FALSE, colClasses = "character",  na.strings = '', comment.char = '')
@@ -63,34 +61,51 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
     stop("Map file missing necessary columns.")
   }
 
-  logoutput(paste("Reading in data file", datafile))
+  logoutput(paste("Reading in OTU file", datafile))
   if ((tsvfile)) {
-    otu <- read.delim(datafile, check.names = FALSE, na.strings = '', row.names = 1)
+    cmnd <- "otu <- read.delim(datafile, check.names = FALSE, na.strings = '', row.names = 1)"
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
   } else {
-    biom <- read_biom(datafile)
-    otu <- as.data.frame(as.matrix(biom_data(biom)))
-    tax <- observation_metadata(biom)
+
+    cmnd <- 'biom <- biomformat::read_biom(datafile)'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
+
+    cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
+
+    cmnd <- 'tax <- biomformat::observation_metadata(biom)'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
 
     ## qiime biom file
     if (class(tax) == "list") {
-      tax <- t(sapply(tax, "[", i=1:7))
+      cmnd <- 'tax <- t(sapply(tax, "[", i=1:7))'
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
     }
 
     ## Check if tax has 7 columns
     if (ncol(tax) != 7) {
       stop("taxonomy does not have 7 levels.")
     }
+
     colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+
     ## greengenes
     tax <- apply(tax, 2, function(x) { v <- grep("_unclassified$", x); x[v] <- NA; x })
     tax <- apply(tax, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
     tax[which(tax %in% c("", "none"))] <- NA
-    otu <- cbind(otu, tax)
+    cmnd <- 'otu <- cbind(otu, tax)'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
   }
 
   cmnd <- 'amp <- amp_load(otu, map)'
   logoutput(cmnd)
-  eval(parse(text=cmnd))
+  eval(parse(text = cmnd))
   ampvis2:::print.ampvis2(amp)
   writeLines('')
 
@@ -124,18 +139,18 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
   if (missing(amp)) {
     cmnd <- 'amp <- readindata(mapfile=mapfile, datafile=datafile, ...)'
     logoutput(cmnd)
-    eval(parse(text=cmnd))
+    eval(parse(text = cmnd))
   }
   rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 
   on.exit(graphics.off())
 
-  if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values=colors)
+  if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values = colors)
 
   ## suppress ggplotly warning to install dev version of ggplot2, as it is out of date
   withCallingHandlers({
     rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
-  }, message=function(c) {
+  }, message = function(c) {
     if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
       invokeRestart("muffleMessage")
   })
@@ -146,11 +161,11 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
   desc <-  which(colnames(df) == "Description")
   n <- ncol(df)
 
-  df_new <- lapply(df_new, function(x) {x <- data.frame(x); y <- unlist(c(rep(NA, tg-1), x[1,tg:desc], rep(NA,(n- desc)))); names(y) <- colnames(x); rbind(x,y)   })
+  df_new <- lapply(df_new, function(x) {x <- data.frame(x); y <- unlist(c(rep(NA, tg - 1), x[1,tg:desc], rep(NA,(n - desc)))); names(y) <- colnames(x); rbind(x,y)   })
   df_new <- do.call(rbind.data.frame, df_new)
   plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
   logoutput(paste0('Saving rarefaction curve table to ', file.path(outdir, 'rarecurve.txt') ))
-  write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote=FALSE, sep='\t', row.names=FALSE, na="")
+  write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 }
 
 
@@ -177,34 +192,62 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
 #'
 #' @export
 #'
-pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
-  if (missing(amp)) {
-    amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
-  }
+pcoaplot <-
+  function(mapfile,
+           datafile,
+           outdir,
+           amp,
+           sampdepth = NULL,
+           distm = "binomial",
+           filter_species = 0.1,
+           rarefy = FALSE,
+           colors = NULL,
+           ...) {
+    if (missing(amp)) {
+      amp <- readindata(mapfile = mapfile, datafile = datafile, ...)
+    }
 
-  if (!is.null(sampdepth)) {
-    cmnd <- paste0('amp <- subsetamp(amp, sampdepth = ', sampdepth,', rarefy=',rarefy, ')')
+    if (!is.null(sampdepth)) {
+      cmnd <-
+        paste0('amp <- subsetamp(amp, sampdepth = ',
+               sampdepth,
+               ', rarefy=',
+               rarefy,
+               ')')
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
+    }
+
+    on.exit(graphics.off())
+
+    cmnd <-
+      paste0(
+        'pcoa <- amp_ordinate(amp, filter_species =',
+        filter_species,
+        ',type="PCOA", distmeasure ="',
+        distm,
+        '",sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")'
+      )
     logoutput(cmnd)
-    eval(parse(text=cmnd))
-  }
-
-  on.exit(graphics.off())
-
-#  for (distm in distmeasures) {
-#    graphics.off()
-
-    cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")')
-    logoutput(cmnd)
-    eval(parse(text=cmnd))
-    if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values=colors) + ggtitle(paste("PCoA with", distm, "distance"))
+    eval(parse(text = cmnd))
+    if (!is.null(colors))
+      pcoa$plot <-
+      pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
     outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
-    plotlyGrid(pcoa$plot, outfile, data=pcoa$dsites)
+    plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
     tabletsv <- gsub('.html$', '.txt', outfile)
     logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
-    write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
-##  }
-}
+    write.table(
+      pcoa$dsites,
+      tabletsv,
+      quote = FALSE,
+      sep = '\t',
+      row.names = FALSE,
+      na = ""
+    )
+
+  }
 
 
 #' Morpheus heatmap
@@ -274,34 +317,37 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
 
     amptax <- filterlowabund(amptax, level = filter_level)
     sntax <- ifelse(tl == "seq", "Species", tl)
-    sn <- shortnames(amptax$tax, taxa=sntax)
+    sn <- shortnames(amptax$tax, taxa = sntax)
     sn <- paste(amptax$tax$OTU, sn)
 
     mm <- max(amptax$abund)
-    values <-  expm1(seq(log1p(0), log1p(mm), length.out=100))
+    values <-  expm1(seq(log1p(0), log1p(mm), length.out = 100))
     mat <- amptax$abund
     row.names(mat) <- sn
     mat <- mat[,amptax$metadata$SampleID]
-    heatmap <- morpheus(mat,colorScheme = list(scalingMode="fixed", values=values, colors=colors, stepped=FALSE), Rowv=nrow(mat):1, columnAnnotations = amptax$metadata[,tg:desc])
+    cmnd <- 'heatmap <- morpheus(mat,colorScheme = list(scalingMode="fixed", values=values, colors=colors, stepped=FALSE), Rowv=nrow(mat):1, columnAnnotations = amptax$metadata[,tg:desc])'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
 
     outdir <- tools:::file_path_as_absolute(outdir)
     outfile <- file.path(outdir, paste0(tl, "_heatmap.html"))
     logoutput(paste("Saving plot to", outfile))
     heatmap$width = '100%'
     heatmap$height = '90%'
-    tt <- tags$div(heatmap, style="position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
-    save_fillhtml(tt, file=outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
+    tt <- tags$div(heatmap, style = "position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
+    save_fillhtml(tt, file = outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
   }
 
   for (t in taxlevel) {
     cmnd <- paste0('makeheatmap("', t, '", amp)')
     logoutput(cmnd)
-    if (inherits(try(eval(parse(text=cmnd))), "try-error")){
+    if (inherits(try(eval(parse(text = cmnd))), "try-error")) {
       warning(paste("Heatmap at ", t, " level failed."))
     }
   }
 
 }
+
 
 #' Alpha diversity boxplot
 #'
@@ -325,17 +371,17 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
 #'
 adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL, ...) {
   if (missing(amp)) {
-    amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
+    amp <- readindata(mapfile = mapfile, datafile = datafile, ...)
   }
 
   if (is.null(sampdepth)) sampdepth <-  min(colSums(amp$abund))
 
   cmnd <- paste0('alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = ', sampdepth, ')')
   logoutput(cmnd)
-  eval(parse(text=cmnd))
+  eval(parse(text = cmnd))
 
   logoutput(paste0('Saving alpha diversity table to ', file.path(outdir, 'alphadiv.txt') ))
-  write.table(alphadiv, file.path(outdir, 'alphadiv.txt'), quote=FALSE, sep='\t', row.names=FALSE, na="")
+  write.table(alphadiv, file.path(outdir, 'alphadiv.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 
   tg <- which(colnames(amp$metadata) == "TreatmentGroup")
   desc <- which(colnames(amp$metadata) == "Description") - 1
@@ -346,18 +392,20 @@ adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors
     } else {
       lc <- NULL
     }
-    shannon <-  bpexploder(alphadiv, settings=list(groupVar=col, yVar="Shannon", tipText = list(SampleID = "SampleID", Shannon = "Shannon Index", Description = "Desc"), relativeWidth=0.8, levelColors = lc))
-    chao1 <- bpexploder(alphadiv, settings=list(groupVar=col, yVar="Chao1", tipText = list(SampleID = "SampleID", Chao1 = "Species Richness", Description = "Desc"), relativeWidth=0.8, levelColors = lc))
+
+    shannon <-  bpexploder(alphadiv, settings = list(groupVar = col, yVar = "Shannon", tipText = list(SampleID = "SampleID", Shannon = "Shannon Index", Description = "Desc"), relativeWidth = 0.8, levelColors = lc))
+
+    chao1 <- bpexploder(alphadiv, settings = list(groupVar = col, yVar = "Chao1", tipText = list(SampleID = "SampleID", Chao1 = "Species Richness", Description = "Desc"), relativeWidth = 0.8, levelColors = lc))
     return(list(shannon, chao1))
   }
 
   divwidget <- unlist(lapply(colnames(amp$metadata)[tg:desc], function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
   tt <- tags$div(
-    style = "display: grid; grid-template-columns: 1fr 1fr;",
-    lapply(divwidget, function(x) { x$width = '90%'; x$height='100%'; tags$div(x) })
+    style = "display: grid; grid-template-columns: 1fr 1fr; grid-row-gap: 5em;",
+    lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
   )
 
-  htmlGrid(tt, file=file.path(outdir, "alphadiv.html"),  data=alphadiv, title="species diversity", jquery = TRUE)
+  htmlGrid(tt, file = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
 
 }
 
@@ -457,19 +505,17 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' @examples
 #'
 #' \dontrun{
-#' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-#' "/path/to/outputs/", allgraphs)
-#' # example with no optional arguments for running allgraphs
-#' }
 #'
-#' \dontrun{
+#' # example with no optional arguments for running allgraphs
+#' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
+#'  "/path/to/outputs/", allgraphs)
+#'
 #' # example with optional argument sampdepth
 #' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
 #' "/path/to/outputs/", allgraphs, sampdepth = 30000)
 #'
 #' # example of making heatmap with optional arguments
-#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", morphheatmap, sampdepth = 30000,
-#' filter_level=0.01, taxlevel=c("Family", "seq"))
+#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", morphheatmap, sampdepth = 30000, filter_level=0.01, taxlevel=c("Family", "seq"))
 #' }
 #'
 #'

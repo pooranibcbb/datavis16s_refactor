@@ -20,6 +20,10 @@ output:
         toc: true
         toc_depth: 2
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
+```
 "
 
 mdfile <- "doc/Reference_Manual_datavis16s.md"
@@ -30,7 +34,7 @@ Rmdfile <- gsub(".md", ".Rmd", mdfile)
 ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE)
 file.copy(mdfile, Rmdfile, overwrite = TRUE )
 render(Rmdfile)
-file.remove(Rmdfile)
+#file.remove(Rmdfile)
 
 # ## User docs
 # render("doc/user_doc.Rmd", output_format = "github_document")

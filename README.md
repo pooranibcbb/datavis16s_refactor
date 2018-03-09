@@ -4,7 +4,7 @@
 
 - To install all dependencies, run the commands in [dependencies.R](scripts/dependencies.R).  You may need to change the path to the datavis16s directory.
 
--   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [[github](doc/user_doc.md)] [[html](doc/datavis16s_pipeline.html)].
+-   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [[github](doc/user_doc.md)][[html](doc/datavis16s_pipeline.html)].
 
     ``` r
     source("scripts/build.R")
@@ -57,6 +57,6 @@
     Sys.setenv(GITHUB_PAT = "token")
     # change ref to whichever branch
     devtools::install_github("bcbb/nephele2/pipelines/datavis16s", 
-        host = "https://github.niaid.nih.gov/api/v3", ref = "16sdataviz", 
+        host = "https://github.niaid.nih.gov/api/v3", ref = "datavis16s", 
         dependencies = TRUE)
     ```

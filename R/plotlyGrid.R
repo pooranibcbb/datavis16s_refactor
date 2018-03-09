@@ -13,8 +13,7 @@
 #' Useful for multiple graphs sharing the same lib.
 #'
 #' @importFrom htmlwidgets prependContent saveWidget
-#' @importFrom plotly plotly_data plotly_build config ggplotly
-#' @importFrom tools file_path_sans_ext
+#' @importFrom plotly plotly_data plotly_build ggplotly
 #'
 #' @return html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
 #'
@@ -52,7 +51,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
   outfile <- file.path(tools:::file_path_as_absolute(dirname(filename)), basename(filename))
   outlib <- file.path(dirname(outfile), basename(outlib))
   logoutput(paste("Saving plot to", outfile))
-  saveWidget(config(pp, cloud = T, editable = T), file=outfile , selfcontained = FALSE, title=title, lib=outlib)
+  saveWidget(plotly::config(pp, cloud = T, editable = T), file=outfile , selfcontained = FALSE, title=title, lib=outlib)
 }
 
 #' @title Add Plotly data export to generic htmlwidget
@@ -98,7 +97,7 @@ nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib
 #'
 #' @param ht html tagList
 #'
-#' @importFrom htmltools tagList save_html tags
+#' @importFrom htmltools tagList tags
 #'
 #' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #' @rdname plotlyGrid
@@ -119,7 +118,7 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
   outlib <- file.path(dirname(outfile), basename(outlib))
 
   logoutput(paste("Saving plot to", outfile))
-  save_html(tl, file= outfile, lib=outlib)
+  htmltools::save_html(tl, file= outfile, lib=outlib)
 }
 
 
@@ -134,7 +133,6 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
 #'   \item{javascript}{js function for exporting data}
 #' }
 #'
-#' @importFrom jsonlite toJSON
 #' @importFrom htmltools HTML
 #'
 #' @source [plotlyGrid.R](../R/plotlyGrid.R)
@@ -146,7 +144,7 @@ gridCode <- function(data) {
   nn <- names(ll)
   ll <- lapply(nn, function(x) { mm <- ll[[x]]; ll[[x]] <- NULL; return(list(data=mm));  } )
   names(ll) <- nn
-  ll <- toJSON(ll)
+  ll <- jsonlite::toJSON(ll)
 
   jq <- HTML('<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>')
   html <- HTML(text = '<a href=\"#\" id=\"plotly-data-export\" target=\"_blank\" style=\"font-family:\'Open Sans\',sans-serif;\">Export Data to Plotly</a>')

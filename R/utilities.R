@@ -15,7 +15,7 @@ logoutput <- function(c, bline = 0, aline = 0) {
 
 }
 
-#' shortnames for SILVA taxonomy
+#' shortnames for taxonomy
 #'
 #' @param taxtable taxonomy table object from amp$tax
 #' @param taxa  taxonomic level at which to retrieve the names
