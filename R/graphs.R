@@ -192,60 +192,30 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
 #'
 #' @export
 #'
-pcoaplot <-
-  function(mapfile,
-           datafile,
-           outdir,
-           amp,
-           sampdepth = NULL,
-           distm = "binomial",
-           filter_species = 0.1,
-           rarefy = FALSE,
-           colors = NULL,
-           ...) {
-    if (missing(amp)) {
-      amp <- readindata(mapfile = mapfile, datafile = datafile, ...)
-    }
+pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
+  if (missing(amp)) {
+    amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
 
-    if (!is.null(sampdepth)) {
-      cmnd <-
-        paste0('amp <- subsetamp(amp, sampdepth = ',
-               sampdepth,
-               ', rarefy=',
-               rarefy,
-               ')')
-      logoutput(cmnd)
-      eval(parse(text = cmnd))
-    }
+  }
+  if (!is.null(sampdepth)) {
+    cmnd <- paste0('amp <- subsetamp(amp, sampdepth = ', sampdepth,', rarefy=',rarefy, ')')
+    logoutput(cmnd)
+    eval(parse(text=cmnd))
+  }
 
     on.exit(graphics.off())
 
-    cmnd <-
-      paste0(
-        'pcoa <- amp_ordinate(amp, filter_species =',
-        filter_species,
-        ',type="PCOA", distmeasure ="',
-        distm,
-        '",sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")'
-      )
+    cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", sample_colorframe = TRUE, detailed_output = TRUE, transform="none")')
+
     logoutput(cmnd)
     eval(parse(text = cmnd))
-    if (!is.null(colors))
-      pcoa$plot <-
-      pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
+    if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
     outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
     plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
     tabletsv <- gsub('.html$', '.txt', outfile)
     logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
-    write.table(
-      pcoa$dsites,
-      tabletsv,
-      quote = FALSE,
-      sep = '\t',
-      row.names = FALSE,
-      na = ""
-    )
+    write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
 
   }
 
