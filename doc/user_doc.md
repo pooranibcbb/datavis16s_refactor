@@ -12,7 +12,7 @@
 ampvis2 and Plotly
 ------------------
 
-Nephele uses the [ampvis2 R package](https://madsalbertsen.github.io/ampvis2/) for statistical computation. We also make use of the [Plotly R interface](https://plot.ly/r/) for the [plotly.js](https://plot.ly) charting library. The plots can be minimally edited interactively. However, they also have a link to export the data to the [Plotly Chart Studio](https://plot.ly/online-chart-maker/) which allows for [making a variety of charts](https://help.plot.ly/tutorials/).
+Nephele uses the [ampvis2 R package](https://madsalbertsen.github.io/ampvis2/) v2.3.2 for statistical computation. We also make use of the [Plotly R interface](https://plot.ly/r/) for the [plotly.js](https://plot.ly) charting library. The plots can be minimally edited interactively. However, they also have a link to export the data to the [Plotly Chart Studio](https://plot.ly/online-chart-maker/) which allows for [making a variety of charts](https://help.plot.ly/tutorials/).
 
 Plots
 -----

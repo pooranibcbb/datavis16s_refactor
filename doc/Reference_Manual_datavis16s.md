@@ -22,7 +22,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 08, 2018
+March 15, 2018
 
 DESCRIPTION
 ===========
@@ -274,7 +274,7 @@ pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
 </tr>
 <tr class="even">
 <td><code>rarefy</code></td>
-<td>Logical. Should the OTU table be rarefied to the sampling depth? See details.</td>
+<td>Logical. Rarefy the OTU table if sampdepth is specified.</td>
 </tr>
 <tr class="odd">
 <td><code>colors</code></td>

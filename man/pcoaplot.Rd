@@ -28,7 +28,7 @@ except for unifrac, wunifrac, and none.}
 \item{filter_species}{Remove low abundant OTU's across all samples below this threshold in percent.
 Setting this to 0 may drastically increase computation time.}
 
-\item{rarefy}{Logical. Should the OTU table be rarefied to the sampling depth?  See details.}
+\item{rarefy}{Logical. Rarefy the OTU table if sampdepth is specified.}
 
 \item{colors}{(Optional) color vector - length equal to number of TreatmentGroups in mapfile}
 
