@@ -15,7 +15,7 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth, rarefy=FALSE, ...) {
+subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
@@ -23,11 +23,12 @@ subsetamp <- function(amp, sampdepth, rarefy=FALSE, ...) {
     amp$abund <- as.data.frame(t(otu))
   }
 
+  if(is.null(sampdepth)) sampdepth <- 0
   cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth, ...)'
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
-  ampvis2:::print.ampvis2(amp)
+  print_ampvis2(amp)
   writeLines('')
   return(amp)
 }
@@ -103,7 +104,7 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
   cmnd <- 'amp <- amp_load(otu, map)'
   logoutput(cmnd)
   eval(parse(text = cmnd))
-  ampvis2:::print.ampvis2(amp)
+  print_ampvis2(amp)
   writeLines('')
 
   if (sum(amp$abund) < mincount) {
@@ -132,8 +133,8 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
-rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
-  if (missing(amp)) {
+rarefactioncurve <- function(mapfile, datafile, outdir, amp = NULL, colors=NULL, ...) {
+  if (is.null(amp)) {
     cmnd <- 'amp <- readindata(mapfile=mapfile, datafile=datafile, ...)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
@@ -189,10 +190,9 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp, colors=NULL, ...) {
 #'
 #' @export
 #'
-pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
-  if (missing(amp)) {
+pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
+  if (is.null(amp)) {
     amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
-
   }
   if (!is.null(sampdepth)) {
     cmnd <- paste0('amp <- subsetamp(amp, sampdepth = ', sampdepth,', rarefy=',rarefy, ')')
@@ -231,6 +231,7 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #' @param filter_level minimum abundance to show in the heatmap
 #' @param taxlevel vector of taxonomic levels to graph.  must be subset of
 #' c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.
+#' @param colors  (Optional) color vector - length equal to number of TreatmentGroups in mapfile
 #' @param ...  parameters to pass to  \code{\link{readindata}}
 #'
 #' @return  Saves heatmaps to outdir.
@@ -240,7 +241,6 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #'  the heatmap with no collapsing of taxonomic levels.
 #'
 #' @importFrom morpheus morpheus
-#' @importFrom htmlwidgets saveWidget appendContent
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
@@ -251,37 +251,51 @@ pcoaplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, distm="bi
 #' }
 #'
 #'
-morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, rarefy=FALSE, filter_level = 0.1, taxlevel=c("seq"), ...) {
-  if (missing(amp)) {
+morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0.1, taxlevel=c("seq"), colors = NULL, ...) {
+
+  ## read in data
+  if (is.null(amp)) {
     amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
   }
 
-  if (!is.null(sampdepth)) {
-    cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy)'
-    logoutput(cmnd, 1)
-    eval(parse(text=cmnd))
-  }
-
-  cmnd <- 'amp <- amp_subset_samples(amp, normalise = TRUE)'
+  ## normalize data
+  logoutput("Calculate relative abundance.")
+  cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE)'
   logoutput(cmnd)
   eval(parse(text=cmnd))
+
 
   if (!all(nrow(amp$abund) > 1, ncol(amp$abund) > 1)) {
     stop("OTU table must be at least 2x2 for heatmap.")
   }
 
-
+  ## Annotations
   tg <- which(colnames(amp$metadata) == "TreatmentGroup")
   desc <-  which(colnames(amp$metadata) == "Description") - 1
-  colors <- rev(colorRampPalette( RColorBrewer::brewer.pal(11, "RdYlBu"), bias=1)(100))
+  columns <- lapply(tg:desc, function(x) { list(field=colnames(amp$metadata)[x], highlightMatchingValues=TRUE, display=list('color'))  } )
+  columns <- append(list(list(field='id', display=list('text'))), columns)
+  try(names(colors) <- unique(amp$metadata$TreatmentGroup), silent = TRUE)
+  rows <- list(list(field='id', display=list('text')))
 
+  ## Heatmap colors
+  hmapcolors <- rev(colorRampPalette( RColorBrewer::brewer.pal(11, "RdYlBu"), bias=0.5)(100))
+
+  ## heatmap function
   makeheatmap <- function(tl, amp) {
+
+    ## create matrix at higher taxonomic level
     if (tl != "seq") {
       amptax <- highertax(amp, taxlevel=tl)
     } else {
       amptax <- amp
     }
 
+    if (filter_level > 0) {
+      logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
+      cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
+    }
 
     ## row and column names for matrix
     if (tl == "seq") {
@@ -293,17 +307,26 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
     mat <- amptax$abund
     row.names(mat) <- sn
     mat <- mat[,amptax$metadata$SampleID]
-    cmnd <- 'heatmap <- morpheus(mat,colorScheme = list(scalingMode="fixed", values=values, colors=colors, stepped=FALSE), Rowv=nrow(mat):1, columnAnnotations = amptax$metadata[,tg:desc])'
+
+    ## log scale for colors
+    mm <- max(amptax$abund)
+    values <-  c(0,expm1(seq(log1p(filter_level), log1p(100), length.out = 99)))
+    w <- which(values > 10)
+    values[w] <- round(values[w])
+
+    cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
 
-    outdir <- tools:::file_path_as_absolute(outdir)
+    outdir <- tools::file_path_as_absolute(outdir)
     outfile <- file.path(outdir, paste0(tl, "_heatmap.html"))
     logoutput(paste("Saving plot to", outfile))
     heatmap$width = '100%'
     heatmap$height = '90%'
     tt <- tags$div(heatmap, style = "position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
     save_fillhtml(tt, file = outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
+
+    write.tab.table(amptax$abund, file.path(outdir, "heatmap.txt"))
   }
 
   for (t in taxlevel) {
@@ -337,12 +360,17 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
 #'
 #' @importFrom bpexploder bpexploder
 #'
-adivboxplot <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL, ...) {
-  if (missing(amp)) {
+adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
+  if (is.null(amp)) {
     amp <- readindata(mapfile = mapfile, datafile = datafile, ...)
   }
 
-  if (is.null(sampdepth)) sampdepth <-  min(colSums(amp$abund))
+  if (is.null(sampdepth)) {
+    logoutput('Calculate number of counts to rarefy table.')
+    cmnd <- 'sampdepth <-  min(colSums(amp$abund))'
+    logoutput(cmnd)
+    eval(parse(text=cmnd))
+  }
 
   cmnd <- paste0('alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = ', sampdepth, ')')
   logoutput(cmnd)
@@ -397,11 +425,13 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
   amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
 
   ## Choose colors
+  amp$metadata <-  amp$metadata[order(amp$metadata$TreatmentGroup),]
   numtg <- length(unique(amp$metadata$TreatmentGroup))
-  if (numtg <= 18){
-    allcols <- c(RColorBrewer::brewer.pal(7, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:8, 10:15, 9,17:19)]
-    st <- round(runif(1, min=1, 18))
-    st <- ((st:(st+(numtg - 1)) - 1) %% 18) + 1
+  allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:7,9,11:14, 10, 15:16,18:20)]
+  coln <- length(allcols)
+  if (numtg <= coln){
+    st <- sample.int(coln, size=1)
+    st <- ((st:(st+(numtg - 1)) - 1) %% coln) + 1
     allcols <- allcols[st]
   } else {
     allcols <- NULL
@@ -414,13 +444,15 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
   try(eval(parse(text=cmnd)))
 
   ## Heatmap
-  logoutput('Relative abundance Heatmap', 1)
-  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, taxlevel = c("Family", "seq"))'
+  logoutput('Relative abundance heatmaps', 1)
+  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, taxlevel = c("Family", "seq"), colors=allcols, filter_level=0)'
   logoutput(cmnd)
   try(eval(parse(text=cmnd)))
 
   ## Filter out low count samples
-  logoutput(paste0('Filter samples below ', sampdepth, ' reads'), 1)
+  cs <- colSums(amp$abund)
+  sampdepth <- min(cs[cs >= sampdepth])
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts.'), 1)
   ampsub <- subsetamp(amp, sampdepth=sampdepth)
 
   if (nrow(ampsub$metadata) < 3) {

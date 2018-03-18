@@ -48,7 +48,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 
   }
 
-  outfile <- file.path(tools:::file_path_as_absolute(dirname(filename)), basename(filename))
+  outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
   outlib <- file.path(dirname(outfile), basename(outlib))
   logoutput(paste("Saving plot to", outfile))
   saveWidget(plotly::config(pp, cloud = T, editable = T), file=outfile , selfcontained = FALSE, title=title, lib=outlib)
@@ -83,7 +83,7 @@ nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib
     title <- tools::file_path_sans_ext(basename(filename))
   }
 
-  outfile <- file.path(tools:::file_path_as_absolute(dirname(filename)), basename(filename))
+  outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
   outlib <- file.path(dirname(outfile), basename(outlib))
 
 
@@ -113,7 +113,7 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
     title <- tags$h2(title, style = "font-family: sans-serif; text-align: center;")
     tl <- tagList(title,jq, html, javascript, ht)
   }
-  outfile <- file.path(tools:::file_path_as_absolute(dirname(filename)), basename(filename))
+  outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
 
   outlib <- file.path(dirname(outfile), basename(outlib))
 

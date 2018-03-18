@@ -7,8 +7,9 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"), ...)
+morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+  rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"),
+  colors = NULL, ...)
 }
 \arguments{
 \item{mapfile}{full path to mapping file}
@@ -27,6 +28,8 @@ morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
 
 \item{taxlevel}{vector of taxonomic levels to graph.  must be subset of
 c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.}
+
+\item{colors}{(Optional) color vector - length equal to number of TreatmentGroups in mapfile}
 
 \item{...}{parameters to pass to  \code{\link{readindata}}}
 }

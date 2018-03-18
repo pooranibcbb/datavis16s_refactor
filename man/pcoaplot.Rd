@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
+pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, ...)
 }

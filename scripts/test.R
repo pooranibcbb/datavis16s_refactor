@@ -1,16 +1,31 @@
-library(datavis16s)
-## mothur
+devtools::load_all()
 
-# outdir <-  "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/mothur"
-# dir.create(outdir, showWarnings = FALSE)
-# ggg <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/mothur.biom", outdir = outdir, sampdepth = 5713)
+#amp <- readindata(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom")
+#sn <- datavis16s:::shortnames(amp$tax[1216:1220,])
+outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/SILVA"
+# tl <- "Family"
+# if (tl != "seq") {
+#   amptax <- highertax(amp, taxlevel=tl)
+# } else {
+#   amptax <- amp
+# }
 #
-# outdir <-  "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/greengenes"
-# dir.create(outdir, showWarnings = FALSE)
-# ggg <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/greengenesOTU_table.biom", outdir = outdir, sampdepth = 47052)
+# amptax <- filterlowabund(amptax, level = 0.1)
+# stop()
+# sntax <- ifelse(tl == "seq", "Species", tl)
+# sn <- shortnames(amptax$tax, taxa = sntax)
+# sn <- paste(amptax$tax$OTU, sn)
+#
+# mm <- max(amptax$abund)
+# values <-  c(0,expm1(seq(log1p(filter_level), log1p(100), length.out = 99)))
+# w <- which(values > 10)
+# values[w] <- round(values[w], digits = 1)
+# #    message(paste(values))
+# mat <- amptax$abund
+# row.names(mat) <- sn
+#
+# mat <- mat[,amptax$metadata$SampleID]
+#
 
-outdir <-  "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/graphs"
-dir.create(outdir, showWarnings = FALSE)
-#ggg <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom", outdir = outdir, sampdepth = 36876)
-amp <- readindata(mapfile="testdata/testmapfile.txt", datafile = "testdata/taxa_species.biom")
-adivboxplot(amp=amp, outdir=outdir, sampdepth = 36876)
+# mp <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom", outdir = outdir)
+newmp <- trygraphwrapper(mapfile = "testdata/SILVA_mapfile.txt", datafile = "testdata/SILVA_OTU_table.biom", outdir = outdir, allgraphs, sampdepth=20000, logfilename = file.path(outdir, "logfile.txt"))

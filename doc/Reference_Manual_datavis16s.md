@@ -17,12 +17,13 @@ datavis16s
     -   [`highertax`](#highertax)
     -   [`logoutput`](#logoutput)
     -   [`plotlyGrid`](#plotlygrid)
+    -   [`print_ampvis2`](#print_ampvis2)
     -   [`save_fillhtml`](#save_fillhtml)
     -   [`shortnames`](#shortnames)
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 15, 2018
+March 18, 2018
 
 DESCRIPTION
 ===========
@@ -50,6 +51,7 @@ DESCRIPTION
       plotly,
       RColorBrewer,
       vegan
+    URL: https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
 
 Exported
 ========
@@ -66,8 +68,8 @@ Plots exploding boxplot of shannon diversity and Chao species richness. If sampl
 ### Usage
 
 ``` r
-adivboxplot(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL,
-  ...)
+adivboxplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+  colors = NULL, ...)
 ```
 
 ### Arguments
@@ -135,8 +137,9 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 ### Usage
 
 ``` r
-morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"), ...)
+morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+  rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"),
+  colors = NULL, ...)
 ```
 
 ### Arguments
@@ -186,6 +189,10 @@ morphheatmap(mapfile, datafile, outdir, amp, sampdepth = NULL,
 <td>vector of taxonomic levels to graph. must be subset of c(&quot;Kingdom&quot;, &quot;Phylum&quot;, &quot;Class&quot;, &quot;Order&quot;, &quot;Family&quot;, &quot;Genus&quot;, &quot;Species&quot;, &quot;seq&quot;). See Details.</td>
 </tr>
 <tr class="odd">
+<td><code>colors</code></td>
+<td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
+</tr>
+<tr class="even">
 <td><code>...</code></td>
 <td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
 </tr>
@@ -225,7 +232,7 @@ PCoA plots
 ### Usage
 
 ``` r
-pcoaplot(mapfile, datafile, outdir, amp, sampdepth = NULL,
+pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, ...)
 ```
@@ -307,7 +314,7 @@ Make rarefaction curve graph
 ### Usage
 
 ``` r
-rarefactioncurve(mapfile, datafile, outdir, amp, colors = NULL, ...)
+rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
 ```
 
 ### Arguments
@@ -714,6 +721,39 @@ html plot is saved to filename. external libraries are saved to outlib in same d
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
+`print_ampvis2`
+---------------
+
+Print ampvis2 object summary
+
+### Description
+
+Print ampvis2 object summary
+
+### Usage
+
+``` r
+print_ampvis2(data)
+```
+
+### Arguments
+
+| Argument | Description    |
+|----------|----------------|
+| `data`   | ampvis2 object |
+
+### Value
+
+Prints summary stats about ampvis2 object
+
+### Note
+
+This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
+
+### Source
+
+[utilities.R](../R/utilities.R)
+
 `save_fillhtml`
 ---------------
 
@@ -790,7 +830,7 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
 ```
 
 ### Arguments
