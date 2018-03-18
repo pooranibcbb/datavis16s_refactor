@@ -2,7 +2,9 @@
 
 ### Dependencies
 
-- To install all dependencies, run the commands in [dependencies.R](scripts/dependencies.R).  You may need to change the path to the datavis16s directory.
+- For the Nephele AMI, OS package libxml2-dev is needed.
+
+- To install all R dependencies, run the commands in [dependencies.R](scripts/dependencies.R).  You may need to change the path to the datavis16s directory.
 
 -   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [[github](doc/user_doc.md)][[html](doc/datavis16s_pipeline.html)].
 
