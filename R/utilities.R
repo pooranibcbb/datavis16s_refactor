@@ -25,22 +25,50 @@ logoutput <- function(c, bline = 0, aline = 0) {
 #' @source [utilities.R](../R/utilities.R)
 #'
 shortnames <- function(taxtable, taxa="Species") {
+  ## greengenes
+  taxtable <- apply(taxtable, 2, function(x) { v <- grep("_unclassified$|^Unassigned$", x); x[v] <- NA; x })
+  taxtable <- apply(taxtable, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
 
-  vd <- which(taxtable[,"Kingdom"] == "")
-  taxtable[vd,"Kingdom"] <- row.names(taxtable)[vd]
+  ## SILVA97
+  taxtable <- apply(taxtable, 2, function(x) { gsub("^D_\\d+__", "", x) })
+  uncnames <-  c("Other", "uncultured", "uncultured bacterium", "Ambiguous_taxa", "uncultured organism", "uncultured rumen bacterium")
+
+  taxtable[which(taxtable %in% c("", "none"), arr.ind = TRUE)] <- NA
+
+  vd <- which(is.na(taxtable[,"Kingdom"]))
+  taxtable[vd,"Kingdom"] <- paste(row.names(taxtable)[vd], "unclassified")
+
   if (taxa == "Species") {
-    vn <- which(taxtable[,"Species"] != "")
+    vn <- which(apply(taxtable,1, function(x) !(is.na(x["Species"]) | x["Species"] %in% uncnames | grepl(paste0("^",x['Genus']), x["Species"]))))
     if (length(vn) > 0) {
       taxtable[vn,"Species"] <- paste(taxtable[vn,"Genus"],taxtable[vn,"Species"] )
     }
   }
+
   tt <- which(colnames(taxtable) == taxa)
   taxtable <- taxtable[,1:tt]
-  v <- apply(taxtable, 1, function(x) { y <- suppressWarnings(min(which(x == "")));  }  )
-  w <- which(v == "Inf")
-  v <- v - 1
-  v[w] <- ncol(taxtable)
-  sn <- sapply(1:length(v), function(x) { y <- v[x];  ifelse(y %in% c(1,tt), taxtable[x,y], paste(taxtable[x,y], colnames(taxtable)[y]))  } )
+
+  sname <- function(x) {
+    ## SILVA
+    y <- suppressWarnings(min(which(x %in% uncnames)))
+    if (y != "Inf"){
+      return(paste(x[y-1], colnames(taxtable)[y-1], x[y]))
+    }
+
+    y <- suppressWarnings(min(which(is.na(x))))
+    if (y == "Inf") {
+      return(paste(x[length(x)]))
+    }
+
+    if ( y == 2 ) {
+      return(paste(x[1]))
+    }
+
+    return(paste(x[y-1], colnames(taxtable)[y-1]))
+
+  }
+
+  sn <- apply(taxtable, 1, sname )
   return(sn)
 }
 
@@ -68,8 +96,9 @@ highertax <- function(amp, taxlevel=NULL) {
     return(amp)
   }
   tc <- which(colnames(tax) == taxlevel)
+  sn <- shortnames(tax, taxa=taxlevel)
   tax <- tax[,1:tc]
-  tax$sn <- shortnames(tax, taxa=taxlevel)
+  tax$sn <- sn
   tax <- tax[,c(tc+1,1:tc)]
   taxcols <- colnames(tax)
   otucols <- colnames(otu)

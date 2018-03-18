@@ -94,10 +94,7 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 
     colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
-    ## greengenes
-    tax <- apply(tax, 2, function(x) { v <- grep("_unclassified$", x); x[v] <- NA; x })
-    tax <- apply(tax, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
-    tax[which(tax %in% c("", "none"))] <- NA
+
     cmnd <- 'otu <- cbind(otu, tax)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
@@ -285,13 +282,14 @@ morphheatmap <- function(mapfile, datafile, outdir, amp, sampdepth = NULL, raref
       amptax <- amp
     }
 
-    amptax <- filterlowabund(amptax, level = filter_level)
-    sntax <- ifelse(tl == "seq", "Species", tl)
-    sn <- shortnames(amptax$tax, taxa = sntax)
-    sn <- paste(amptax$tax$OTU, sn)
 
-    mm <- max(amptax$abund)
-    values <-  expm1(seq(log1p(0), log1p(mm), length.out = 100))
+    ## row and column names for matrix
+    if (tl == "seq") {
+      sn <- shortnames(amptax$tax, taxa = "Species")
+      sn <- paste(amptax$tax$OTU, sn)
+    } else {
+      sn <- amptax$tax$sn
+    }
     mat <- amptax$abund
     row.names(mat) <- sn
     mat <- mat[,amptax$metadata$SampleID]
