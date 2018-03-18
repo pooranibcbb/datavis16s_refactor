@@ -7,8 +7,8 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-adivboxplot(mapfile, datafile, outdir, amp, sampdepth = NULL, colors = NULL,
-  ...)
+adivboxplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+  colors = NULL, ...)
 }
 \arguments{
 \item{mapfile}{full path to map file}

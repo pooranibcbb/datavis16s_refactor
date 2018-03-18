@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-rarefactioncurve(mapfile, datafile, outdir, amp, colors = NULL, ...)
+rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
 }
 \arguments{
 \item{mapfile}{full path mapping file}

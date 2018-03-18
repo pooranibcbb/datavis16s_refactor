@@ -46,13 +46,14 @@ body {
 <li><a href="#highertax"><code>highertax</code></a></li>
 <li><a href="#logoutput"><code>logoutput</code></a></li>
 <li><a href="#plotlygrid"><code>plotlyGrid</code></a></li>
+<li><a href="#print_ampvis2"><code>print_ampvis2</code></a></li>
 <li><a href="#save_fillhtml"><code>save_fillhtml</code></a></li>
 <li><a href="#shortnames"><code>shortnames</code></a></li>
 <li><a href="#subsetamp"><code>subsetamp</code></a></li>
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 15, 2018</p>
+<p>March 18, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
@@ -76,15 +77,16 @@ Imports:
   morpheus,
   plotly,
   RColorBrewer,
-  vegan</code></pre>
+  vegan
+URL: https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s</code></pre>
 <h1 id="exported">Exported</h1>
 <h2 id="adivboxplot"><code>adivboxplot</code></h2>
 <p>Alpha diversity boxplot</p>
 <h3 id="description-1">Description</h3>
 <p>Plots exploding boxplot of shannon diversity and Chao species richness. If sampling depth is NULL, rarefies OTU table to the minimum readcount of any sample. If this is low, then the plot will fail.</p>
 <h3 id="usage">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adivboxplot</span>(mapfile, datafile, outdir, amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">colors =</span> <span class="ot">NULL</span>,
-  ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adivboxplot</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
+  <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments">Arguments</h3>
 <table>
 <thead>
@@ -174,8 +176,9 @@ Imports:
 <h3 id="description-3">Description</h3>
 <p>Creates heatmaps using Morpheus R API <a href="https://software.broadinstitute.org/morpheus/" class="uri">https://software.broadinstitute.org/morpheus/</a> . The heatmaps are made using relative abundances.</p>
 <h3 id="usage-2">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(mapfile, datafile, outdir, amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
-  <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, <span class="dt">filter_level =</span> <span class="fl">0.1</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;seq&quot;</span>), ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
+  <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, <span class="dt">filter_level =</span> <span class="fl">0.1</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;seq&quot;</span>),
+  <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-2">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -222,6 +225,10 @@ Imports:
 <td>vector of taxonomic levels to graph. must be subset of c(&quot;Kingdom&quot;, &quot;Phylum&quot;, &quot;Class&quot;, &quot;Order&quot;, &quot;Family&quot;, &quot;Genus&quot;, &quot;Species&quot;, &quot;seq&quot;). See Details.</td>
 </tr>
 <tr class="odd">
+<td><code>colors</code></td>
+<td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
+</tr>
+<tr class="even">
 <td><code>...</code></td>
 <td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
 </tr>
@@ -243,7 +250,7 @@ Imports:
 <h3 id="description-4">Description</h3>
 <p>PCoA plots</p>
 <h3 id="usage-3">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(mapfile, datafile, outdir, amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
   <span class="dt">distm =</span> <span class="st">&quot;binomial&quot;</span>, <span class="dt">filter_species =</span> <span class="fl">0.1</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>,
   <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-3">Arguments</h3>
@@ -310,7 +317,7 @@ Imports:
 <h3 id="description-5">Description</h3>
 <p>Make rarefaction curve graph</p>
 <h3 id="usage-4">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rarefactioncurve</span>(mapfile, datafile, outdir, amp, <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rarefactioncurve</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-4">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -662,14 +669,41 @@ Imports:
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
+<h2 id="print_ampvis2"><code>print_ampvis2</code></h2>
+<p>Print ampvis2 object summary</p>
+<h3 id="description-13">Description</h3>
+<p>Print ampvis2 object summary</p>
+<h3 id="usage-12">Usage</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print_ampvis2</span>(data)</code></pre></div>
+<h3 id="arguments-12">Arguments</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data</code></td>
+<td>ampvis2 object</td>
+</tr>
+</tbody>
+</table>
+<h3 id="value-11">Value</h3>
+<p>Prints summary stats about ampvis2 object</p>
+<h3 id="note">Note</h3>
+<p>This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.</p>
+<h3 id="source-12">Source</h3>
+<p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="save_fillhtml"><code>save_fillhtml</code></h2>
 <p>Save an HTML object to a file</p>
-<h3 id="description-13">Description</h3>
+<h3 id="description-14">Description</h3>
 <p>Save an HTML object to a file</p>
-<h3 id="usage-12">Usage</h3>
+<h3 id="usage-13">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_fillhtml</span>(html, file, <span class="dt">background =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>,
   <span class="dt">bodystyle =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
-<h3 id="arguments-12">Arguments</h3>
+<h3 id="arguments-13">Arguments</h3>
 <table>
 <thead>
 <tr class="header">
@@ -700,17 +734,17 @@ Imports:
 </tr>
 </tbody>
 </table>
-<h3 id="value-11">Value</h3>
+<h3 id="value-12">Value</h3>
 <p>save html to file</p>
-<h3 id="source-12">Source</h3>
+<h3 id="source-13">Source</h3>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <h2 id="shortnames"><code>shortnames</code></h2>
 <p>shortnames for taxonomy</p>
-<h3 id="description-14">Description</h3>
+<h3 id="description-15">Description</h3>
 <p>shortnames for taxonomy</p>
-<h3 id="usage-13">Usage</h3>
+<h3 id="usage-14">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shortnames</span>(taxtable, <span class="dt">taxa =</span> <span class="st">&quot;Species&quot;</span>)</code></pre></div>
-<h3 id="arguments-13">Arguments</h3>
+<h3 id="arguments-14">Arguments</h3>
 <table>
 <thead>
 <tr class="header">
@@ -729,17 +763,17 @@ Imports:
 </tr>
 </tbody>
 </table>
-<h3 id="value-12">Value</h3>
+<h3 id="value-13">Value</h3>
 <p>Vector of shortened names for each seqvar/otu.</p>
-<h3 id="source-13">Source</h3>
+<h3 id="source-14">Source</h3>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="subsetamp"><code>subsetamp</code></h2>
 <p>Subset and rarefy OTU table.</p>
-<h3 id="description-15">Description</h3>
+<h3 id="description-16">Description</h3>
 <p>Subset and/or rarefy OTU table.</p>
-<h3 id="usage-14">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, sampdepth, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
-<h3 id="arguments-14">Arguments</h3>
+<h3 id="usage-15">Usage</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
+<h3 id="arguments-15">Arguments</h3>
 <table>
 <thead>
 <tr class="header">
@@ -768,9 +802,9 @@ Imports:
 </table>
 <h3 id="details-2">Details</h3>
 <p><code>sampdepth</code> will be used to filter out samples with fewer than this number of reads. If rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function rrarefy.</p>
-<h3 id="value-13">Value</h3>
+<h3 id="value-14">Value</h3>
 <p>ampvis2 object</p>
-<h3 id="source-14">Source</h3>
+<h3 id="source-15">Source</h3>
 <p><a href="../R/graphs.R">graphs.R</a></p>
 
 </body>
