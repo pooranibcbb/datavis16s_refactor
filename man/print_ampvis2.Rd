@@ -16,9 +16,6 @@ print_ampvis2(data)
 Prints summary stats about ampvis2 object
 }
 \description{
-Print ampvis2 object summary
-}
-\note{
 This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
 ':::' internal calling of function in package.
 }

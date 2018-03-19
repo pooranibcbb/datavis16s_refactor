@@ -174,8 +174,8 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp = NULL, colors=NULL,
 #' @param outdir  full path to output directory
 #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth  sampling depth
-#' @param distm  distance measure for PCoA.  any that are supported by \link[ampvis2]{amp_ordinate}
-#' except for unifrac, wunifrac, and none.
+#' @param distm  distance measure for PCoA.  any that are supported by
+#' \href{https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html}{amp_ordinate} except for unifrac, wunifrac, and none.
 #' @param filter_species Remove low abundant OTU's across all samples below this threshold in percent.
 #' Setting this to 0 may drastically increase computation time.
 #' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.

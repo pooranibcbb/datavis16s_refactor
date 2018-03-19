@@ -22,8 +22,8 @@ pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 
 \item{sampdepth}{sampling depth}
 
-\item{distm}{distance measure for PCoA.  any that are supported by \link[ampvis2]{amp_ordinate}
-except for unifrac, wunifrac, and none.}
+\item{distm}{distance measure for PCoA.  any that are supported by
+\href{https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html}{amp_ordinate} except for unifrac, wunifrac, and none.}
 
 \item{filter_species}{Remove low abundant OTU's across all samples below this threshold in percent.
 Setting this to 0 may drastically increase computation time.}
