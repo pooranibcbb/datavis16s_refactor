@@ -2,7 +2,8 @@
 
 ### Dependencies
 
-- For the Nephele AMI, OS package libxml2-dev is needed.
+- For the Nephele AMI, debian package libxml2-dev is needed.
+- Requires [rpy2](https://rpy2.bitbucket.io) to use with python.
 
 - To install all R dependencies, run the commands in [dependencies.R](scripts/dependencies.R).  You may need to change the path to the datavis16s directory.
 
