@@ -21,7 +21,7 @@ allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 \item{...}{other parameters to pass to \link{readindata}}
 }
 \value{
-graphs are saved to outdir
+graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
 }
 \description{
 Make all 4 types of graphs
