@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 18, 2018
+March 19, 2018
 
 DESCRIPTION
 ===========
@@ -280,7 +280,7 @@ pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 </tr>
 <tr class="even">
 <td><code>distm</code></td>
-<td>distance measure for PCoA. any that are supported by <a href="#ampordinate">amp_ordinate</a> except for unifrac, wunifrac, and none.</td>
+<td>distance measure for PCoA. any that are supported by <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html">amp_ordinate</a> except for unifrac, wunifrac, and none.</td>
 </tr>
 <tr class="odd">
 <td><code>filter_species</code></td>
@@ -731,7 +731,7 @@ Print ampvis2 object summary
 
 ### Description
 
-Print ampvis2 object summary
+This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
 
 ### Usage
 
@@ -748,10 +748,6 @@ print_ampvis2(data)
 ### Value
 
 Prints summary stats about ampvis2 object
-
-### Note
-
-This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
 
 ### Source
 

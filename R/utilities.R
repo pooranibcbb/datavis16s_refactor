@@ -156,7 +156,7 @@ filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
-#' @note This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
+#' @description  This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
 #' ':::' internal calling of function in package.
 #'
 print_ampvis2 <- function(data) {
