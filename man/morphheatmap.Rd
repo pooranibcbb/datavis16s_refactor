@@ -8,8 +8,8 @@
 }
 \usage{
 morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"),
-  colors = NULL, ...)
+  rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
+  ...)
 }
 \arguments{
 \item{mapfile}{full path to mapping file}

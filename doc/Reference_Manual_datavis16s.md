@@ -31,7 +31,7 @@ DESCRIPTION
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
-    Date: 2018-03-19 00:05:36 UTC
+    Date: 2018-03-19 18:41:11 UTC
     Authors@R: 
         person(given = "Poorani",
                family = "Subramanian",
@@ -145,8 +145,8 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 
 ``` r
 morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0.1, taxlevel = c("seq"),
-  colors = NULL, ...)
+  rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
+  ...)
 ```
 
 ### Arguments

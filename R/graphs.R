@@ -251,7 +251,7 @@ pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0.1, taxlevel=c("seq"), colors = NULL, ...) {
+morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -445,7 +445,7 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 
   ## Heatmap
   logoutput('Relative abundance heatmaps', 1)
-  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, taxlevel = c("Family", "seq"), colors=allcols, filter_level=0)'
+  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols)'
   logoutput(cmnd)
   try(eval(parse(text=cmnd)))
 
