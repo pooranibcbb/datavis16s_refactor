@@ -119,7 +119,7 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 #' Make rarefaction curve graph
 #'
 #' @param mapfile  full path mapping file
-#' @param datafile ffull path to input OTU file (biom or see \link{readindata})
+#' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir full path to output directory
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
@@ -415,7 +415,7 @@ adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, c
 #' @param sampdepth  sampling depth
 #' @param ... other parameters to pass to \link{readindata}
 #'
-#' @return graphs are saved to outdir
+#' @return graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'

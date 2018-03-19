@@ -126,7 +126,7 @@ allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 
 ### Value
 
-graphs are saved to outdir
+graphs are saved to outdir. See [user doc](../doc/user_doc.md).
 
 ### Source
 
@@ -344,7 +344,7 @@ rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
 </tr>
 <tr class="even">
 <td><code>datafile</code></td>
-<td>ffull path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
 <tr class="odd">
 <td><code>outdir</code></td>
