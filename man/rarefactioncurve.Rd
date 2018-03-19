@@ -12,7 +12,7 @@ rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
 \arguments{
 \item{mapfile}{full path mapping file}
 
-\item{datafile}{ffull path to input OTU file (biom or see \link{readindata})}
+\item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{full path to output directory}
 

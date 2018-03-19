@@ -1,5 +1,7 @@
 # datavis16s
 
+R package for graphs for Nephele 16S pipelines.
+
 ### Dependencies
 
 - For the Nephele AMI, debian package libxml2-dev is needed.
