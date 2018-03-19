@@ -49,14 +49,15 @@ alphadiv <- amp_alphadiv(amp, measure = "shannon", richness = TRUE, rarefy = sam
 
 ### Heatmap
 
-The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R) developed at the Broad Institute. A [tutorial](https://software.broadinstitute.org/morpheus/tutorial.html) for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/).
+The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R) developed at the Broad Institute. [Documentation](https://software.broadinstitute.org/morpheus/documentation.html) for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/).
 
-The OTU table is first normalized to represent the relative abundances using amp\_subset\_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmaps are made from the raw OTU table (*seq\_heatmap.html*) and also at the family level (*Family\_heatmap.html*).
+The OTU table is first normalized to represent the relative abundances using amp\_subset\_samples before the heatmap is made with morpheus. In order for the heatmap to be generated, the OTU table must be at least 2x2. The heatmap is made from the raw OTU table (*seq\_heatmap.html*).
 
 ``` r
-amp <- amp_subset_samples(amp, normalise = TRUE)
-heatmap <- morpheus(amptax$abund, colorScheme = list(scalingMode = "fixed", values = values, 
-    colors = colors, stepped = FALSE), columnAnnotations = amptax$metadata[, tg:desc])
+amptax <- amp_subset_samples(amp, normalise = TRUE)
+heatmap <- morpheus(amp$abund, columns = columns, columnAnnotations = amptax$metadata, 
+    columnColorModel = list(type = as.list(colors)), colorScheme = list(scalingMode = "fixed", 
+        stepped = FALSE), rowAnnotations = amptax$tax, rows = rows)
 ```
 
 Tools and References
