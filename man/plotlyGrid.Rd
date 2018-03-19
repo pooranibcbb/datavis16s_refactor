@@ -7,10 +7,6 @@
 \title{Add Plotly data export to Plotly graph}
 \source{
 [plotlyGrid.R](../R/plotlyGrid.R)
-
-[plotlyGrid.R](../R/plotlyGrid.R)
-
-[plotlyGrid.R](../R/plotlyGrid.R)
 }
 \usage{
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
