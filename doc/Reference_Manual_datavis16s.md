@@ -31,27 +31,34 @@ DESCRIPTION
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
-    Authors@R: person("Poorani", "Subramanian", email = "poorani.subramanian@nih.gov", role = c("aut", "cre"))
+    Date: 2018-03-19 00:05:36 UTC
+    Authors@R: 
+        person(given = "Poorani",
+               family = "Subramanian",
+               role = c("aut", "cre"),
+               email = "poorani.subramanian@nih.gov")
     Description: betterbetterplots!
-    Depends: R (>= 3.4.1)
     License: none
+    URL: 
+        https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
+    Depends: 
+        R (>= 3.4.1)
+    Imports: 
+        ampvis2,
+        biomformat,
+        bpexploder,
+        data.table,
+        ggplot2,
+        htmltools,
+        htmlwidgets,
+        jsonlite,
+        morpheus,
+        plotly,
+        RColorBrewer,
+        vegan
     Encoding: UTF-8
     LazyData: true
     RoxygenNote: 6.0.1
-    Imports:
-      ampvis2,
-      biomformat,
-      bpexploder,
-      data.table,
-      ggplot2,
-      htmltools,
-      htmlwidgets,
-      jsonlite,
-      morpheus,
-      plotly,
-      RColorBrewer,
-      vegan
-    URL: https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
 
 Exported
 ========
@@ -714,10 +721,6 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
 
 ### Source
-
-[plotlyGrid.R](../R/plotlyGrid.R)
-
-[plotlyGrid.R](../R/plotlyGrid.R)
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 

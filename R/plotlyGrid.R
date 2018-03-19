@@ -63,7 +63,6 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 #'
 #' @importFrom htmlwidgets prependContent saveWidget
 #'
-#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #' @rdname plotlyGrid
 #'
 nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib="lib") {
@@ -99,7 +98,6 @@ nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib
 #'
 #' @importFrom htmltools tagList tags
 #'
-#' @source [plotlyGrid.R](../R/plotlyGrid.R)
 #' @rdname plotlyGrid
 #'
 htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib") {
