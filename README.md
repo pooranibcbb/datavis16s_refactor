@@ -31,7 +31,7 @@ R package for graphs for Nephele 16S pipelines.
   - The sampling depth argument, `sampdepth`, is optional for all functions.  
   - If specified, it is used to remove samples with read counts below `sampdepth`.  
   - For functions with `rarefy` argument, setting to TRUE will rarefy the OTU table to `sampdepth` reads.   
-  - The alpha diversity boxplot requires a value to rarefy the OTU table.  If you do not specify `sampdepth`, it will use the number of reads from the smallest sample.
+  - The alpha diversity boxplot will set a default value to rarefy the OTU table, and allgraphs sets default value to rarefy and remove low abundant samples.  See details section of [`adivboxplot`](doc/Reference_Manual_datavis16s.md#adivboxplot) and [`allgraphs`](doc/Reference_Manual_datavis16s.md#allgraphs) help.  All other functions will not remove samples or rarefy unless `sampdepth` is specified.
 
 <sub><sup><a name="fn1">1</a></sup>Can optionally pass tab-delimited text file to each of the functions instead of the biom file.  See [`readindata`](doc/Reference_Manual_datavis16s.md#readindata) for more details.</sub>
 

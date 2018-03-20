@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-allgraphs(mapfile, datafile, outdir, sampdepth = 10000, ...)
+allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 }
 \arguments{
 \item{mapfile}{full path to map file}
@@ -16,7 +16,7 @@ allgraphs(mapfile, datafile, outdir, sampdepth = 10000, ...)
 
 \item{outdir}{full path to output directory}
 
-\item{sampdepth}{sampling depth}
+\item{sampdepth}{sampling depth.  see details.}
 
 \item{...}{other parameters to pass to \link{readindata}}
 }
@@ -25,4 +25,10 @@ graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
 }
 \description{
 Make all 4 types of graphs
+}
+\details{
+If sampdepth is NULL, then the sampling depth is set to the size of the
+smallest sample larger than 0.2*median sample size.  Otherwise, it is set to the
+size of the smallest sample larger than sampdepth.  This value is used for the alpha diversity
+and PCoA plots.
 }

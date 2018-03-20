@@ -19,7 +19,7 @@ adivboxplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 
 \item{amp}{ampvis2 object. may be specified instead of mapfile and datafile}
 
-\item{sampdepth}{sampling depth}
+\item{sampdepth}{sampling depth.  see details.}
 
 \item{colors}{colors to use for plots}
 
@@ -31,4 +31,8 @@ Save alpha diversity boxplots to outdir.
 \description{
 Plots exploding boxplot of shannon diversity and Chao species richness.  If sampling depth is NULL,
 rarefies OTU table to the minimum readcount of any sample.  If this is low, then the plot will fail.
+}
+\details{
+If \code{sampdepth} is NULL, the sampling depth is set to the size of the smallest
+sample.
 }

@@ -31,7 +31,7 @@ DESCRIPTION
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
-    Date: 2018-03-20 19:34:34 UTC
+    Date: 2018-03-20 22:26:33 UTC
     Authors@R: 
         person(given = "Poorani",
                family = "Subramanian",
@@ -87,9 +87,13 @@ adivboxplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 | `datafile`  | full path to input OTU file                                      |
 | `outdir`    | full path to output directory                                    |
 | `amp`       | ampvis2 object. may be specified instead of mapfile and datafile |
-| `sampdepth` | sampling depth                                                   |
+| `sampdepth` | sampling depth. see details.                                     |
 | `colors`    | colors to use for plots                                          |
 | `...`       | other parameters to pass to [readindata](#readindata)            |
+
+### Details
+
+If `sampdepth` is NULL, the sampling depth is set to the size of the smallest sample.
 
 ### Value
 
@@ -111,7 +115,7 @@ Make all 4 types of graphs
 ### Usage
 
 ``` r
-allgraphs(mapfile, datafile, outdir, sampdepth = 10000, ...)
+allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 ```
 
 ### Arguments
@@ -121,8 +125,12 @@ allgraphs(mapfile, datafile, outdir, sampdepth = 10000, ...)
 | `mapfile`   | full path to map file                                                |
 | `datafile`  | full path to input OTU file (biom or see [readindata](#readindata) ) |
 | `outdir`    | full path to output directory                                        |
-| `sampdepth` | sampling depth                                                       |
+| `sampdepth` | sampling depth. see details.                                         |
 | `...`       | other parameters to pass to [readindata](#readindata)                |
+
+### Details
+
+If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2\*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth. This value is used for the alpha diversity and PCoA plots.
 
 ### Value
 
@@ -862,7 +870,7 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = 0, rarefy = FALSE, ...)
 ```
 
 ### Arguments

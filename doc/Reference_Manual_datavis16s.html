@@ -58,7 +58,7 @@ body {
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.0
-Date: 2018-03-20 19:34:34 UTC
+Date: 2018-03-20 22:26:33 UTC
 Authors@R: 
     person(given = &quot;Poorani&quot;,
            family = &quot;Subramanian&quot;,
@@ -121,7 +121,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 <tr class="odd">
 <td><code>sampdepth</code></td>
-<td>sampling depth</td>
+<td>sampling depth. see details.</td>
 </tr>
 <tr class="even">
 <td><code>colors</code></td>
@@ -133,6 +133,8 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 </tbody>
 </table>
+<h3 id="details">Details</h3>
+<p>If <code>sampdepth</code> is NULL, the sampling depth is set to the size of the smallest sample.</p>
 <h3 id="value">Value</h3>
 <p>Save alpha diversity boxplots to outdir.</p>
 <h3 id="source">Source</h3>
@@ -142,7 +144,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-2">Description</h3>
 <p>Make all 4 types of graphs</p>
 <h3 id="usage-1">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allgraphs</span>(mapfile, datafile, outdir, <span class="dt">sampdepth =</span> <span class="dv">10000</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allgraphs</span>(mapfile, datafile, outdir, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-1">Arguments</h3>
 <table>
 <thead>
@@ -166,7 +168,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 <tr class="even">
 <td><code>sampdepth</code></td>
-<td>sampling depth</td>
+<td>sampling depth. see details.</td>
 </tr>
 <tr class="odd">
 <td><code>...</code></td>
@@ -174,6 +176,8 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 </tbody>
 </table>
+<h3 id="details-1">Details</h3>
+<p>If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth. This value is used for the alpha diversity and PCoA plots.</p>
 <h3 id="value-1">Value</h3>
 <p>graphs are saved to outdir. See <a href="../doc/user_doc.md">user doc</a>.</p>
 <h3 id="source-1">Source</h3>
@@ -241,7 +245,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 </tbody>
 </table>
-<h3 id="details">Details</h3>
+<h3 id="details-2">Details</h3>
 <p>For the <code>taxlevel</code> parameter, each level is made into a separate heatmap. &quot;seq&quot; makes the heatmap with no collapsing of taxonomic levels.</p>
 <h3 id="value-2">Value</h3>
 <p>Saves heatmaps to outdir.</p>
@@ -405,7 +409,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 </tbody>
 </table>
-<h3 id="details-1">Details</h3>
+<h3 id="details-3">Details</h3>
 <p>datafile may be either biom file or text file. If text file, it should have ampvis2 OTU table format <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_load.html#the-otu-table" class="uri">https://madsalbertsen.github.io/ampvis2/reference/amp_load.html#the-otu-table</a> . If the number of reads is less than mincount, the function will give an error, as we cannot make graphs with so few counts.</p>
 <h3 id="value-5">Value</h3>
 <p>ampvis2 object</p>
@@ -779,7 +783,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-16">Description</h3>
 <p>Subset and/or rarefy OTU table.</p>
 <h3 id="usage-15">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, <span class="dt">sampdepth =</span> <span class="dv">0</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
 <h3 id="arguments-15">Arguments</h3>
 <table>
 <thead>
@@ -807,7 +811,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 </tbody>
 </table>
-<h3 id="details-2">Details</h3>
+<h3 id="details-4">Details</h3>
 <p><code>sampdepth</code> will be used to filter out samples with fewer than this number of reads. If rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function rrarefy.</p>
 <h3 id="value-14">Value</h3>
 <p>ampvis2 object</p>
