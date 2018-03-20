@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 19, 2018
+March 20, 2018
 
 DESCRIPTION
 ===========
@@ -31,7 +31,7 @@ DESCRIPTION
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
-    Date: 2018-03-19 18:41:11 UTC
+    Date: 2018-03-20 19:34:34 UTC
     Authors@R: 
         person(given = "Poorani",
                family = "Subramanian",
@@ -111,7 +111,7 @@ Make all 4 types of graphs
 ### Usage
 
 ``` r
-allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
+allgraphs(mapfile, datafile, outdir, sampdepth = 10000, ...)
 ```
 
 ### Arguments
@@ -451,15 +451,48 @@ trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
 
 ### Arguments
 
-| Argument      | Description                                                          |
-|---------------|----------------------------------------------------------------------|
-| `mapfile`     | full path to map file                                                |
-| `datafile`    | full path to input OTU file (biom or see [readindata](#readindata) ) |
-| `outdir`      | output directory for graphs                                          |
-| `FUN`         | function you would like to run                                       |
-| `logfilename` | logfilename                                                          |
-| `info`        | print sessionInfo to logfile                                         |
-| `...`         | parameters needed to pass to FUN                                     |
+<table style="width:43%;">
+<colgroup>
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
+</tr>
+<tr class="odd">
+<td><code>outdir</code></td>
+<td>output directory for graphs</td>
+</tr>
+<tr class="even">
+<td><code>FUN</code></td>
+<td>character string. name of function you would like to run. can be actual function object if run from R</td>
+</tr>
+<tr class="odd">
+<td><code>logfilename</code></td>
+<td>logfilename</td>
+</tr>
+<tr class="even">
+<td><code>info</code></td>
+<td>print sessionInfo to logfile</td>
+</tr>
+<tr class="odd">
+<td><code>...</code></td>
+<td>parameters needed to pass to FUN</td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -472,15 +505,15 @@ Returns 0 if FUN succeeds and 1 if it returns an error.
 
 # example with no optional arguments for running allgraphs
 trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/out.biom", "/path/to/outputs/", 
-    allgraphs)
+    "allgraphs")
 
 # example with optional argument sampdepth
 trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/out.biom", "/path/to/outputs/", 
-    allgraphs, sampdepth = 30000)
+    "allgraphs", sampdepth = 30000)
 
 # example of making heatmap with optional arguments
 trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", 
-    "/path/to/outputs", morphheatmap, sampdepth = 30000, filter_level = 0.01, taxlevel = c("Family", 
+    "/path/to/outputs", "morphheatmap", sampdepth = 30000, filter_level = 0.01, taxlevel = c("Family", 
         "seq"))
 ## End(Not run)
 ```

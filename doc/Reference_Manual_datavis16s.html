@@ -53,12 +53,12 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 19, 2018</p>
+<p>March 20, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.0
-Date: 2018-03-19 18:41:11 UTC
+Date: 2018-03-20 19:34:34 UTC
 Authors@R: 
     person(given = &quot;Poorani&quot;,
            family = &quot;Subramanian&quot;,
@@ -142,7 +142,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-2">Description</h3>
 <p>Make all 4 types of graphs</p>
 <h3 id="usage-1">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allgraphs</span>(mapfile, datafile, outdir, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allgraphs</span>(mapfile, datafile, outdir, <span class="dt">sampdepth =</span> <span class="dv">10000</span>, ...)</code></pre></div>
 <h3 id="arguments-1">Arguments</h3>
 <table>
 <thead>
@@ -419,7 +419,11 @@ RoxygenNote: 6.0.1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">trygraphwrapper</span>(mapfile, datafile, outdir, FUN, <span class="dt">logfilename =</span> <span class="st">&quot;logfile.txt&quot;</span>,
   <span class="dt">info =</span> <span class="ot">TRUE</span>, ...)</code></pre></div>
 <h3 id="arguments-6">Arguments</h3>
-<table>
+<table style="width:43%;">
+<colgroup>
+<col width="19%"></col>
+<col width="23%"></col>
+</colgroup>
 <thead>
 <tr class="header">
 <th>Argument</th>
@@ -441,7 +445,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 <tr class="even">
 <td><code>FUN</code></td>
-<td>function you would like to run</td>
+<td>character string. name of function you would like to run. can be actual function object if run from R</td>
 </tr>
 <tr class="odd">
 <td><code>logfilename</code></td>
@@ -464,15 +468,15 @@ RoxygenNote: 6.0.1</code></pre>
 
 <span class="co"># example with no optional arguments for running allgraphs</span>
 <span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, 
-    allgraphs)
+    <span class="st">&quot;allgraphs&quot;</span>)
 
 <span class="co"># example with optional argument sampdepth</span>
 <span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, 
-    allgraphs, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
+    <span class="st">&quot;allgraphs&quot;</span>, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
 
 <span class="co"># example of making heatmap with optional arguments</span>
 <span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/taxa_species.biom&quot;</span>, 
-    <span class="st">&quot;/path/to/outputs&quot;</span>, morphheatmap, <span class="dt">sampdepth =</span> <span class="dv">30000</span>, <span class="dt">filter_level =</span> <span class="fl">0.01</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, 
+    <span class="st">&quot;/path/to/outputs&quot;</span>, <span class="st">&quot;morphheatmap&quot;</span>, <span class="dt">sampdepth =</span> <span class="dv">30000</span>, <span class="dt">filter_level =</span> <span class="fl">0.01</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, 
         <span class="st">&quot;seq&quot;</span>))
 ## End(Not run)</code></pre></div>
 <h3 id="source-6">Source</h3>

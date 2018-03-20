@@ -200,21 +200,21 @@ pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, dist
     eval(parse(text=cmnd))
   }
 
-    on.exit(graphics.off())
+  on.exit(graphics.off())
 
-    cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", sample_colorframe = TRUE, detailed_output = TRUE, transform="none")')
+  cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", sample_colorframe = TRUE, detailed_output = TRUE, transform="none")')
 
-    logoutput(cmnd)
-    eval(parse(text = cmnd))
-    if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
+  logoutput(cmnd)
+  eval(parse(text = cmnd))
+  if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
-    outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
-    plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
-    tabletsv <- gsub('.html$', '.txt', outfile)
-    logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
-    write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
+  outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
+  plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
+  tabletsv <- gsub('.html$', '.txt', outfile)
+  logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
+  write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
 
-  }
+}
 
 
 #' Morpheus heatmap
@@ -325,8 +325,7 @@ morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL
     heatmap$height = '90%'
     tt <- tags$div(heatmap, style = "position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
     save_fillhtml(tt, file = outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
-
-    write.tab.table(amptax$abund, file.path(outdir, "heatmap.txt"))
+    write.tab.table(amptax$abund, file.path(outdir, "heatmap.txt"), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
   }
 
   for (t in taxlevel) {
@@ -421,7 +420,7 @@ adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, c
 #'
 #' @export
 #'
-allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
+allgraphs <- function(mapfile, datafile, outdir, sampdepth = 10000, ...) {
   amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
 
   ## Choose colors
@@ -456,10 +455,11 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
   ampsub <- subsetamp(amp, sampdepth=sampdepth)
 
   if (nrow(ampsub$metadata) < 3) {
-    stop("At least 3 samples are needed in order to produce the remaining plots.")
+    logoutput("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.", 1)
+    return()
   }
 
- ## Alpha diversity
+  ## Alpha diversity
   logoutput('Alpha diversity boxplot', 1)
   cmnd <- 'adivboxplot(outdir = outdir, amp = ampsub, sampdepth = sampdepth,colors = allcols)'
   logoutput(cmnd)
@@ -492,7 +492,8 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' @param mapfile full path to map file
 #' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  output directory for graphs
-#' @param FUN function you would like to run
+#' @param FUN character string. name of function you would like to run. can be actual
+#' function object if run from R
 #' @param logfilename logfilename
 #' @param info print sessionInfo to logfile
 #' @param ...  parameters needed to pass to FUN
@@ -508,18 +509,22 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #'
 #' # example with no optional arguments for running allgraphs
 #' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-#'  "/path/to/outputs/", allgraphs)
+#'  "/path/to/outputs/", 'allgraphs')
 #'
 #' # example with optional argument sampdepth
 #' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-#' "/path/to/outputs/", allgraphs, sampdepth = 30000)
+#' "/path/to/outputs/", 'allgraphs', sampdepth = 30000)
 #'
 #' # example of making heatmap with optional arguments
-#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", morphheatmap, sampdepth = 30000, filter_level=0.01, taxlevel=c("Family", "seq"))
+#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", 'morphheatmap', sampdepth = 30000, filter_level=0.01, taxlevel=c("Family", "seq"))
 #' }
 #'
 #'
 trygraphwrapper <- function(mapfile, datafile, outdir, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
+
+  ## set error handling options here, since rpy2 does not allow setting globally
+  options(stringsAsFactors = FALSE, scipen = 999, warn=1)
+
   ## open log file
   logfile <- file(logfilename, open = "at")
   sink(file = logfile, type="output")

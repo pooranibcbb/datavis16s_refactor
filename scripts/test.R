@@ -1,8 +1,8 @@
-devtools::load_all()
+library(devtools)
 
 #amp <- readindata(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom")
 #sn <- datavis16s:::shortnames(amp$tax[1216:1220,])
-outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/SILVA"
+outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata"
 # tl <- "Family"
 # if (tl != "seq") {
 #   amptax <- highertax(amp, taxlevel=tl)
@@ -29,3 +29,4 @@ outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/SILVA
 
 # mp <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom", outdir = outdir)
 newmp <- trygraphwrapper(mapfile = "testdata/SILVA_mapfile.txt", datafile = "testdata/SILVA_OTU_table.biom", outdir = outdir, allgraphs, sampdepth=20000, logfilename = file.path(outdir, "logfile.txt"))
+
