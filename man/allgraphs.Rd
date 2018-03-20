@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
+allgraphs(mapfile, datafile, outdir, sampdepth = 10000, ...)
 }
 \arguments{
 \item{mapfile}{full path to map file}
