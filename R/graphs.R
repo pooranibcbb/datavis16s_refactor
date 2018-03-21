@@ -15,14 +15,15 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth = 0, rarefy=FALSE, ...) {
-  if (rarefy & sampdepth > 0) {
+subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
+  if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
     eval(parse(text=cmnd))
     amp$abund <- as.data.frame(t(otu))
   }
 
+  if (is.null(sampdepth)) sampdepth = 0
   cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth, ...)'
   logoutput(cmnd)
   eval(parse(text=cmnd))
@@ -47,6 +48,8 @@ subsetamp <- function(amp, sampdepth = 0, rarefy=FALSE, ...) {
 #' with so few counts.
 #'
 #' @source [graphs.R](../R/graphs.R)
+#'
+#' @importFrom utils read.delim
 #'
 #' @export
 #'
@@ -240,6 +243,7 @@ pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, dist
 #'  the heatmap with no collapsing of taxonomic levels.
 #'
 #' @importFrom morpheus morpheus
+#' @importFrom grDevices colorRampPalette
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
@@ -324,7 +328,7 @@ morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL
     heatmap$height = '90%'
     tt <- tags$div(heatmap, style = "position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
     save_fillhtml(tt, file = outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
-    write.tab.table(amptax$abund, file.path(outdir, "heatmap.txt"), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
+    write.table(amptax$abund, file.path(outdir, "heatmap.txt"), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
   }
 
   for (t in taxlevel) {
@@ -402,7 +406,7 @@ adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, c
     lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
   )
 
-  htmlGrid(tt, file = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
+  htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
 
 }
 
@@ -420,8 +424,12 @@ adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, c
 #'
 #' @details If sampdepth is NULL, then the sampling depth is set to the size of the
 #' smallest sample larger than 0.2*median sample size.  Otherwise, it is set to the
-#' size of the smallest sample larger than sampdepth.  This value is used for the alpha diversity
-#' and PCoA plots.
+#' size of the smallest sample larger than sampdepth.
+#'
+#' This value is used to remove samples before for alpha diversity and PCoA plots.
+#' Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
+#'
+#' @importFrom stats median
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
@@ -455,11 +463,6 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
   logoutput(cmnd)
   try(eval(parse(text=cmnd)))
 
-  if (nrow(ampsub$metadata) < 3) {
-    logoutput("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.", 1)
-    return()
-  }
-
   ## Filter out low count samples
   cs <- colSums(amp$abund)
   if (is.null(sampdepth)) {
@@ -469,8 +472,14 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
   sampdepth <- min(cs[cs >= sampdepth])
   logoutput(paste('Sampling depth:', sampdepth))
 
-  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots.'), 1)
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots.'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth)
+
+  if (nrow(ampsub$metadata) < 3) {
+    logoutput("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.", 1)
+    return()
+  }
+
 
   ## Alpha diversity
   logoutput('Alpha diversity boxplot', 1)
@@ -514,6 +523,8 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
+#' @importFrom utils capture.output sessionInfo
+#'
 #' @examples
 #'
 #' \dontrun{
@@ -527,13 +538,16 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' "/path/to/outputs/", 'allgraphs', sampdepth = 30000)
 #'
 #' # example of making heatmap with optional arguments
-#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", "/path/to/outputs", 'morphheatmap', sampdepth = 30000, filter_level=0.01, taxlevel=c("Family", "seq"))
+#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom",
+#' "/path/to/outputs", 'morphheatmap', sampdepth = 30000, filter_level=0.01,
+#' taxlevel=c("Family", "seq"))
 #' }
 #'
 #'
 trygraphwrapper <- function(mapfile, datafile, outdir, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
 
   ## set error handling options here, since rpy2 does not allow setting globally
+  ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
   options(stringsAsFactors = FALSE, scipen = 999, warn=1)
 
   ## open log file

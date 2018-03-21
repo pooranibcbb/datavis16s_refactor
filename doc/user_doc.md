@@ -27,7 +27,9 @@ rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 
 ### PCoA
 
-Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp\_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html). Samples which fall below the specified sampling depth are removed from the OTU table using [amp\_subset\_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed. The binomial distance is able to handle varying sample sizes. However, for the Bray-Curtis PCoA, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy) from the vegan R package. At least 3 samples are needed in the OTU table for the plot to be generated. The tables are written to *pcoa\_binomial.txt* and *pcoa\_bray.txt* and the plots to *pcoa\_binomial.html* and *pcoa\_bray.html*.
+Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp\_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html). Samples which fall below the specified sampling depth are removed from the OTU table using [amp\_subset\_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed.
+
+The binomial distance is able to handle varying sample sizes. However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy) from the vegan R package. At least 3 samples are needed in the OTU table for the plot to be generated. The tables are written to *pcoa\_binomial.txt* and *pcoa\_bray.txt* and the plots to *pcoa\_binomial.html* and *pcoa\_bray.html*.
 
 ``` r
 amp <- amp_subset_samples(amp, minreads = sampdepth)

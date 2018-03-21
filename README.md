@@ -25,13 +25,16 @@ R package for graphs for Nephele 16S pipelines.
 - **R**
   - You can use `readindata` to create an ampvis2 object, and pass that instead of the mapping file and biom file.
 
-- There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4.  See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
+- There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4 (used as [DADA2 pipeline](../DADA2) function).  See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
 
 - **Sampling depth**
   - The sampling depth argument, `sampdepth`, is optional for all functions.  
   - If specified, it is used to remove samples with read counts below `sampdepth`.  
-  - For functions with `rarefy` argument, setting to TRUE will rarefy the OTU table to `sampdepth` reads.   
-  - The alpha diversity boxplot will set a default value to rarefy the OTU table, and allgraphs sets default value to rarefy and remove low abundant samples.  See details section of [`adivboxplot`](doc/Reference_Manual_datavis16s.md#adivboxplot) and [`allgraphs`](doc/Reference_Manual_datavis16s.md#allgraphs) help.  All other functions will not remove samples or rarefy unless `sampdepth` is specified.
+  - For functions with `rarefy` argument, setting to TRUE will rarefy the OTU table to `sampdepth` reads. `adivboxplot` will use the smallest sample size to rarefy if `sampdepth` is not specified.
+  - For pipelines, the alpha diversity boxplot and the PCoA would benefit from having this sampling depth set properly.
+    - Conrad is working on [formula](http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-653).  
+    - Until then, see details section of  [`allgraphs`](doc/Reference_Manual_datavis16s.md#allgraphs) help for current pipeline default (similar to N1.0 default).
+    - All other functions will not remove samples or rarefy unless `sampdepth` is specified.
 
 <sub><sup><a name="fn1">1</a></sup>Can optionally pass tab-delimited text file to each of the functions instead of the biom file.  See [`readindata`](doc/Reference_Manual_datavis16s.md#readindata) for more details.</sub>
 

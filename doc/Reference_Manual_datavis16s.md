@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 20, 2018
+March 21, 2018
 
 DESCRIPTION
 ===========
@@ -130,7 +130,9 @@ allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
 
 ### Details
 
-If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2\*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth. This value is used for the alpha diversity and PCoA plots.
+If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2\*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth.
+
+This value is used to remove samples before for alpha diversity and PCoA plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
 
 ### Value
 
@@ -603,6 +605,10 @@ filtered ampvis2 object
 
 Format plotly grid code
 
+### Description
+
+Format data according to here: <https://plot.ly/export/>
+
 ### Usage
 
 ``` r
@@ -870,7 +876,7 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth = 0, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
 ```
 
 ### Arguments

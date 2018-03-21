@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-subsetamp(amp, sampdepth = 0, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
 }
 \arguments{
 \item{amp}{ampvis2 object}

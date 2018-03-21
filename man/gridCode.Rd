@@ -20,3 +20,6 @@ list of 3 values:
   \item{javascript}{js function for exporting data}
 }
 }
+\description{
+Format data according to here: \url{https://plot.ly/export/}
+}
