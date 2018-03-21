@@ -6,5 +6,7 @@
 #' @rdname datavis16s-package
 #'
 #' @import ampvis2
+#' @importFrom utils write.table
+#' @importFrom grDevices graphics.off
 #'
 NULL

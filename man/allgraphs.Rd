@@ -29,6 +29,8 @@ Make all 4 types of graphs
 \details{
 If sampdepth is NULL, then the sampling depth is set to the size of the
 smallest sample larger than 0.2*median sample size.  Otherwise, it is set to the
-size of the smallest sample larger than sampdepth.  This value is used for the alpha diversity
-and PCoA plots.
+size of the smallest sample larger than sampdepth.
+
+This value is used to remove samples before for alpha diversity and PCoA plots.
+Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
 }

@@ -79,7 +79,7 @@ shortnames <- function(taxtable, taxa="Species") {
 #'
 #' @return  ampvis2 object with otu table and taxa summed up to the taxlevel
 #'
-#' @importFrom data.table data.table
+#' @importFrom data.table data.table .SD
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
@@ -158,6 +158,8 @@ filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
 #'
 #' @description  This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
 #' ':::' internal calling of function in package.
+#'
+#' @importFrom stats median
 #'
 print_ampvis2 <- function(data) {
 

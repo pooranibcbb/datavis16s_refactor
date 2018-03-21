@@ -51,7 +51,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
   outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
   outlib <- file.path(dirname(outfile), basename(outlib))
   logoutput(paste("Saving plot to", outfile))
-  saveWidget(plotly::config(pp, cloud = T, editable = T), file=outfile , selfcontained = FALSE, title=title, lib=outlib)
+  saveWidget(plotly::config(pp, cloud = T, editable = T), file=outfile , selfcontained = FALSE, title=title, libdir=outlib)
 }
 
 #' @title Add Plotly data export to generic htmlwidget
@@ -87,7 +87,7 @@ nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib
 
 
   logoutput(paste("Saving plot to", outfile))
-  saveWidget(hw, file= outfile, selfcontained = selfcontained, title = title, lib=outlib)
+  saveWidget(hw, file= outfile, selfcontained = selfcontained, title = title, libdir=outlib)
 }
 
 #' @title Add Plotly data export to plain html
@@ -121,6 +121,8 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
 
 
 #' @title Format plotly grid code
+#'
+#' @description Format data according to here: \url{https://plot.ly/export/}
 #'
 #' @param data data to populate plotly grid
 #'

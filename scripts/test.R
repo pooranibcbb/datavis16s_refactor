@@ -28,5 +28,5 @@ outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata"
 #
 
 # mp <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom", outdir = outdir)
-newmp <- trygraphwrapper(mapfile = "testdata/SILVA_mapfile.txt", datafile = "testdata/SILVA_OTU_table.biom", outdir = outdir, allgraphs, sampdepth=20000, logfilename = file.path(outdir, "logfile.txt"))
+newmp <- trygraphwrapper(mapfile = "testdata/SILVA_mapfile.txt", datafile = "testdata/SILVA_OTU_table.biom", outdir = outdir, allgraphs, logfilename = file.path(outdir, "logfile.txt"))
 

@@ -33,7 +33,9 @@ rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 ```
 
 ### PCoA
-Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html).  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed.  The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis PCoA, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy) from the vegan R package.  At least 3 samples are needed in the OTU table for the plot to be generated.  The tables are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.
+Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html).  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed.  
+
+The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy) from the vegan R package.  At least 3 samples are needed in the OTU table for the plot to be generated.  The tables are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.
 ```{r}
 amp <- amp_subset_samples(amp, minreads = sampdepth)
 pcoa_binomial <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "binomial", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")

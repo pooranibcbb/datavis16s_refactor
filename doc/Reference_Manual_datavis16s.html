@@ -53,7 +53,7 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 20, 2018</p>
+<p>March 21, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
@@ -177,7 +177,8 @@ RoxygenNote: 6.0.1</code></pre>
 </tbody>
 </table>
 <h3 id="details-1">Details</h3>
-<p>If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth. This value is used for the alpha diversity and PCoA plots.</p>
+<p>If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth.</p>
+<p>This value is used to remove samples before for alpha diversity and PCoA plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.</p>
 <h3 id="value-1">Value</h3>
 <p>graphs are saved to outdir. See <a href="../doc/user_doc.md">user doc</a>.</p>
 <h3 id="source-1">Source</h3>
@@ -533,6 +534,8 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="gridcode"><code>gridCode</code></h2>
 <p>Format plotly grid code</p>
+<h3 id="description-10">Description</h3>
+<p>Format data according to here: <a href="https://plot.ly/export/" class="uri">https://plot.ly/export/</a></p>
 <h3 id="usage-8">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gridCode</span>(data)</code></pre></div>
 <h3 id="arguments-8">Arguments</h3>
@@ -561,7 +564,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <h2 id="highertax"><code>highertax</code></h2>
 <p>return tables at higher tax level</p>
-<h3 id="description-10">Description</h3>
+<h3 id="description-11">Description</h3>
 <p>return tables at higher tax level</p>
 <h3 id="usage-9">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">highertax</span>(amp, <span class="dt">taxlevel =</span> <span class="ot">NULL</span>)</code></pre></div>
@@ -590,7 +593,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="logoutput"><code>logoutput</code></h2>
 <p>write log output</p>
-<h3 id="description-11">Description</h3>
+<h3 id="description-12">Description</h3>
 <p>Prints time along with log message.</p>
 <h3 id="usage-10">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">logoutput</span>(c, <span class="dt">bline =</span> <span class="dv">0</span>, <span class="dt">aline =</span> <span class="dv">0</span>)</code></pre></div>
@@ -621,7 +624,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="plotlygrid"><code>plotlyGrid</code></h2>
 <p>Add Plotly data export to Plotly graph</p>
-<h3 id="description-12">Description</h3>
+<h3 id="description-13">Description</h3>
 <p>All functions create an output html plot with link which sends the data to a grid in the plotly chart studio.</p>
 <p><code>plotlyGrid</code> takes in a ggplot or plotly object and creates an output html plotly plot.</p>
 <p><code>nonplotlyGrid</code> takes in an htmlwidget.</p>
@@ -684,7 +687,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <h2 id="print_ampvis2"><code>print_ampvis2</code></h2>
 <p>Print ampvis2 object summary</p>
-<h3 id="description-13">Description</h3>
+<h3 id="description-14">Description</h3>
 <p>This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.</p>
 <h3 id="usage-12">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print_ampvis2</span>(data)</code></pre></div>
@@ -709,7 +712,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="save_fillhtml"><code>save_fillhtml</code></h2>
 <p>Save an HTML object to a file</p>
-<h3 id="description-14">Description</h3>
+<h3 id="description-15">Description</h3>
 <p>Save an HTML object to a file</p>
 <h3 id="usage-13">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_fillhtml</span>(html, file, <span class="dt">background =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>,
@@ -751,7 +754,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/plotlyGrid.R">plotlyGrid.R</a></p>
 <h2 id="shortnames"><code>shortnames</code></h2>
 <p>shortnames for taxonomy</p>
-<h3 id="description-15">Description</h3>
+<h3 id="description-16">Description</h3>
 <p>shortnames for taxonomy</p>
 <h3 id="usage-14">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shortnames</span>(taxtable, <span class="dt">taxa =</span> <span class="st">&quot;Species&quot;</span>)</code></pre></div>
@@ -780,10 +783,10 @@ RoxygenNote: 6.0.1</code></pre>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="subsetamp"><code>subsetamp</code></h2>
 <p>Subset and rarefy OTU table.</p>
-<h3 id="description-16">Description</h3>
+<h3 id="description-17">Description</h3>
 <p>Subset and/or rarefy OTU table.</p>
 <h3 id="usage-15">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, <span class="dt">sampdepth =</span> <span class="dv">0</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subsetamp</span>(amp, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, ...)</code></pre></div>
 <h3 id="arguments-15">Arguments</h3>
 <table>
 <thead>
