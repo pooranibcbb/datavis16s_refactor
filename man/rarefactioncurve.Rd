@@ -7,14 +7,14 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
+rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, ...)
 }
 \arguments{
-\item{mapfile}{full path mapping file}
-
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{full path to output directory}
+
+\item{mapfile}{full path mapping file}
 
 \item{amp}{(Optional) ampvis2 object. may be specified instead of mapfile and datafile}
 

@@ -53,7 +53,7 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 21, 2018</p>
+<p>March 24, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
@@ -92,7 +92,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-1">Description</h3>
 <p>Plots exploding boxplot of shannon diversity and Chao species richness. If sampling depth is NULL, rarefies OTU table to the minimum readcount of any sample. If this is low, then the plot will fail.</p>
 <h3 id="usage">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adivboxplot</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adivboxplot</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
   <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments">Arguments</h3>
 <table>
@@ -104,16 +104,16 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to map file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -144,7 +144,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-2">Description</h3>
 <p>Make all 4 types of graphs</p>
 <h3 id="usage-1">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allgraphs</span>(mapfile, datafile, outdir, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">allgraphs</span>(datafile, outdir, mapfile, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-1">Arguments</h3>
 <table>
 <thead>
@@ -155,16 +155,16 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to map file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
 </tr>
 <tr class="even">
 <td><code>sampdepth</code></td>
@@ -188,7 +188,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-3">Description</h3>
 <p>Creates heatmaps using Morpheus R API <a href="https://software.broadinstitute.org/morpheus/" class="uri">https://software.broadinstitute.org/morpheus/</a> . The heatmaps are made using relative abundances.</p>
 <h3 id="usage-2">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
   <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, <span class="dt">filter_level =</span> <span class="dv">0</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;seq&quot;</span>), <span class="dt">colors =</span> <span class="ot">NULL</span>,
   ...)</code></pre></div>
 <h3 id="arguments-2">Arguments</h3>
@@ -205,16 +205,16 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to mapping file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to mapping file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -252,7 +252,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p>Saves heatmaps to outdir.</p>
 <h3 id="examples">Examples</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run:
-<span class="kw">morphheatmap</span>(<span class="dt">mapfile =</span> <span class="st">&quot;mapfile.txt&quot;</span>, <span class="dt">datafile =</span> <span class="st">&quot;OTU_table.txt&quot;</span>, <span class="dt">outdir =</span> <span class="st">&quot;outputs/graphs&quot;</span>, 
+<span class="kw">morphheatmap</span>(<span class="dt">datafile =</span> <span class="st">&quot;OTU_table.txt&quot;</span>, <span class="dt">outdir =</span> <span class="st">&quot;outputs/graphs&quot;</span>, <span class="dt">mapfile =</span> <span class="st">&quot;mapfile.txt&quot;</span>, 
     <span class="dt">sampdepth =</span> <span class="dv">25000</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, <span class="st">&quot;seq&quot;</span>), <span class="dt">tsvfile =</span> <span class="ot">TRUE</span>)
 ## End(Not run)</code></pre></div>
 <h3 id="source-2">Source</h3>
@@ -262,7 +262,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-4">Description</h3>
 <p>PCoA plots</p>
 <h3 id="usage-3">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
   <span class="dt">distm =</span> <span class="st">&quot;binomial&quot;</span>, <span class="dt">filter_species =</span> <span class="fl">0.1</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>,
   <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-3">Arguments</h3>
@@ -279,16 +279,16 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to map file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -329,7 +329,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-5">Description</h3>
 <p>Make rarefaction curve graph</p>
 <h3 id="usage-4">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rarefactioncurve</span>(mapfile, datafile, outdir, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rarefactioncurve</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-4">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -344,16 +344,16 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path mapping file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path mapping file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -378,7 +378,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-6">Description</h3>
 <p>Read in data</p>
 <h3 id="usage-5">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readindata</span>(mapfile, datafile, <span class="dt">tsvfile =</span> <span class="ot">FALSE</span>, <span class="dt">mincount =</span> <span class="dv">10</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readindata</span>(datafile, mapfile, <span class="dt">tsvfile =</span> <span class="ot">FALSE</span>, <span class="dt">mincount =</span> <span class="dv">10</span>)</code></pre></div>
 <h3 id="arguments-5">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -393,18 +393,14 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
+<td><code>datafile</code></td>
+<td>full path to input data file. must be either biom file or tab delimited text file. See details. #' <span class="citation">@param</span> mapfile full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
 </tr>
 <tr class="even">
-<td><code>datafile</code></td>
-<td>full path to input data file. must be either biom file or tab delimited text file. See details.</td>
-</tr>
-<tr class="odd">
 <td><code>tsvfile</code></td>
 <td>Logical. Is datafile a tab-delimited text file? See details.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>mincount</code></td>
 <td>minimum number of reads</td>
 </tr>
@@ -421,7 +417,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-7">Description</h3>
 <p>This is a wrapper for any of the graph functions meant to be called using rpy2 in python.</p>
 <h3 id="usage-6">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">trygraphwrapper</span>(mapfile, datafile, outdir, FUN, <span class="dt">logfilename =</span> <span class="st">&quot;logfile.txt&quot;</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">trygraphwrapper</span>(datafile, outdir, mapfile, FUN, <span class="dt">logfilename =</span> <span class="st">&quot;logfile.txt&quot;</span>,
   <span class="dt">info =</span> <span class="ot">TRUE</span>, ...)</code></pre></div>
 <h3 id="arguments-6">Arguments</h3>
 <table style="width:43%;">
@@ -437,16 +433,16 @@ RoxygenNote: 6.0.1</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to map file</td>
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or txt, see <a href="#readindata">readindata</a> )</td>
 </tr>
 <tr class="even">
-<td><code>datafile</code></td>
-<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
-</tr>
-<tr class="odd">
 <td><code>outdir</code></td>
 <td>output directory for graphs</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
 </tr>
 <tr class="even">
 <td><code>FUN</code></td>
@@ -472,16 +468,16 @@ RoxygenNote: 6.0.1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run:
 
 <span class="co"># example with no optional arguments for running allgraphs</span>
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, 
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, <span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, 
     <span class="st">&quot;allgraphs&quot;</span>)
 
-<span class="co"># example with optional argument sampdepth</span>
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/out.biom&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, 
-    <span class="st">&quot;allgraphs&quot;</span>, <span class="dt">sampdepth =</span> <span class="dv">30000</span>)
+<span class="co"># example with optional argument sampdepth and tsv file</span>
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/outputs/OTU_table.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/&quot;</span>, <span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, 
+    <span class="st">&quot;allgraphs&quot;</span>, <span class="dt">sampdepth =</span> <span class="dv">30000</span>, <span class="dt">tsvfile =</span> <span class="ot">TRUE</span>)
 
 <span class="co"># example of making heatmap with optional arguments</span>
-<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, <span class="st">&quot;/path/to/outputs/taxa_species.biom&quot;</span>, 
-    <span class="st">&quot;/path/to/outputs&quot;</span>, <span class="st">&quot;morphheatmap&quot;</span>, <span class="dt">sampdepth =</span> <span class="dv">30000</span>, <span class="dt">filter_level =</span> <span class="fl">0.01</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, 
+<span class="kw">trygraphwrapper</span>(<span class="st">&quot;/path/to/outputs/taxa_species.biom&quot;</span>, <span class="st">&quot;/path/to/outputs&quot;</span>, <span class="st">&quot;/path/to/inputs/mapfile.txt&quot;</span>, 
+    <span class="st">&quot;morphheatmap&quot;</span>, <span class="dt">sampdepth =</span> <span class="dv">30000</span>, <span class="dt">filter_level =</span> <span class="fl">0.01</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, 
         <span class="st">&quot;seq&quot;</span>))
 ## End(Not run)</code></pre></div>
 <h3 id="source-6">Source</h3>

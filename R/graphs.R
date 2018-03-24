@@ -35,9 +35,9 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
 
 #' Read in data
 #'
-#' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
 #' @param datafile  full path to input data file.  must be either biom file or tab delimited text file.
 #' See details.
+#' #' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
 #' @param tsvfile  Logical.  Is datafile a tab-delimited text file? See details.
 #' @param mincount  minimum number of reads
 #' @return ampvis2 object
@@ -53,7 +53,7 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
 #'
 #' @export
 #'
-readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
+readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
   logoutput(paste("Reading in map file", mapfile))
   map <- read.delim(mapfile, check.names = FALSE, colClasses = "character",  na.strings = '', comment.char = '')
   colnames(map) <- gsub("^\\#SampleID$", "SampleID", colnames(map))
@@ -120,9 +120,9 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 
 #' Make rarefaction curve graph
 #'
-#' @param mapfile  full path mapping file
 #' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir full path to output directory
+#' @param mapfile  full path mapping file
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
 #' @param ... parameters to pass to \code{\link{readindata}}
@@ -135,9 +135,9 @@ readindata <- function(mapfile, datafile, tsvfile=FALSE, mincount=10) {
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
-rarefactioncurve <- function(mapfile, datafile, outdir, amp = NULL, colors=NULL, ...) {
+rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, ...) {
   if (is.null(amp)) {
-    cmnd <- 'amp <- readindata(mapfile=mapfile, datafile=datafile, ...)'
+    cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
@@ -171,9 +171,9 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp = NULL, colors=NULL,
 
 #' PCoA plots
 #'
-#' @param mapfile  full path to map file
 #' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
+#' @param mapfile  full path to map file
 #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth  sampling depth
 #' @param distm  distance measure for PCoA.  any that are supported by
@@ -192,9 +192,11 @@ rarefactioncurve <- function(mapfile, datafile, outdir, amp = NULL, colors=NULL,
 #'
 #' @export
 #'
-pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
+pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
   if (is.null(amp)) {
-    amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
+    cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
   }
   if (!is.null(sampdepth)) {
     cmnd <- paste0('amp <- subsetamp(amp, sampdepth = ', sampdepth,', rarefy=',rarefy, ')')
@@ -224,9 +226,9 @@ pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, dist
 #' @description Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.  The heatmaps are made
 #' using relative abundances.
 #'
-#' @param mapfile full path to mapping file
 #' @param datafile  full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
+#' @param mapfile full path to mapping file
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth sampling depth
 #' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.
@@ -249,16 +251,18 @@ pcoaplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, dist
 #'
 #' @examples
 #' \dontrun{
-#'  morphheatmap(mapfile="mapfile.txt", datafile="OTU_table.txt", outdir="outputs/graphs",
+#'  morphheatmap(datafile="OTU_table.txt", outdir="outputs/graphs", mapfile="mapfile.txt",
 #'  sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
 #' }
 #'
 #'
-morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
-    amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
+    cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
   }
 
   ## normalize data
@@ -347,9 +351,9 @@ morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL
 #' Plots exploding boxplot of shannon diversity and Chao species richness.  If sampling depth is NULL,
 #' rarefies OTU table to the minimum readcount of any sample.  If this is low, then the plot will fail.
 #'
-#' @param mapfile  full path to map file
 #' @param datafile full path to input OTU file
 #' @param outdir  full path to output directory
+#' @param mapfile  full path to map file
 #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth  sampling depth.  see details.
 #' @param colors colors to use for plots
@@ -365,9 +369,11 @@ morphheatmap <- function(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL
 #'
 #' @importFrom bpexploder bpexploder
 #'
-adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
+adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
   if (is.null(amp)) {
-    amp <- readindata(mapfile = mapfile, datafile = datafile, ...)
+    cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
   }
 
   if (is.null(sampdepth)) {
@@ -435,8 +441,8 @@ adivboxplot <- function(mapfile, datafile, outdir, amp=NULL, sampdepth = NULL, c
 #'
 #' @export
 #'
-allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
-  amp <- readindata(mapfile=mapfile, datafile=datafile, ...)
+allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
+  amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
 
   ## Choose colors
   amp$metadata <-  amp$metadata[order(amp$metadata$TreatmentGroup),]
@@ -509,9 +515,9 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #'
 #' @description This is a wrapper for any of the graph functions meant to be called using rpy2 in python.
 #'
-#' @param mapfile full path to map file
-#' @param datafile full path to input OTU file (biom or see \link{readindata})
+#' @param datafile full path to input OTU file (biom or txt, see \link{readindata})
 #' @param outdir  output directory for graphs
+#' @param mapfile full path to map file
 #' @param FUN character string. name of function you would like to run. can be actual
 #' function object if run from R
 #' @param logfilename logfilename
@@ -530,21 +536,21 @@ allgraphs <- function(mapfile, datafile, outdir, sampdepth = NULL, ...) {
 #' \dontrun{
 #'
 #' # example with no optional arguments for running allgraphs
-#' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-#'  "/path/to/outputs/", 'allgraphs')
+#' trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
+#' "/path/to/inputs/mapfile.txt", 'allgraphs')
 #'
-#' # example with optional argument sampdepth
-#' trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-#' "/path/to/outputs/", 'allgraphs', sampdepth = 30000)
+#' # example with optional argument sampdepth and tsv file
+#' trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/",
+#' "/path/to/inputs/mapfile.txt", 'allgraphs', sampdepth = 30000, tsvfile=TRUE)
 #'
 #' # example of making heatmap with optional arguments
-#' trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom",
-#' "/path/to/outputs", 'morphheatmap', sampdepth = 30000, filter_level=0.01,
+#' trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs",
+#' "/path/to/inputs/mapfile.txt", 'morphheatmap', sampdepth = 30000, filter_level=0.01,
 #' taxlevel=c("Family", "seq"))
 #' }
 #'
 #'
-trygraphwrapper <- function(mapfile, datafile, outdir, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
+trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
 
   ## set error handling options here, since rpy2 does not allow setting globally
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
@@ -564,7 +570,7 @@ trygraphwrapper <- function(mapfile, datafile, outdir, FUN, logfilename="logfile
   if (info) writeLines(capture.output(sessionInfo()))
 
   ## make function command
-  cmnd <- paste0(deparse(substitute(FUN)), '(mapfile="', mapfile, '", datafile="', datafile, '", outdir="', outdir, '", ', ' ...)')
+  cmnd <- paste0(deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', ' ...)')
   logoutput(cmnd, 1)
   FUN <- match.fun(FUN)
 

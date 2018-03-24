@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 21, 2018
+March 24, 2018
 
 DESCRIPTION
 ===========
@@ -75,7 +75,7 @@ Plots exploding boxplot of shannon diversity and Chao species richness. If sampl
 ### Usage
 
 ``` r
-adivboxplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   colors = NULL, ...)
 ```
 
@@ -83,9 +83,9 @@ adivboxplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 
 | Argument    | Description                                                      |
 |-------------|------------------------------------------------------------------|
-| `mapfile`   | full path to map file                                            |
 | `datafile`  | full path to input OTU file                                      |
 | `outdir`    | full path to output directory                                    |
+| `mapfile`   | full path to map file                                            |
 | `amp`       | ampvis2 object. may be specified instead of mapfile and datafile |
 | `sampdepth` | sampling depth. see details.                                     |
 | `colors`    | colors to use for plots                                          |
@@ -115,16 +115,16 @@ Make all 4 types of graphs
 ### Usage
 
 ``` r
-allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
+allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
 ```
 
 ### Arguments
 
 | Argument    | Description                                                          |
 |-------------|----------------------------------------------------------------------|
-| `mapfile`   | full path to map file                                                |
 | `datafile`  | full path to input OTU file (biom or see [readindata](#readindata) ) |
 | `outdir`    | full path to output directory                                        |
+| `mapfile`   | full path to map file                                                |
 | `sampdepth` | sampling depth. see details.                                         |
 | `...`       | other parameters to pass to [readindata](#readindata)                |
 
@@ -154,7 +154,7 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 ### Usage
 
 ``` r
-morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
   ...)
 ```
@@ -174,16 +174,16 @@ morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to mapping file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to mapping file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -228,7 +228,7 @@ Saves heatmaps to outdir.
 
 ``` r
 ## Not run:
-morphheatmap(mapfile = "mapfile.txt", datafile = "OTU_table.txt", outdir = "outputs/graphs", 
+morphheatmap(datafile = "OTU_table.txt", outdir = "outputs/graphs", mapfile = "mapfile.txt", 
     sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile = TRUE)
 ## End(Not run)
 ```
@@ -249,7 +249,7 @@ PCoA plots
 ### Usage
 
 ``` r
-pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, ...)
 ```
@@ -269,16 +269,16 @@ pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to map file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -331,7 +331,7 @@ Make rarefaction curve graph
 ### Usage
 
 ``` r
-rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
+rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, ...)
 ```
 
 ### Arguments
@@ -349,16 +349,16 @@ rarefactioncurve(mapfile, datafile, outdir, amp = NULL, colors = NULL, ...)
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path mapping file</td>
-</tr>
-<tr class="even">
 <td><code>datafile</code></td>
 <td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>outdir</code></td>
 <td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path mapping file</td>
 </tr>
 <tr class="even">
 <td><code>amp</code></td>
@@ -395,7 +395,7 @@ Read in data
 ### Usage
 
 ``` r
-readindata(mapfile, datafile, tsvfile = FALSE, mincount = 10)
+readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 ```
 
 ### Arguments
@@ -413,18 +413,14 @@ readindata(mapfile, datafile, tsvfile = FALSE, mincount = 10)
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
+<td><code>datafile</code></td>
+<td>full path to input data file. must be either biom file or tab delimited text file. See details. #' <span class="citation">@param</span> mapfile full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
 </tr>
 <tr class="even">
-<td><code>datafile</code></td>
-<td>full path to input data file. must be either biom file or tab delimited text file. See details.</td>
-</tr>
-<tr class="odd">
 <td><code>tsvfile</code></td>
 <td>Logical. Is datafile a tab-delimited text file? See details.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>mincount</code></td>
 <td>minimum number of reads</td>
 </tr>
@@ -455,7 +451,7 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 ### Usage
 
 ``` r
-trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
+trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
   info = TRUE, ...)
 ```
 
@@ -474,16 +470,16 @@ trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>mapfile</code></td>
-<td>full path to map file</td>
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or txt, see <a href="#readindata">readindata</a> )</td>
 </tr>
 <tr class="even">
-<td><code>datafile</code></td>
-<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
-</tr>
-<tr class="odd">
 <td><code>outdir</code></td>
 <td>output directory for graphs</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
 </tr>
 <tr class="even">
 <td><code>FUN</code></td>
@@ -514,16 +510,16 @@ Returns 0 if FUN succeeds and 1 if it returns an error.
 ## Not run:
 
 # example with no optional arguments for running allgraphs
-trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/out.biom", "/path/to/outputs/", 
+trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/", "/path/to/inputs/mapfile.txt", 
     "allgraphs")
 
-# example with optional argument sampdepth
-trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/out.biom", "/path/to/outputs/", 
-    "allgraphs", sampdepth = 30000)
+# example with optional argument sampdepth and tsv file
+trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/", "/path/to/inputs/mapfile.txt", 
+    "allgraphs", sampdepth = 30000, tsvfile = TRUE)
 
 # example of making heatmap with optional arguments
-trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom", 
-    "/path/to/outputs", "morphheatmap", sampdepth = 30000, filter_level = 0.01, taxlevel = c("Family", 
+trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs", "/path/to/inputs/mapfile.txt", 
+    "morphheatmap", sampdepth = 30000, filter_level = 0.01, taxlevel = c("Family", 
         "seq"))
 ## End(Not run)
 ```

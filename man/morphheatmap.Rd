@@ -7,16 +7,16 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-morphheatmap(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
   ...)
 }
 \arguments{
-\item{mapfile}{full path to mapping file}
-
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{full path to output directory}
+
+\item{mapfile}{full path to mapping file}
 
 \item{amp}{(Optional) ampvis2 object. may be specified instead of mapfile and datafile}
 
@@ -46,7 +46,7 @@ For the \code{taxlevel} parameter, each level is made into a separate heatmap.  
 }
 \examples{
 \dontrun{
- morphheatmap(mapfile="mapfile.txt", datafile="OTU_table.txt", outdir="outputs/graphs",
+ morphheatmap(datafile="OTU_table.txt", outdir="outputs/graphs", mapfile="mapfile.txt",
  sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
 }
 
