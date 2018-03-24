@@ -7,14 +7,14 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-allgraphs(mapfile, datafile, outdir, sampdepth = NULL, ...)
+allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
 }
 \arguments{
-\item{mapfile}{full path to map file}
-
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{full path to output directory}
+
+\item{mapfile}{full path to map file}
 
 \item{sampdepth}{sampling depth.  see details.}
 

@@ -7,13 +7,12 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-readindata(mapfile, datafile, tsvfile = FALSE, mincount = 10)
+readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 }
 \arguments{
-\item{mapfile}{full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns}
-
 \item{datafile}{full path to input data file.  must be either biom file or tab delimited text file.
-See details.}
+See details.
+#' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns}
 
 \item{tsvfile}{Logical.  Is datafile a tab-delimited text file? See details.}
 

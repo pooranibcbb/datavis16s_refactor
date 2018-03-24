@@ -1,4 +1,4 @@
-library(devtools)
+devtools::load_all()
 
 #amp <- readindata(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom")
 #sn <- datavis16s:::shortnames(amp$tax[1216:1220,])
@@ -28,5 +28,7 @@ outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata"
 #
 
 # mp <- allgraphs(mapfile="testdata/vanessa_HF_mapfile.txt", datafile = "testdata/taxa_species.biom", outdir = outdir)
-newmp <- trygraphwrapper(mapfile = "testdata/SILVA_mapfile.txt", datafile = "testdata/SILVA_OTU_table.biom", outdir = outdir, allgraphs, logfilename = file.path(outdir, "logfile.txt"))
+#newmp <- trygraphwrapper(mapfile = "testdata/SILVA_mapfile.txt", datafile = "testdata/SILVA_OTU_table.biom", outdir = outdir, allgraphs, logfilename = file.path(outdir, "logfile.txt"))
 
+unlink(file.path(outdir, "graphs"), recursive = TRUE)
+trygraphwrapper("testdata/SILVA_OTU_table.biom", outdir,  "testdata/SILVA_mapfile.txt", allgraphs,  logfilename = file.path(outdir, "logfile.txt"))

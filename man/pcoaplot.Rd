@@ -7,16 +7,16 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-pcoaplot(mapfile, datafile, outdir, amp = NULL, sampdepth = NULL,
+pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, ...)
 }
 \arguments{
-\item{mapfile}{full path to map file}
-
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
 
 \item{outdir}{full path to output directory}
+
+\item{mapfile}{full path to map file}
 
 \item{amp}{ampvis2 object. may be specified instead of mapfile and datafile}
 

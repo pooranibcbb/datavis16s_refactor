@@ -7,15 +7,15 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-trygraphwrapper(mapfile, datafile, outdir, FUN, logfilename = "logfile.txt",
+trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
   info = TRUE, ...)
 }
 \arguments{
-\item{mapfile}{full path to map file}
-
-\item{datafile}{full path to input OTU file (biom or see \link{readindata})}
+\item{datafile}{full path to input OTU file (biom or txt, see \link{readindata})}
 
 \item{outdir}{output directory for graphs}
+
+\item{mapfile}{full path to map file}
 
 \item{FUN}{character string. name of function you would like to run. can be actual
 function object if run from R}
@@ -37,16 +37,16 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 \dontrun{
 
 # example with no optional arguments for running allgraphs
-trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
- "/path/to/outputs/", 'allgraphs')
+trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
+"/path/to/inputs/mapfile.txt", 'allgraphs')
 
-# example with optional argument sampdepth
-trygraphwrapper("/path/to/inputs/mapfile.txt","/path/to/outputs/out.biom",
-"/path/to/outputs/", 'allgraphs', sampdepth = 30000)
+# example with optional argument sampdepth and tsv file
+trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/",
+"/path/to/inputs/mapfile.txt", 'allgraphs', sampdepth = 30000, tsvfile=TRUE)
 
 # example of making heatmap with optional arguments
-trygraphwrapper("/path/to/inputs/mapfile.txt", "/path/to/outputs/taxa_species.biom",
-"/path/to/outputs", 'morphheatmap', sampdepth = 30000, filter_level=0.01,
+trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs",
+"/path/to/inputs/mapfile.txt", 'morphheatmap', sampdepth = 30000, filter_level=0.01,
 taxlevel=c("Family", "seq"))
 }
 
