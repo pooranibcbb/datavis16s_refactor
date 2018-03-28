@@ -15,16 +15,18 @@ logoutput <- function(c, bline = 0, aline = 0) {
 
 }
 
+
+
 #' shortnames for taxonomy
 #'
-#' @param taxtable taxonomy table object from amp$tax
-#' @param taxa  taxonomic level at which to retrieve the names
+#' @param taxtable taxonomy table object from ampvis2 object amp$tax
 #'
-#' @return Vector of shortened names for each seqvar/otu.
+#' @return data.frame taxonomy table object like ampvis2 amp$tax.  taxonomy names
+#' are sanitized and formatted to be a bit nicer.
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
-shortnames <- function(taxtable, taxa="Species") {
+shortnames <- function(taxtable) {
   ## greengenes
   taxtable <- apply(taxtable, 2, function(x) { v <- grep("_unclassified$|^Unassigned$", x); x[v] <- NA; x })
   taxtable <- apply(taxtable, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
@@ -35,41 +37,56 @@ shortnames <- function(taxtable, taxa="Species") {
 
   taxtable[which(taxtable %in% c("", "none"), arr.ind = TRUE)] <- NA
 
+
+  ## Unclassified
   vd <- which(is.na(taxtable[,"Kingdom"]))
   taxtable[vd,"Kingdom"] <- paste(row.names(taxtable)[vd], "unclassified")
 
-  if (taxa == "Species") {
-    vn <- which(apply(taxtable,1, function(x) !(is.na(x["Species"]) | x["Species"] %in% uncnames | grepl(paste0("^",x['Genus']), x["Species"]))))
-    if (length(vn) > 0) {
-      taxtable[vn,"Species"] <- paste(taxtable[vn,"Genus"],taxtable[vn,"Species"] )
-    }
+
+  ## Output Genus species instead of just species
+  vn <- which(apply(taxtable,1, function(x) !(is.na(x["Species"]) | x["Species"] %in% uncnames | grepl(paste0("^",x['Genus']), x["Species"]))))
+  if (length(vn) > 0) {
+    taxtable[vn,"Species"] <- paste(taxtable[vn,"Genus"],taxtable[vn,"Species"] )
   }
 
-  tt <- which(colnames(taxtable) == taxa)
-  taxtable <- taxtable[,1:tt]
 
-  sname <- function(x) {
-    ## SILVA
-    y <- suppressWarnings(min(which(x %in% uncnames)))
-    if (y != "Inf"){
-      return(paste(x[y-1], colnames(taxtable)[y-1], x[y]))
+  ## Generate newnames
+  snamecol <- function(taxa) {
+    sname <- function(x) {
+      ## SILVA
+      y <- suppressWarnings(min(which(x %in% uncnames)))
+      if (y != "Inf"){
+        return(paste(x[y-1], colnames(taxtable)[y-1], x[y]))
+      }
+
+      y <- suppressWarnings(min(which(is.na(x))))
+      if (y == "Inf") {
+        return(paste(x[length(x)]))
+      }
+
+      if ( y == 2 ) {
+        return(paste(x[1]))
+      }
+
+
+      return(paste(x[y-1], colnames(shorttable)[y-1]))
+
     }
 
-    y <- suppressWarnings(min(which(is.na(x))))
-    if (y == "Inf") {
-      return(paste(x[length(x)]))
-    }
-
-    if ( y == 2 ) {
-      return(paste(x[1]))
-    }
-
-    return(paste(x[y-1], colnames(taxtable)[y-1]))
-
+    tt <- which(colnames(taxtable) == taxa)
+    shorttable <- taxtable[,1:tt]
+    sn <- apply(shorttable, 1, sname )
+    return(sn)
   }
 
-  sn <- apply(taxtable, 1, sname )
-  return(sn)
+
+  taxalist <- intersect(c("Phylum", "Class", "Order", "Family", "Genus", "Species"), colnames(taxtable))
+  tlist <- lapply(taxalist, snamecol)
+  newname_taxtable <- do.call(cbind.data.frame, tlist)
+  newname_taxtable <- cbind.data.frame(taxtable[,"Kingdom"], newname_taxtable, taxtable[,"OTU"])
+  colnames(  newname_taxtable ) <- colnames(taxtable)
+  return(newname_taxtable)
+
 }
 
 #' return tables at higher tax level
@@ -83,22 +100,14 @@ shortnames <- function(taxtable, taxa="Species") {
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
-highertax <- function(amp, taxlevel=NULL) {
+highertax <- function(amp, taxlevel) {
 
   otu <- as.matrix(amp$abund)
   tax <- amp$tax
-  if (is.null(taxlevel)) {
-    n <- ncol(tax)
-    tax$sn <- shortnames(tax)
-    tax <- tax[,c(n+1,1:n)]
-    amp$abund <- as.data.frame(otu)
-    amp$tax <- tax
-    return(amp)
-  }
+
   tc <- which(colnames(tax) == taxlevel)
-  sn <- shortnames(tax, taxa=taxlevel)
+  sn <- shortnames(tax)
   tax <- tax[,1:tc]
-  tax$sn <- sn
   tax <- tax[,c(tc+1,1:tc)]
   taxcols <- colnames(tax)
   otucols <- colnames(otu)
@@ -107,7 +116,7 @@ highertax <- function(amp, taxlevel=NULL) {
   dt <- dt[, lapply(.SD, sum) , by = c(taxcols)]
   otu <- data.frame(dt[,otucols, with=FALSE], check.names = FALSE)
   tax <- data.frame(dt[,taxcols, with=FALSE])
-  row.names(otu) <- tax$sn
+  row.names(otu) <- tax[,ncol(tax)]
   amp$abund <- as.data.frame(otu)
   amp$tax <- tax
   return(amp)
@@ -195,3 +204,29 @@ print_ampvis2 <- function(data) {
     "\n", paste(as.character(colnames(data$metadata)), collapse = ", ")
   )
 }
+
+#' #' Cleanup taxonomy names
+#' #'
+#' #' @param taxtable taxonomy table attribute of ampvis2 object
+#' #'
+#' #' @return data frame of taxonomy table with sanitized taxonomy
+#' #'
+#' #'
+#' #'
+#' taxonomycleanup <- function(taxtable) {
+#'
+#'   ## greengenes
+#'   taxtable <- apply(taxtable, 2, function(x) { v <- grep("_unclassified$|^Unassigned$", x); x[v] <- NA; x })
+#'   taxtable <- apply(taxtable, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
+#'
+#'   ## SILVA97
+#'   taxtable <- apply(taxtable, 2, function(x) { gsub("^D_\\d+__", "", x) })
+#'   taxtable[which(taxtable %in% c("", "none"), arr.ind = TRUE)] <- NA
+#'
+#'   vd <- which(is.na(taxtable[,"Kingdom"]))
+#'   taxtable[vd,"Kingdom"] <- paste(row.names(taxtable)[vd], "unclassified")
+#'
+#'   return(as.data.frame(taxtable))
+#'
+#'
+#' }

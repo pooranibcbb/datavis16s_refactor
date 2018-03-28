@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 24, 2018
+March 28, 2018
 
 DESCRIPTION
 ===========
@@ -641,7 +641,7 @@ return tables at higher tax level
 ### Usage
 
 ``` r
-highertax(amp, taxlevel = NULL)
+highertax(amp, taxlevel)
 ```
 
 ### Arguments
@@ -697,16 +697,12 @@ All functions create an output html plot with link which sends the data to a gri
 
 `plotlyGrid` takes in a ggplot or plotly object and creates an output html plotly plot.
 
-`nonplotlyGrid` takes in an htmlwidget.
-
 `htmlGrid` takes in an html tag object.
 
 ### Usage
 
 ``` r
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
-nonplotlyGrid(hw, filename, data, jquery = FALSE, title = NULL,
-  outlib = "lib")
 htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 ```
 
@@ -745,16 +741,12 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 <td>(Optional) name of external lib directory for non-selfcontained html. Useful for multiple graphs sharing the same lib.</td>
 </tr>
 <tr class="even">
-<td><code>hw</code></td>
-<td>htmlwidget</td>
+<td><code>ht</code></td>
+<td>html tagList</td>
 </tr>
 <tr class="odd">
 <td><code>jquery</code></td>
 <td>should we load jquery</td>
-</tr>
-<tr class="even">
-<td><code>ht</code></td>
-<td>html tagList</td>
 </tr>
 </tbody>
 </table>
@@ -814,13 +806,13 @@ save_fillhtml(html, file, background = "white", libdir = "lib",
 
 ### Arguments
 
-| Argument     | Description                      |
-|--------------|----------------------------------|
-| `html`       | HTML content to print            |
-| `file`       | File to write content to         |
-| `background` | Background color for web page    |
-| `libdir`     | Directory to copy dependenies to |
-| `bodystyle`  | html style string                |
+| Argument     | Description                       |
+|--------------|-----------------------------------|
+| `html`       | HTML content to print             |
+| `file`       | File to write content to          |
+| `background` | Background color for web page     |
+| `libdir`     | Directory to copy dependencies to |
+| `bodystyle`  | html style string                 |
 
 ### Value
 
@@ -842,19 +834,18 @@ shortnames for taxonomy
 ### Usage
 
 ``` r
-shortnames(taxtable, taxa = "Species")
+shortnames(taxtable)
 ```
 
 ### Arguments
 
-| Argument   | Description                                    |
-|------------|------------------------------------------------|
-| `taxtable` | taxonomy table object from amp$tax             |
-| `taxa`     | taxonomic level at which to retrieve the names |
+| Argument   | Description                                       |
+|------------|---------------------------------------------------|
+| `taxtable` | taxonomy table object from ampvis2 object amp$tax |
 
 ### Value
 
-Vector of shortened names for each seqvar/otu.
+data.frame taxonomy table object like ampvis2 amp$tax. taxonomy names are sanitized and formatted to be a bit nicer.
 
 ### Source
 

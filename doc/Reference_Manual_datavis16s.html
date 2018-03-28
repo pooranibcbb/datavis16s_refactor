@@ -53,7 +53,7 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>March 24, 2018</p>
+<p>March 28, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
@@ -563,7 +563,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-11">Description</h3>
 <p>return tables at higher tax level</p>
 <h3 id="usage-9">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">highertax</span>(amp, <span class="dt">taxlevel =</span> <span class="ot">NULL</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">highertax</span>(amp, taxlevel)</code></pre></div>
 <h3 id="arguments-9">Arguments</h3>
 <table>
 <thead>
@@ -623,12 +623,9 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-13">Description</h3>
 <p>All functions create an output html plot with link which sends the data to a grid in the plotly chart studio.</p>
 <p><code>plotlyGrid</code> takes in a ggplot or plotly object and creates an output html plotly plot.</p>
-<p><code>nonplotlyGrid</code> takes in an htmlwidget.</p>
 <p><code>htmlGrid</code> takes in an html tag object.</p>
 <h3 id="usage-11">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotlyGrid</span>(pplot, filename, <span class="dt">data =</span> <span class="ot">NULL</span>, <span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">outlib =</span> <span class="st">&quot;lib&quot;</span>)
-<span class="kw">nonplotlyGrid</span>(hw, filename, data, <span class="dt">jquery =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="ot">NULL</span>,
-  <span class="dt">outlib =</span> <span class="st">&quot;lib&quot;</span>)
 <span class="kw">htmlGrid</span>(ht, filename, data, <span class="dt">jquery =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">outlib =</span> <span class="st">&quot;lib&quot;</span>)</code></pre></div>
 <h3 id="arguments-11">Arguments</h3>
 <table style="width:43%;">
@@ -664,16 +661,12 @@ RoxygenNote: 6.0.1</code></pre>
 <td>(Optional) name of external lib directory for non-selfcontained html. Useful for multiple graphs sharing the same lib.</td>
 </tr>
 <tr class="even">
-<td><code>hw</code></td>
-<td>htmlwidget</td>
+<td><code>ht</code></td>
+<td>html tagList</td>
 </tr>
 <tr class="odd">
 <td><code>jquery</code></td>
 <td>should we load jquery</td>
-</tr>
-<tr class="even">
-<td><code>ht</code></td>
-<td>html tagList</td>
 </tr>
 </tbody>
 </table>
@@ -736,7 +729,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 <tr class="even">
 <td><code>libdir</code></td>
-<td>Directory to copy dependenies to</td>
+<td>Directory to copy dependencies to</td>
 </tr>
 <tr class="odd">
 <td><code>bodystyle</code></td>
@@ -753,7 +746,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-16">Description</h3>
 <p>shortnames for taxonomy</p>
 <h3 id="usage-14">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shortnames</span>(taxtable, <span class="dt">taxa =</span> <span class="st">&quot;Species&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shortnames</span>(taxtable)</code></pre></div>
 <h3 id="arguments-14">Arguments</h3>
 <table>
 <thead>
@@ -765,16 +758,12 @@ RoxygenNote: 6.0.1</code></pre>
 <tbody>
 <tr class="odd">
 <td><code>taxtable</code></td>
-<td>taxonomy table object from amp$tax</td>
-</tr>
-<tr class="even">
-<td><code>taxa</code></td>
-<td>taxonomic level at which to retrieve the names</td>
+<td>taxonomy table object from ampvis2 object amp$tax</td>
 </tr>
 </tbody>
 </table>
 <h3 id="value-13">Value</h3>
-<p>Vector of shortened names for each seqvar/otu.</p>
+<p>data.frame taxonomy table object like ampvis2 amp$tax. taxonomy names are sanitized and formatted to be a bit nicer.</p>
 <h3 id="source-14">Source</h3>
 <p><a href="../R/utilities.R">utilities.R</a></p>
 <h2 id="subsetamp"><code>subsetamp</code></h2>

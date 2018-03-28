@@ -2,7 +2,6 @@
 % Please edit documentation in R/plotlyGrid.R
 \name{plotlyGrid}
 \alias{plotlyGrid}
-\alias{nonplotlyGrid}
 \alias{htmlGrid}
 \title{Add Plotly data export to Plotly graph}
 \source{
@@ -10,9 +9,6 @@
 }
 \usage{
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
-
-nonplotlyGrid(hw, filename, data, jquery = FALSE, title = NULL,
-  outlib = "lib")
 
 htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 }
@@ -28,11 +24,9 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 \item{outlib}{(Optional) name of external lib directory for non-selfcontained html.
 Useful for multiple graphs sharing the same lib.}
 
-\item{hw}{htmlwidget}
+\item{ht}{html tagList}
 
 \item{jquery}{should we load jquery}
-
-\item{ht}{html tagList}
 }
 \value{
 html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
@@ -42,8 +36,6 @@ All functions create an output html plot  with link which sends the data to a gr
  studio.
 
  \code{plotlyGrid} takes in a ggplot or plotly object and creates an output html plotly plot.
-
-\code{nonplotlyGrid} takes in an htmlwidget.
 
 \code{htmlGrid} takes in an html tag object.
 }
