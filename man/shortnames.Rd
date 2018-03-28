@@ -7,15 +7,14 @@
 [utilities.R](../R/utilities.R)
 }
 \usage{
-shortnames(taxtable, taxa = "Species")
+shortnames(taxtable)
 }
 \arguments{
-\item{taxtable}{taxonomy table object from amp$tax}
-
-\item{taxa}{taxonomic level at which to retrieve the names}
+\item{taxtable}{taxonomy table object from ampvis2 object amp$tax}
 }
 \value{
-Vector of shortened names for each seqvar/otu.
+data.frame taxonomy table object like ampvis2 amp$tax.  taxonomy names
+are sanitized and formatted to be a bit nicer.
 }
 \description{
 shortnames for taxonomy

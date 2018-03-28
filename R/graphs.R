@@ -54,6 +54,8 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
 #' @export
 #'
 readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
+
+  ## mapfile
   logoutput(paste("Reading in map file", mapfile))
   map <- read.delim(mapfile, check.names = FALSE, colClasses = "character",  na.strings = '', comment.char = '')
   colnames(map) <- gsub("^\\#SampleID$", "SampleID", colnames(map))
@@ -64,13 +66,15 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     stop("Map file missing necessary columns.")
   }
 
+  ## otu table
   logoutput(paste("Reading in OTU file", datafile))
+  ## text file
   if ((tsvfile)) {
     cmnd <- "otu <- read.delim(datafile, check.names = FALSE, na.strings = '', row.names = 1)"
     logoutput(cmnd)
     eval(parse(text = cmnd))
   } else {
-
+    ## biom file
     cmnd <- 'biom <- biomformat::read_biom(datafile)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
@@ -96,7 +100,6 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     }
 
     colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-
 
     cmnd <- 'otu <- cbind(otu, tax)'
     logoutput(cmnd)
@@ -136,6 +139,8 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #' @source [graphs.R](../R/graphs.R)
 #'
 rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, ...) {
+
+  ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
     logoutput(cmnd)
@@ -145,16 +150,19 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 
   on.exit(graphics.off())
 
+  ## colors for curves
   if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values = colors)
 
   ## suppress ggplotly warning to install dev version of ggplot2, as it is out of date
   withCallingHandlers({
+    ## plot curves
     rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
   }, message = function(c) {
     if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
       invokeRestart("muffleMessage")
   })
 
+  ## make table of data for plotly export
   df <- plotly_data(rarecurve)
   df_new <- split(df, df$SampleID)
   tg <- which(colnames(df) == "TreatmentGroup")
@@ -163,6 +171,8 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 
   df_new <- lapply(df_new, function(x) {x <- data.frame(x); y <- unlist(c(rep(NA, tg - 1), x[1,tg:desc], rep(NA,(n - desc)))); names(y) <- colnames(x); rbind(x,y)   })
   df_new <- do.call(rbind.data.frame, df_new)
+
+  ## save to html and txt file
   plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
   logoutput(paste0('Saving rarefaction curve table to ', file.path(outdir, 'rarecurve.txt') ))
   write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
@@ -193,11 +203,15 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 #' @export
 #'
 pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
+
+  ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
+
+  ## remove samples below sampdepth and rarefy, if necessary
   if (!is.null(sampdepth)) {
     cmnd <- paste0('amp <- subsetamp(amp, sampdepth = ', sampdepth,', rarefy=',rarefy, ')')
     logoutput(cmnd)
@@ -206,12 +220,14 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 
   on.exit(graphics.off())
 
+  ## plot PCoA
   cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", sample_colorframe = TRUE, detailed_output = TRUE, transform="none")')
 
   logoutput(cmnd)
   eval(parse(text = cmnd))
   if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
+  ## save to file
   outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
   plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
   tabletsv <- gsub('.html$', '.txt', outfile)
@@ -295,8 +311,10 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       amptax <- highertax(amp, taxlevel=tl)
     } else {
       amptax <- amp
+      amptax$tax <- shortnames(amptax$tax)
     }
 
+    ## filter low abundant taxa, if desired
     if (filter_level > 0) {
       logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
       cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
@@ -306,10 +324,9 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
     ## row and column names for matrix
     if (tl == "seq") {
-      sn <- shortnames(amptax$tax, taxa = "Species")
-      sn <- paste(amptax$tax$OTU, sn)
+      sn <- paste(amptax$tax$OTU, amptax$tax$Species)
     } else {
-      sn <- amptax$tax$sn
+      sn <- amptax$tax[,ncol(amptax$tax)]
     }
     mat <- amptax$abund
     row.names(mat) <- sn
@@ -321,10 +338,12 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     w <- which(values > 10)
     values[w] <- round(values[w])
 
+    ## make morpheus heatmap
     cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
 
+    ## Save html file
     outdir <- tools::file_path_as_absolute(outdir)
     outfile <- file.path(outdir, paste0(tl, "_heatmap.html"))
     logoutput(paste("Saving plot to", outfile))
@@ -332,9 +351,10 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     heatmap$height = '90%'
     tt <- tags$div(heatmap, style = "position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
     save_fillhtml(tt, file = outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
-    write.table(amptax$abund, file.path(outdir, "heatmap.txt"), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
+
   }
 
+  ## make heatmap at different taxonomic levels
   for (t in taxlevel) {
     cmnd <- paste0('makeheatmap("', t, '", amp)')
     logoutput(cmnd)
@@ -370,12 +390,15 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @importFrom bpexploder bpexploder
 #'
 adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
+
+  ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
 
+  ## rarefy to minimum sample count if sampling depth is not specified
   if (is.null(sampdepth)) {
     logoutput('Calculate number of counts to rarefy table.')
     cmnd <- 'sampdepth <-  min(colSums(amp$abund))'
@@ -383,13 +406,16 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     eval(parse(text=cmnd))
   }
 
+  ## compute alpha diversity and species richness
   cmnd <- paste0('alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = ', sampdepth, ')')
   logoutput(cmnd)
   eval(parse(text = cmnd))
 
+  ## save tabular output
   logoutput(paste0('Saving alpha diversity table to ', file.path(outdir, 'alphadiv.txt') ))
   write.table(alphadiv, file.path(outdir, 'alphadiv.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 
+  ## make plots for each category (between treatmentgroup and description)
   tg <- which(colnames(amp$metadata) == "TreatmentGroup")
   desc <- which(colnames(amp$metadata) == "Description") - 1
 
@@ -406,12 +432,14 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     return(list(shannon, chao1))
   }
 
+  ## style widgets 2 across
   divwidget <- unlist(lapply(colnames(amp$metadata)[tg:desc], function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
   tt <- tags$div(
     style = "display: grid; grid-template-columns: 1fr 1fr; grid-row-gap: 5em;",
     lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
   )
 
+  ## save html file
   htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
 
 }

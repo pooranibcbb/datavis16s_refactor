@@ -17,7 +17,7 @@ save_fillhtml(html, file, background = "white", libdir = "lib",
 
 \item{background}{Background color for web page}
 
-\item{libdir}{Directory to copy dependenies to}
+\item{libdir}{Directory to copy dependencies to}
 
 \item{bodystyle}{html style string}
 }

@@ -7,7 +7,7 @@
 [utilities.R](../R/utilities.R)
 }
 \usage{
-highertax(amp, taxlevel = NULL)
+highertax(amp, taxlevel)
 }
 \arguments{
 \item{amp}{ampvis2 object}
