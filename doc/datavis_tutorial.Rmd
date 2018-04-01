@@ -1,0 +1,49 @@
+---
+title: "16S Visualization Tutorial"
+output:
+  html_document:
+    mathjax: null
+    section_divs: false
+    smart: false
+    highlight: null
+    theme: null
+    template: /Users/subramanianp4/git/nephele2/misc_examples/docs/user_doc_template.html
+    toc: true
+  # github_document:
+  #   toc: true
+  #   toc_depth: 3
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
+```
+
+## Plotly Graphs
+
+
+
+## Heatmap
+
+The [Morpheus documentation](https://software.broadinstitute.org/morpheus/documentation.html) shows how to use the various features of the heatmap.  We will show some examples of how these features could be used specifically for the output of the Nephele 16S pipelines.
+
+### Filter Low Abundant Taxa
+
+Filter taxa based on maximum abundance across all samples or the number of samples for which they are present.
+
+1. Select Tools > Create Calculated Annotation 
+   - Maximum abundance: Enter Annotation Name `Max` and `MAX()` for Formula
+   - Number of samples: Enter Annotation Name `Num samples` and `COUNTIF(">0")` for Formula
+2. Click OK.
+3. Select Tools > Filter > Add
+   - Maximum abundance: Choose Field `Max`.  You can choose a minimum value for the range.  This will filter out taxa which are below this value across all samples.  Or you can `Switch to top filter` to see the top most abundant taxa.
+   - Number of samples: Choose Field `Num samples` .  You can choose a range for the number of samples or you can `Switch to top filter` to see the most frequent taxa across all samples. 
+
+
+
+### View the heatmap at different taxonomic levels
+
+1. Select Tools > Collapse 
+2. Choose Collapse Method: Sum and Collapse: Rows.  
+3. For Collapse Field, choose the taxonomic level at which you would like to view the heatmap.
+4. Tap OK, and a new tab will open with the heatmap at the desired level.
+5. Select View > Options > Annotations > Row Annotations > level name > Close.  This will show the new row names for the heatmap.
+
