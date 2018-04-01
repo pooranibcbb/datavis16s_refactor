@@ -154,13 +154,13 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
   if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values = colors)
 
   ## suppress ggplotly warning to install dev version of ggplot2, as it is out of date
-  withCallingHandlers({
-    ## plot curves
-    rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
-  }, message = function(c) {
-    if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
-      invokeRestart("muffleMessage")
-  })
+  #  withCallingHandlers({
+  ## plot curves
+  rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
+  #  }, message = function(c) {
+  #    if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
+  #      invokeRestart("muffleMessage")
+  #  })
 
   ## make table of data for plotly export
   df <- plotly_data(rarecurve)
@@ -172,10 +172,14 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
   df_new <- lapply(df_new, function(x) {x <- data.frame(x); y <- unlist(c(rep(NA, tg - 1), x[1,tg:desc], rep(NA,(n - desc)))); names(y) <- colnames(x); rbind(x,y)   })
   df_new <- do.call(rbind.data.frame, df_new)
 
+
   ## save to html and txt file
   plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
   logoutput(paste0('Saving rarefaction curve table to ', file.path(outdir, 'rarecurve.txt') ))
   write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
+
+  return(as.integer(0))
+
 }
 
 
@@ -233,6 +237,8 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
   tabletsv <- gsub('.html$', '.txt', outfile)
   logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
   write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
+
+  return(as.integer(0))
 
 }
 
@@ -359,9 +365,11 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     cmnd <- paste0('makeheatmap("', t, '", amp)')
     logoutput(cmnd)
     if (inherits(try(eval(parse(text = cmnd))), "try-error")) {
-      warning(paste("Heatmap at ", t, " level failed."))
+      stop(paste("Heatmap at ", t, " level failed."))
     }
   }
+
+  return(as.integer(0))
 
 }
 
@@ -442,6 +450,8 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   ## save html file
   htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
 
+  return(as.integer(0))
+
 }
 
 #' Pipeline function
@@ -470,6 +480,8 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' @export
 #'
 allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
+  retvalue <- as.integer(0)
+
   amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
 
   ## Choose colors
@@ -489,13 +501,13 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
   logoutput('Rarefaction curve', 1)
   cmnd <- 'rarefactioncurve(outdir = outdir, amp = amp, colors = allcols)'
   logoutput(cmnd)
-  try(eval(parse(text=cmnd)))
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## Heatmap
   logoutput('Relative abundance heatmaps', 1)
   cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols)'
   logoutput(cmnd)
-  try(eval(parse(text=cmnd)))
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## Filter out low count samples
   cs <- colSums(amp$abund)
@@ -519,14 +531,14 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
   logoutput('Alpha diversity boxplot', 1)
   cmnd <- 'adivboxplot(outdir = outdir, amp = ampsub, sampdepth = sampdepth, colors = allcols)'
   logoutput(cmnd)
-  try(eval(parse(text=cmnd)))
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
 
   ## binomial PCoA
   logoutput('PCoA plots', 1)
   cmnd <- paste0('pcoaplot(outdir = outdir, amp = ampsub, distm = "binomial", colors = allcols)')
   logoutput(cmnd)
-  try(eval(parse(text=cmnd)))
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## bray-curtis PCoA
   ## Rarefy table
@@ -535,7 +547,9 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
 
   cmnd <- 'pcoaplot(outdir = outdir, amp = amp, distm = "bray", colors = allcols)'
   logoutput(cmnd)
-  try(eval(parse(text=cmnd)))
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
+
+  return(retvalue)
 
 }
 
@@ -552,7 +566,9 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
 #' @param info print sessionInfo to logfile
 #' @param ...  parameters needed to pass to FUN
 #'
-#' @return Returns 0 if FUN succeeds and 1 if it returns an error.
+#' @return Returns 0 if FUN succeeds and stops on error.  In rpy2, it will throw
+#' rpy2.rinterface.RRuntimeError.
+#'
 #' @export
 #'
 #' @source [graphs.R](../R/graphs.R)
@@ -582,13 +598,14 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 
   ## set error handling options here, since rpy2 does not allow setting globally
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
-  options(stringsAsFactors = FALSE, scipen = 999, warn=1)
+  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2))
 
   ## open log file
   logfile <- file(logfilename, open = "at")
   sink(file = logfile, type="output")
   sink(file = logfile, type= "message")
 
+  on.exit(closeAllConnections())
   ## create output directory
   outdir <- file.path(outdir, "graphs")
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
@@ -602,17 +619,16 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   logoutput(cmnd, 1)
   FUN <- match.fun(FUN)
 
-  ## run command
-  if (inherits(try(eval(parse(text=cmnd))), "try-error")) {
-    retvalue <- as.integer(1)
-  } else {
-    retvalue <- as.integer(0)
-  }
 
-  ## close logfile
-  sink(type="output")
-  sink(type="message")
-  return(retvalue)
+  ## run command
+  retvalue <- eval(parse(text=cmnd))
+  ## if (inherits(try(eval(parse(text=cmnd))), "try-error")) {
+  ##   retvalue <- as.integer(1)
+  ## } else {
+  ##   retvalue <- as.integer(0)
+  ## }
+
+  return(as.integer(0))
 
 }
 
