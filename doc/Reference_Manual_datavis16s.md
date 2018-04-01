@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-March 28, 2018
+April 01, 2018
 
 DESCRIPTION
 ===========
@@ -502,7 +502,7 @@ trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
 
 ### Value
 
-Returns 0 if FUN succeeds and 1 if it returns an error.
+Returns 0 if FUN succeeds and stops on error. In rpy2, it will throw rpy2.rinterface.RRuntimeError.
 
 ### Examples
 

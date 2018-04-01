@@ -27,7 +27,8 @@ function object if run from R}
 \item{...}{parameters needed to pass to FUN}
 }
 \value{
-Returns 0 if FUN succeeds and 1 if it returns an error.
+Returns 0 if FUN succeeds and stops on error.  In rpy2, it will throw
+rpy2.rinterface.RRuntimeError.
 }
 \description{
 This is a wrapper for any of the graph functions meant to be called using rpy2 in python.
