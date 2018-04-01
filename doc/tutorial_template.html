@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 20px 30px 20px 30px">
+$for(include-before)$
+$include-before$
+$endfor$
+$if(title)$
+<h1>$title$</h1>
+$if(subtitle)$
+<p>$subtitle$</p>
+$endif$
+$for(author)$
+<p class="author">$author$</p>
+$endfor$
+$if(date)$
+<p class="date">$date$</p>
+$endif$
+$endif$
+$if(toc_float)$
+$else$
+$if(toc)$
+<div id="$idprefix$TOC">
+$toc$
+</div>
+$endif$
+$endif$
+$body$
+$for(include-after)$
+$include-after$
+$endfor$
+</div>
+{% endblock %}

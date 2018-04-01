@@ -1,0 +1,45 @@
+{% extends &quot;base.html&quot; %}
+
+{% block content %}
+<div style="padding: 20px 30px 20px 30px">
+<h1>16S Visualization Tutorial</h1>
+<nav id="TOC">
+<ul>
+<li><a href="#plotly-graphs">Plotly Graphs</a></li>
+<li><a href="#heatmap">Heatmap</a><ul>
+<li><a href="#filter-low-abundant-taxa">Filter Low Abundant Taxa</a></li>
+<li><a href="#view-the-heatmap-at-different-taxonomic-levels">View the heatmap at different taxonomic levels</a></li>
+</ul></li>
+</ul>
+</nav>
+<h2 id="plotly-graphs">Plotly Graphs</h2>
+<h2 id="heatmap">Heatmap</h2>
+<p>The <a href="https://software.broadinstitute.org/morpheus/documentation.html">Morpheus documentation</a> shows how to use the various features of the heatmap. We will show some examples of how these features could be used specifically for the output of the Nephele 16S pipelines.</p>
+<h3 id="filter-low-abundant-taxa">Filter Low Abundant Taxa</h3>
+<p>Filter taxa based on maximum abundance across all samples or the number of samples for which they are present.</p>
+<ol style="list-style-type: decimal">
+<li>Select Tools &gt; Create Calculated Annotation</li>
+</ol>
+<ul>
+<li>Maximum abundance: Enter Annotation Name <code>Max</code> and <code>MAX()</code> for Formula</li>
+<li>Number of samples: Enter Annotation Name <code>Num samples</code> and <code>COUNTIF(&quot;&gt;0&quot;)</code> for Formula</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Click OK.</li>
+<li>Select Tools &gt; Filter &gt; Add</li>
+</ol>
+<ul>
+<li>Maximum abundance: Choose Field <code>Max</code>. You can choose a minimum value for the range. This will filter out taxa which are below this value across all samples. Or you can <code>Switch to top filter</code> to see the top most abundant taxa.</li>
+<li>Number of samples: Choose Field <code>Num samples</code> . You can choose a range for the number of samples or you can <code>Switch to top filter</code> to see the most frequent taxa across all samples.</li>
+</ul>
+<h3 id="view-the-heatmap-at-different-taxonomic-levels">View the heatmap at different taxonomic levels</h3>
+<ol style="list-style-type: decimal">
+<li>Select Tools &gt; Collapse</li>
+<li>Choose Collapse Method: Sum and Collapse: Rows.<br />
+</li>
+<li>For Collapse Field, choose the taxonomic level at which you would like to view the heatmap.</li>
+<li>Tap OK, and a new tab will open with the heatmap at the desired level.</li>
+<li>Select View &gt; Options &gt; Annotations &gt; Row Annotations &gt; level name &gt; Close. This will show the new row names for the heatmap.</li>
+</ol>
+</div>
+{% endblock %}
