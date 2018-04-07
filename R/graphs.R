@@ -146,7 +146,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
-  rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
+  rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup") + ggtitle("Rarefaction Curves")
 
   on.exit(graphics.off())
 
@@ -174,9 +174,10 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 
 
   ## save to html and txt file
+  htmlwidgets::saveWidget(rarecurve,  file.path(outdir, "newrarecurve.html"))
   plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
   logoutput(paste0('Saving rarefaction curve table to ', file.path(outdir, 'rarecurve.txt') ))
-  write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
+  write.csv(df_new, file.path(outdir, 'rarecurve.csv'), quote = FALSE, sep = '\t', row.names = FALSE, na = "null")
 
   return(as.integer(0))
 
@@ -236,7 +237,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
   plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
   tabletsv <- gsub('.html$', '.txt', outfile)
   logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
-  write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
+  write.csv(pcoa$dsites, tabletsv, quote=FALSE, row.names=FALSE, na="null")
 
   return(as.integer(0))
 
@@ -278,7 +279,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, normalize=TRUE, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -288,11 +289,12 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
   }
 
   ## normalize data
-  logoutput("Calculate relative abundance.")
-  cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE)'
-  logoutput(cmnd)
-  eval(parse(text=cmnd))
-
+  if (normalize) {
+    logoutput("Calculate relative abundance.")
+    cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE)'
+    logoutput(cmnd)
+    eval(parse(text=cmnd))
+  }
 
   if (!all(nrow(amp$abund) > 1, ncol(amp$abund) > 1)) {
     stop("OTU table must be at least 2x2 for heatmap.")
@@ -622,13 +624,81 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 
   ## run command
   retvalue <- eval(parse(text=cmnd))
-  ## if (inherits(try(eval(parse(text=cmnd))), "try-error")) {
-  ##   retvalue <- as.integer(1)
-  ## } else {
-  ##   retvalue <- as.integer(0)
-  ## }
 
   return(as.integer(0))
+
+}
+
+
+#' Debug wrapper
+#'
+#' @description This is a wrapper for any of the graph functions meant to be called using rpy2 in python.
+#'
+#' @param datafile full path to input OTU file (biom or txt, see \link{readindata})
+#' @param outdir  output directory for graphs
+#' @param mapfile full path to map file
+#' @param FUN character string. name of function you would like to run. can be actual
+#' function object if run from R
+#' @param logfilename logfilename
+#' @param info print sessionInfo to logfile
+#' @param ...  parameters needed to pass to FUN
+#'
+#' @return Returns 0 if FUN succeeds and a list of the following on error:
+#'
+#' \describe{
+#' \item{message}{String. Error message.}
+#' \item{call}{String. Error generating call.}
+#' \item{traceback}{Character vector. Traceback calls.}
+#' 
+#' @export
+#'
+#' @source [graphs.R](../R/graphs.R)
+#'
+#' @importFrom utils capture.output sessionInfo
+#'
+trydatavis <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
+
+  ## set error handling options here, since rpy2 does not allow setting globally
+  ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
+  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE)
+
+  ## open log file
+  logfile <- file(logfilename, open = "at")
+  sink(file = logfile, type="output")
+  sink(file = logfile, type= "message")
+
+  on.exit(closeAllConnections())
+  ## create output directory
+  outdir <- file.path(outdir, "graphs")
+  dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+    
+  ## print sessionInfo
+  if (info) writeLines(capture.output(sessionInfo()))
+
+  ## make function command
+  cmnd <- paste0(deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', ' ...)')
+  logoutput(cmnd, 1)
+  FUN <- match.fun(FUN)
+
+  tryenv <- new.env()
+  retvalue <- try(withCallingHandlers(eval(parse(text=cmnd)),
+                      error = function(e) {
+                        tb <- .traceback(3)
+
+                        ## remove eval(parse(text=cmnd)) from stack for error message
+                        nows_tb <- gsub("\\s", "", tb, perl=TRUE)
+                        ev <- grep("eval\\(parse\\(text\\=cmnd\\)\\)", nows_tb)
+                        if (length(ev) > 0) {
+                          tb <- tb[c(1:(min(ev) - 1), (max(ev) + 1):length(tb))]
+                        }
+
+                        #e$message <- paste(c(e$message, tb ), collapse = "\n")
+                        tb <- sapply(tb, paste, collapse = "\n")
+                        assign("err", value = list(message=e$message, call = deparse(e$call), traceback = tb),
+                               envir = tryenv)
+                      }))
+  if(inherits(retvalue, "try-error")) retvalue <- tryenv$err
+  return(retvalue)
 
 }
 
