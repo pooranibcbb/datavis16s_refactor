@@ -600,14 +600,17 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 
   ## set error handling options here, since rpy2 does not allow setting globally
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
-  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2))
+  oldopts <- options()
+  options(stringsAsFactors = FALSE, scipen = 999, warn=1)
 
   ## open log file
   logfile <- file(logfilename, open = "at")
   sink(file = logfile, type="output")
   sink(file = logfile, type= "message")
 
-  on.exit(closeAllConnections())
+  on.exit(oldopts)
+  on.exit(closeAllConnections(), add = TRUE)
+
   ## create output directory
   outdir <- file.path(outdir, "graphs")
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
@@ -617,15 +620,12 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   if (info) writeLines(capture.output(sessionInfo()))
 
   ## make function command
-  cmnd <- paste0(deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', ' ...)')
-  logoutput(cmnd, 1)
+  # cmnd <- paste0('retvalue <- ',deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', ' ...)')
+  # logoutput(cmnd, 1)
   FUN <- match.fun(FUN)
+  retvalue <- FUN(datafile = datafile, outdir = outdir, mapfile = mapfile, ...)
 
-
-  ## run command
-  retvalue <- eval(parse(text=cmnd))
-
-  return(as.integer(0))
+  return(retvalue)
 
 }
 
@@ -649,7 +649,7 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 #' \item{message}{String. Error message.}
 #' \item{call}{String. Error generating call.}
 #' \item{traceback}{Character vector. Traceback calls.}
-#' 
+#'
 #' @export
 #'
 #' @source [graphs.R](../R/graphs.R)
@@ -671,7 +671,7 @@ trydatavis <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt"
   ## create output directory
   outdir <- file.path(outdir, "graphs")
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
-    
+
   ## print sessionInfo
   if (info) writeLines(capture.output(sessionInfo()))
 
