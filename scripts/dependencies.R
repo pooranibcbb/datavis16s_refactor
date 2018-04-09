@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+options(repos=c(CRAN="https://cran.rstudio.com/"))
 
 ## Bioconductor 3.6
 install.packages("BiocInstaller", repos="http://bioconductor.org/packages/3.6/bioc")
