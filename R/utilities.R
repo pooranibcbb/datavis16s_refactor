@@ -108,7 +108,8 @@ highertax <- function(amp, taxlevel) {
   tc <- which(colnames(tax) == taxlevel)
   sn <- shortnames(tax)
   tax <- tax[,1:tc]
-  tax <- tax[,c(tc+1,1:tc)]
+  tax[,tc] <- sn[,tc]
+
   taxcols <- colnames(tax)
   otucols <- colnames(otu)
   totu <- cbind.data.frame(otu, tax)
