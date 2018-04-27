@@ -146,7 +146,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
-  rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
+  rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup") + ggtitle("Rarefaction Curves")
 
   on.exit(graphics.off())
 
