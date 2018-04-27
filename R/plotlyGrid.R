@@ -51,7 +51,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
   outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
   outlib <- file.path(dirname(outfile), basename(outlib))
   logoutput(paste("Saving plot to", outfile))
-  saveWidget(plotly::config(pp, cloud = T, editable = T), file=outfile , selfcontained = FALSE, title=title, libdir=outlib)
+  saveWidget(plotly::config(pp,  cloud=T, edits = list(titleText=T, legendText=T, legendPosition=T, axisTitleText=T)), file=outfile , selfcontained = FALSE, title=title, libdir=outlib)
 }
 
 #' @title Add Plotly data export to plain html
