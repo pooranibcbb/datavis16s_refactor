@@ -7,7 +7,7 @@ output:
     smart: false
     highlight: null
     theme: null
-    template: /Users/subramanianp4/git/nephele2/misc_examples/docs/user_doc_template.html
+    template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_doc_template.html
     toc: true
   # github_document:
   #   toc: true
@@ -17,9 +17,17 @@ output:
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
 ```
 
+The visualizations are a set of html files that can be viewed in the browser.
+
 ## Plotly Graphs
 
-
+- The title and axis labels can be edited by clicking on them.
+<edit_text_plotly.mp4>
+- The legend can also be edited, and can be moved by clicking and dragging.
+<edit_legend_plotly.mp4>
+- To save the plot, click on the camera icon in the menu.  The browser will download the png file.
+<save_plotly_whole.mp4>
+- To edit the graph further, you can export the data to Plotly Chart Studio by clicking on "Export Data to Plotly."  See the [Plotly Chart Studio tutorials](https://plot.ly/online-chart-maker/) for more information.
 
 ## Heatmap
 
@@ -29,21 +37,27 @@ The [Morpheus documentation](https://software.broadinstitute.org/morpheus/docume
 
 Filter taxa based on maximum abundance across all samples or the number of samples for which they are present.
 
-1. Select Tools > Create Calculated Annotation 
-   - Maximum abundance: Enter Annotation Name `Max` and `MAX()` for Formula
-   - Number of samples: Enter Annotation Name `Num samples` and `COUNTIF(">0")` for Formula
+1. Select Tools > Create Calculated Annotation.
+    - Maximum abundance: Enter `Max` for Annotation Name and `MAX()` for Formula
+    - Number of samples: Enter Annotation Name `Num samples` and `COUNTIF(">0")` for Formula
 2. Click OK.
-3. Select Tools > Filter > Add
-   - Maximum abundance: Choose Field `Max`.  You can choose a minimum value for the range.  This will filter out taxa which are below this value across all samples.  Or you can `Switch to top filter` to see the top most abundant taxa.
-   - Number of samples: Choose Field `Num samples` .  You can choose a range for the number of samples or you can `Switch to top filter` to see the most frequent taxa across all samples. 
-
+3. Select Tools > Filter > Add.
+    - Maximum abundance: Choose Field `Max`.  You can choose a minimum value for the range.  This will filter out taxa which are below this value across all samples.  Or you can `Switch to top filter` to see the top most abundant taxa.
+    - Number of samples: Choose Field `Num samples` .  You can choose a range for the number of samples or you can `Switch to top filter` to see the most frequent taxa across all samples. 
+<filter_heatmap.mp4>
 
 
 ### View the heatmap at different taxonomic levels
 
-1. Select Tools > Collapse 
+1. Select Tools > Collapse.
 2. Choose Collapse Method: Sum and Collapse: Rows.  
 3. For Collapse Field, choose the taxonomic level at which you would like to view the heatmap.
-4. Tap OK, and a new tab will open with the heatmap at the desired level.
+4. Click OK, and a new tab will open with the heatmap at the desired level.
 5. Select View > Options > Annotations > Row Annotations > level name > Close.  This will show the new row names for the heatmap.
+<heatmap_taxlevel.mp4>
 
+### Sort the heatmap by taxonomic level
+
+1. Select View > Options > Annotations > Row Annotations > taxonomic level > Close.  This will show a column with the taxonomic level annotations for the heatmap.
+2. Select Tools > Sort/Group > Add sort level > taxonomic level.  Then select Group By > taxonomic level.
+<heatmap_sort.mp4>
