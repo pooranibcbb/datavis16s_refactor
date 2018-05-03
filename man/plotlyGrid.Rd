@@ -10,7 +10,8 @@
 \usage{
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
 
-htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
+htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib",
+  styletags = NULL)
 }
 \arguments{
 \item{pplot}{plotly or ggplot object}
@@ -27,6 +28,8 @@ Useful for multiple graphs sharing the same lib.}
 \item{ht}{html tagList}
 
 \item{jquery}{should we load jquery}
+
+\item{styletags}{html object with style tags for the tagList.}
 }
 \value{
 html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
@@ -38,4 +41,8 @@ All functions create an output html plot  with link which sends the data to a gr
  \code{plotlyGrid} takes in a ggplot or plotly object and creates an output html plotly plot.
 
 \code{htmlGrid} takes in an html tag object.
+}
+\details{
+If jquery is needed, we use jquery-1.11.3 from the rmarkdown library.  We also use
+ rmarkdown's bootstrap-3.3.5 css to style the text elements.
 }

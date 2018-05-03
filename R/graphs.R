@@ -396,6 +396,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @source [graphs.R](../R/graphs.R)
 #'
 #' @importFrom bpexploder bpexploder
+#' @importFrom htmltools HTML
 #'
 adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
 
@@ -434,9 +435,9 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
       lc <- NULL
     }
 
-    shannon <-  bpexploder(alphadiv, settings = list(groupVar = col, yVar = "Shannon", tipText = list(SampleID = "SampleID", Shannon = "Shannon Index", Description = "Desc"), relativeWidth = 0.8, levelColors = lc))
+    shannon <- bpexploder(adiv, settings = list(groupVar = col, yVar = "Shannon", tipText = list(SampleID = "SampleID", Shannon = "Shannon Index", Description = "Desc"), levelColors = lc))
 
-    chao1 <- bpexploder(alphadiv, settings = list(groupVar = col, yVar = "Chao1", tipText = list(SampleID = "SampleID", Chao1 = "Species Richness", Description = "Desc"), relativeWidth = 0.8, levelColors = lc))
+    chao1 <- bpexploder(adiv, settings = list(groupVar = col, yVar = "Chao1", tipText = list(SampleID = "SampleID", Chao1 = "Species Richness", Description = "Desc"), levelColors = lc))
     return(list(shannon, chao1))
   }
 
@@ -447,8 +448,23 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
   )
 
+  ## Make the axis text a little bigger and style the tooltip
+  axisstyle <- HTML(paste(
+    '<style type="text/css">',
+    '.x.axis {',
+    'font-size: 1em !important;',
+    '}',
+    '.axislabel {',
+    'font-size: 1.2em !important;',
+    '}',
+    '.d3-exploding-boxplot.tip {',
+    'background: rgba(51, 51, 51, 0.8);',
+    '}',
+    '</style>'
+  , sep='\n'))
+
   ## save html file
-  htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
+  htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE, styletags=axisstyle)
 
   return(as.integer(0))
 
