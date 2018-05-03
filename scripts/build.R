@@ -64,12 +64,12 @@ pandoc_convert(Rmdfile, to = "rst", options = c("--columns=1000", "-s", paste0("
 file.remove(Rmdfile)
 file.remove(paste0(Rmdfile, ".bak"))
 
-# ## User docs
-# render("doc/user_doc.Rmd", output_format = "github_document")
-# file.rename("doc/user_doc.md", "doc/github_doc.md")
-# render("doc/user_doc.Rmd", output_format = "html_document", output_file = "datavis16s_pipeline.html")
-# system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
-# file.remove("doc/datavis16s_pipeline.html.bak")
-# file.rename("doc/github_doc.md", "doc/user_doc.md")
-# file.remove("doc/user_doc.html")
-#
+## User docs
+render("doc/user_doc.Rmd", output_format = "github_document")
+file.rename("doc/user_doc.md", "doc/github_doc.md")
+render("doc/user_doc.Rmd", output_format = "html_document", output_file = "datavis16s_pipeline.html")
+system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
+file.remove("doc/datavis16s_pipeline.html.bak")
+file.rename("doc/github_doc.md", "doc/user_doc.md")
+file.remove("doc/user_doc.html")
+
