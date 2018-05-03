@@ -60,27 +60,38 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 #'
 #' @param ht html tagList
 #' @param jquery should we load jquery
+#' @param styletags html object with style tags for the tagList.
 #'
 #' @importFrom htmltools tagList tags
 #'
+#' @details If jquery is needed, we use jquery-1.11.3 from the rmarkdown library.  We also use
+#'  rmarkdown's bootstrap-3.3.5 css to style the text elements.
+#'
 #' @rdname plotlyGrid
 #'
-htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib") {
+htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib", styletags=NULL) {
 
   list2env(gridCode(data), envir=environment())
-  tl <- tagList(html, javascript, ht)
+  tl <- tagList(javascript, ht)
 
   if (jquery) {
-    tl <- tagList(jq, tl)
+    jq <- htmltools::htmlDependency("jquery", "1.11.3", c(file=file.path(find.package("rmarkdown"), "rmd/h/jquery-1.11.3"), href="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3"), script="jquery.min.js", all_files = FALSE)
+    tl <- htmltools::attachDependencies(tl, jq, append=TRUE)
   }
 
+  mc <- htmltools::htmlDependency("bootstrap", "3.3.5", c(file=file.path(find.package("rmarkdown"), "rmd/h/bootstrap-3.3.5/css")), stylesheet = "bootstrap.min.css", all_files = F)
+  tl <- htmltools::attachDependencies(tl, mc, append=TRUE)
   if (!is.null(title)) {
-    title <- tags$h2(title, style = "font-family: sans-serif; text-align: center;")
-    tl <- tagList(title,tl)
+    tl <- tags$div(class="container-fluid", style="max-width:1200px", tags$h2(title), tags$p(html), tl)
+  } else {
+    tl <- tags$div(class="container-fluid", tags$p(html), tl)
+  }
+
+  if (!is.null(styletags)) {
+    tl <- tagList(styletags, tl)
   }
 
   outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
-
   outlib <- file.path(dirname(outfile), basename(outlib))
 
   logoutput(paste("Saving plot to", outfile))
@@ -94,9 +105,8 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
 #'
 #' @param data data to populate plotly grid
 #'
-#' @return list of 3 values:
+#' @return list of 2 values:
 #' \describe{
-#'   \item{jq}{optional jquery script}
 #'   \item{html}{html for plotly export link}
 #'   \item{javascript}{js function for exporting data}
 #' }
@@ -114,7 +124,6 @@ gridCode <- function(data) {
   names(ll) <- nn
   ll <- jsonlite::toJSON(ll)
 
-  jq <- HTML('<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>')
   html <- HTML(text = '<a href=\"#\" id=\"plotly-data-export\" target=\"_blank\" style=\"font-family:\'Open Sans\',sans-serif;\">Export Data to Plotly</a>')
 
   javascript <- HTML(paste('<script>',
@@ -138,7 +147,7 @@ gridCode <- function(data) {
                            "  return false;",
                            "});",
                            "</script>", sep = "\n"))
-  return(list(jq=jq, html=html, javascript=javascript))
+  return(list(html=html, javascript=javascript))
 }
 
 

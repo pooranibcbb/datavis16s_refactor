@@ -54,7 +54,7 @@ header-includes: |
 
 Rmdfile <-  "doc/datavis16s.R.Rmd"
 docsdir <- "../../docs/api_docs/source"
-templatedir <- "../../misc_examples/docs"
+templatedir <- "../../misc_examples/Rdocs"
 
 ReferenceManual(outdir = tempdir(), front.matter = yaml, title.level = 1, run.examples = TRUE, sepexported = TRUE)
 file.rename(file.path(tempdir(),"Reference_Manual_datavis16s.md" ), Rmdfile)

@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-April 01, 2018
+May 03, 2018
 
 DESCRIPTION
 ===========
@@ -32,18 +32,15 @@ DESCRIPTION
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
     Date: 2018-03-20 22:26:33 UTC
-    Authors@R: 
-        person(given = "Poorani",
-               family = "Subramanian",
-               role = c("aut", "cre"),
-               email = "poorani.subramanian@nih.gov")
+    Authors@R (parsed):
+        * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
     Description: betterbetterplots!
     License: none
-    URL: 
+    URL:
         https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
-    Depends: 
+    Depends:
         R (>= 3.4.1)
-    Imports: 
+    Imports:
         ampvis2,
         biomformat,
         bpexploder,
@@ -75,8 +72,8 @@ Plots exploding boxplot of shannon diversity and Chao species richness. If sampl
 ### Usage
 
 ``` r
-adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  colors = NULL, ...)
+adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, colors = NULL, 
+    ...)
 ```
 
 ### Arguments
@@ -154,9 +151,8 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 ### Usage
 
 ``` r
-morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
-  ...)
+morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = FALSE, 
+    filter_level = 0, taxlevel = c("seq"), colors = NULL, ...)
 ```
 
 ### Arguments
@@ -249,9 +245,8 @@ PCoA plots
 ### Usage
 
 ``` r
-pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  distm = "binomial", filter_species = 0.1, rarefy = FALSE,
-  colors = NULL, ...)
+pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, distm = "binomial", 
+    filter_species = 0.1, rarefy = FALSE, colors = NULL, ...)
 ```
 
 ### Arguments
@@ -451,8 +446,8 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 ### Usage
 
 ``` r
-trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
-  info = TRUE, ...)
+trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt", info = TRUE, 
+    ...)
 ```
 
 ### Arguments
@@ -619,9 +614,8 @@ gridCode(data)
 
 ### Value
 
-list of 3 values:
+list of 2 values:
 
--   `jq` optional jquery script
 -   `html` html for plotly export link
 -   `javascript` js function for exporting data
 
@@ -703,7 +697,7 @@ All functions create an output html plot with link which sends the data to a gri
 
 ``` r
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
-htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
+htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib", styletags = NULL)
 ```
 
 ### Arguments
@@ -748,8 +742,16 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 <td><code>jquery</code></td>
 <td>should we load jquery</td>
 </tr>
+<tr class="even">
+<td><code>styletags</code></td>
+<td>html object with style tags for the tagList.</td>
+</tr>
 </tbody>
 </table>
+
+### Details
+
+If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use rmarkdown's bootstrap-3.3.5 css to style the text elements.
 
 ### Value
 
@@ -800,8 +802,7 @@ Save an HTML object to a file
 ### Usage
 
 ``` r
-save_fillhtml(html, file, background = "white", libdir = "lib",
-  bodystyle = "")
+save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 ```
 
 ### Arguments

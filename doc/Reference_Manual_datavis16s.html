@@ -53,24 +53,21 @@ body {
 </ul></li>
 </ul>
 <!-- toc -->
-<p>April 01, 2018</p>
+<p>May 03, 2018</p>
 <h1 id="description">DESCRIPTION</h1>
 <pre><code>Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.0
 Date: 2018-03-20 22:26:33 UTC
-Authors@R: 
-    person(given = &quot;Poorani&quot;,
-           family = &quot;Subramanian&quot;,
-           role = c(&quot;aut&quot;, &quot;cre&quot;),
-           email = &quot;poorani.subramanian@nih.gov&quot;)
+Authors@R (parsed):
+    * Poorani Subramanian &lt;poorani.subramanian@nih.gov&gt; [aut, cre]
 Description: betterbetterplots!
 License: none
-URL: 
+URL:
     https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
-Depends: 
+Depends:
     R (&gt;= 3.4.1)
-Imports: 
+Imports:
     ampvis2,
     biomformat,
     bpexploder,
@@ -92,8 +89,8 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-1">Description</h3>
 <p>Plots exploding boxplot of shannon diversity and Chao species richness. If sampling depth is NULL, rarefies OTU table to the minimum readcount of any sample. If this is low, then the plot will fail.</p>
 <h3 id="usage">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adivboxplot</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
-  <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">adivboxplot</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">colors =</span> <span class="ot">NULL</span>, 
+    ...)</code></pre></div>
 <h3 id="arguments">Arguments</h3>
 <table>
 <thead>
@@ -188,9 +185,8 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-3">Description</h3>
 <p>Creates heatmaps using Morpheus R API <a href="https://software.broadinstitute.org/morpheus/" class="uri">https://software.broadinstitute.org/morpheus/</a> . The heatmaps are made using relative abundances.</p>
 <h3 id="usage-2">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
-  <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, <span class="dt">filter_level =</span> <span class="dv">0</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;seq&quot;</span>), <span class="dt">colors =</span> <span class="ot">NULL</span>,
-  ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">morphheatmap</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, 
+    <span class="dt">filter_level =</span> <span class="dv">0</span>, <span class="dt">taxlevel =</span> <span class="kw">c</span>(<span class="st">&quot;seq&quot;</span>), <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-2">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -262,9 +258,8 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-4">Description</h3>
 <p>PCoA plots</p>
 <h3 id="usage-3">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>,
-  <span class="dt">distm =</span> <span class="st">&quot;binomial&quot;</span>, <span class="dt">filter_species =</span> <span class="fl">0.1</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>,
-  <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pcoaplot</span>(datafile, outdir, mapfile, <span class="dt">amp =</span> <span class="ot">NULL</span>, <span class="dt">sampdepth =</span> <span class="ot">NULL</span>, <span class="dt">distm =</span> <span class="st">&quot;binomial&quot;</span>, 
+    <span class="dt">filter_species =</span> <span class="fl">0.1</span>, <span class="dt">rarefy =</span> <span class="ot">FALSE</span>, <span class="dt">colors =</span> <span class="ot">NULL</span>, ...)</code></pre></div>
 <h3 id="arguments-3">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -417,8 +412,8 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-7">Description</h3>
 <p>This is a wrapper for any of the graph functions meant to be called using rpy2 in python.</p>
 <h3 id="usage-6">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">trygraphwrapper</span>(datafile, outdir, mapfile, FUN, <span class="dt">logfilename =</span> <span class="st">&quot;logfile.txt&quot;</span>,
-  <span class="dt">info =</span> <span class="ot">TRUE</span>, ...)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">trygraphwrapper</span>(datafile, outdir, mapfile, FUN, <span class="dt">logfilename =</span> <span class="st">&quot;logfile.txt&quot;</span>, <span class="dt">info =</span> <span class="ot">TRUE</span>, 
+    ...)</code></pre></div>
 <h3 id="arguments-6">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -550,9 +545,8 @@ RoxygenNote: 6.0.1</code></pre>
 </tbody>
 </table>
 <h3 id="value-8">Value</h3>
-<p>list of 3 values:</p>
+<p>list of 2 values:</p>
 <ul>
-<li><code>jq</code> optional jquery script</li>
 <li><code>html</code> html for plotly export link</li>
 <li><code>javascript</code> js function for exporting data</li>
 </ul>
@@ -626,7 +620,7 @@ RoxygenNote: 6.0.1</code></pre>
 <p><code>htmlGrid</code> takes in an html tag object.</p>
 <h3 id="usage-11">Usage</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotlyGrid</span>(pplot, filename, <span class="dt">data =</span> <span class="ot">NULL</span>, <span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">outlib =</span> <span class="st">&quot;lib&quot;</span>)
-<span class="kw">htmlGrid</span>(ht, filename, data, <span class="dt">jquery =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">outlib =</span> <span class="st">&quot;lib&quot;</span>)</code></pre></div>
+<span class="kw">htmlGrid</span>(ht, filename, data, <span class="dt">jquery =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="ot">NULL</span>, <span class="dt">outlib =</span> <span class="st">&quot;lib&quot;</span>, <span class="dt">styletags =</span> <span class="ot">NULL</span>)</code></pre></div>
 <h3 id="arguments-11">Arguments</h3>
 <table style="width:43%;">
 <colgroup>
@@ -668,8 +662,14 @@ RoxygenNote: 6.0.1</code></pre>
 <td><code>jquery</code></td>
 <td>should we load jquery</td>
 </tr>
+<tr class="even">
+<td><code>styletags</code></td>
+<td>html object with style tags for the tagList.</td>
+</tr>
 </tbody>
 </table>
+<h3 id="details-4">Details</h3>
+<p>If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use rmarkdown's bootstrap-3.3.5 css to style the text elements.</p>
 <h3 id="value-10">Value</h3>
 <p>html plot is saved to filename. external libraries are saved to outlib in same directory as filename.</p>
 <h3 id="source-11">Source</h3>
@@ -704,8 +704,7 @@ RoxygenNote: 6.0.1</code></pre>
 <h3 id="description-15">Description</h3>
 <p>Save an HTML object to a file</p>
 <h3 id="usage-13">Usage</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_fillhtml</span>(html, file, <span class="dt">background =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>,
-  <span class="dt">bodystyle =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_fillhtml</span>(html, file, <span class="dt">background =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>, <span class="dt">bodystyle =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
 <h3 id="arguments-13">Arguments</h3>
 <table>
 <thead>
@@ -799,7 +798,7 @@ RoxygenNote: 6.0.1</code></pre>
 </tr>
 </tbody>
 </table>
-<h3 id="details-4">Details</h3>
+<h3 id="details-5">Details</h3>
 <p><code>sampdepth</code> will be used to filter out samples with fewer than this number of reads. If rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function rrarefy.</p>
 <h3 id="value-14">Value</h3>
 <p>ampvis2 object</p>
