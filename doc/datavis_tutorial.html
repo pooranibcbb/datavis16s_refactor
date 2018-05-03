@@ -9,37 +9,48 @@
 <li><a href="#heatmap">Heatmap</a><ul>
 <li><a href="#filter-low-abundant-taxa">Filter Low Abundant Taxa</a></li>
 <li><a href="#view-the-heatmap-at-different-taxonomic-levels">View the heatmap at different taxonomic levels</a></li>
+<li><a href="#sort-the-heatmap-by-taxonomic-level">Sort the heatmap by taxonomic level</a></li>
 </ul></li>
 </ul>
 </nav>
+<p>The visualizations are a set of html files that can be viewed in the browser.</p>
 <h2 id="plotly-graphs">Plotly Graphs</h2>
+<ul>
+<li>The title and axis labels can be edited by clicking on them. &lt;edit_text_plotly.mp4&gt;</li>
+<li>The legend can also be edited, and can be moved by clicking and dragging. &lt;edit_legend_plotly.mp4&gt;</li>
+<li>To save the plot, click on the camera icon in the menu. The browser will download the png file. &lt;save_plotly_whole.mp4&gt;</li>
+<li>To edit the graph further, you can export the data to Plotly Chart Studio by clicking on &quot;Export Data to Plotly.&quot; See the <a href="https://plot.ly/online-chart-maker/">Plotly Chart Studio tutorials</a> for more information.</li>
+</ul>
 <h2 id="heatmap">Heatmap</h2>
 <p>The <a href="https://software.broadinstitute.org/morpheus/documentation.html">Morpheus documentation</a> shows how to use the various features of the heatmap. We will show some examples of how these features could be used specifically for the output of the Nephele 16S pipelines.</p>
 <h3 id="filter-low-abundant-taxa">Filter Low Abundant Taxa</h3>
 <p>Filter taxa based on maximum abundance across all samples or the number of samples for which they are present.</p>
 <ol style="list-style-type: decimal">
-<li>Select Tools &gt; Create Calculated Annotation</li>
-</ol>
+<li>Select Tools &gt; Create Calculated Annotation.
 <ul>
-<li>Maximum abundance: Enter Annotation Name <code>Max</code> and <code>MAX()</code> for Formula</li>
+<li>Maximum abundance: Enter <code>Max</code> for Annotation Name and <code>MAX()</code> for Formula</li>
 <li>Number of samples: Enter Annotation Name <code>Num samples</code> and <code>COUNTIF(&quot;&gt;0&quot;)</code> for Formula</li>
-</ul>
-<ol start="2" style="list-style-type: decimal">
+</ul></li>
 <li>Click OK.</li>
-<li>Select Tools &gt; Filter &gt; Add</li>
-</ol>
+<li>Select Tools &gt; Filter &gt; Add.
 <ul>
 <li>Maximum abundance: Choose Field <code>Max</code>. You can choose a minimum value for the range. This will filter out taxa which are below this value across all samples. Or you can <code>Switch to top filter</code> to see the top most abundant taxa.</li>
-<li>Number of samples: Choose Field <code>Num samples</code> . You can choose a range for the number of samples or you can <code>Switch to top filter</code> to see the most frequent taxa across all samples.</li>
-</ul>
+<li>Number of samples: Choose Field <code>Num samples</code> . You can choose a range for the number of samples or you can <code>Switch to top filter</code> to see the most frequent taxa across all samples. &lt;filter_heatmap.mp4&gt;</li>
+</ul></li>
+</ol>
 <h3 id="view-the-heatmap-at-different-taxonomic-levels">View the heatmap at different taxonomic levels</h3>
 <ol style="list-style-type: decimal">
-<li>Select Tools &gt; Collapse</li>
+<li>Select Tools &gt; Collapse.</li>
 <li>Choose Collapse Method: Sum and Collapse: Rows.<br />
 </li>
 <li>For Collapse Field, choose the taxonomic level at which you would like to view the heatmap.</li>
-<li>Tap OK, and a new tab will open with the heatmap at the desired level.</li>
-<li>Select View &gt; Options &gt; Annotations &gt; Row Annotations &gt; level name &gt; Close. This will show the new row names for the heatmap.</li>
+<li>Click OK, and a new tab will open with the heatmap at the desired level.</li>
+<li>Select View &gt; Options &gt; Annotations &gt; Row Annotations &gt; level name &gt; Close. This will show the new row names for the heatmap. &lt;heatmap_taxlevel.mp4&gt;</li>
+</ol>
+<h3 id="sort-the-heatmap-by-taxonomic-level">Sort the heatmap by taxonomic level</h3>
+<ol style="list-style-type: decimal">
+<li>Select View &gt; Options &gt; Annotations &gt; Row Annotations &gt; taxonomic level &gt; Close. This will show a column with the taxonomic level annotations for the heatmap.</li>
+<li>Select Tools &gt; Sort/Group &gt; Add sort level &gt; taxonomic level. Then select Group By &gt; taxonomic level. &lt;heatmap_sort.mp4&gt;</li>
 </ol>
 </div>
 {% endblock %}

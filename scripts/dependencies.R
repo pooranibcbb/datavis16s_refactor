@@ -1,4 +1,6 @@
 #!/usr/bin/env Rscript
+## Nephele is using R 3.4.3. The following script only works with this version!
+
 options(repos=c(CRAN="https://cran.rstudio.com/"))
 
 ## Bioconductor 3.6
