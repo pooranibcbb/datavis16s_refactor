@@ -65,7 +65,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 #' @importFrom htmltools tagList tags
 #'
 #' @details If jquery is needed, we use jquery-1.11.3 from the rmarkdown library.  We also use
-#'  rmarkdown's bootstrap-3.3.5 css to style the text elements.
+#'  rmarkdown's bootstrap-3.3.7 css to style the text elements.
 #'
 #' @rdname plotlyGrid
 #'
