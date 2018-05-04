@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-May 03, 2018
+May 04, 2018
 
 DESCRIPTION
 ===========
@@ -751,7 +751,7 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib", style
 
 ### Details
 
-If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use rmarkdown's bootstrap-3.3.5 css to style the text elements.
+If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use rmarkdown's bootstrap-3.3.7 css to style the text elements.
 
 ### Value
 
