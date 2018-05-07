@@ -78,6 +78,6 @@ render(userRmd, output_format = "html_document", output_file = "datavis16s_pipel
 system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
 file.remove("doc/datavis16s_pipeline.html.bak")
 # file.rename("doc/github_doc.md", "doc/user_doc.md")
-# file.remove("doc/user_doc.html")
+file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
 
 

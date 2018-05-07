@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-May 04, 2018
+May 07, 2018
 
 DESCRIPTION
 ===========
