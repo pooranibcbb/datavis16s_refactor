@@ -21,7 +21,7 @@ The visualizations are a set of html files that can be viewed in the browser.
 
 ## Plotly Graphs
 - The title and axis labels can be edited by clicking on them.  
-<edit_text_plotly.mp4: https://youtu.be/ONBAjvhWZkM>
+<edit_text_plotly.mp4><https://youtu.be/ONBAjvhWZkM>
 - The legend can also be edited, and can be moved by clicking and dragging.  
 <edit_legend_plotly.mp4: https://youtu.be/vUjhMzbKtp8>
 - To save the plot, click on the camera icon in the menu.  The browser will download the png file.  
