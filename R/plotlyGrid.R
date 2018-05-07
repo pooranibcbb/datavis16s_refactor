@@ -65,7 +65,7 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 #' @importFrom htmltools tagList tags
 #'
 #' @details If jquery is needed, we use jquery-1.11.3 from the rmarkdown library.  We also use
-#'  rmarkdown's bootstrap-3.3.5 css to style the text elements.
+#'  rmarkdown's bootstrap-3.3.7 css to style the text elements.
 #'
 #' @rdname plotlyGrid
 #'
@@ -79,7 +79,7 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
     tl <- htmltools::attachDependencies(tl, jq, append=TRUE)
   }
 
-  mc <- htmltools::htmlDependency("bootstrap", "3.3.5", c(file=file.path(find.package("rmarkdown"), "rmd/h/bootstrap-3.3.5/css")), stylesheet = "bootstrap.min.css", all_files = F)
+  mc <- htmltools::htmlDependency("bootstrap", "3.3.7", c(file=file.path(find.package("shiny"), "www/shared/bootstrap/css")), stylesheet = "bootstrap.min.css", all_files = F)
   tl <- htmltools::attachDependencies(tl, mc, append=TRUE)
   if (!is.null(title)) {
     tl <- tags$div(class="container-fluid", style="max-width:1200px", tags$h2(title), tags$p(html), tl)
