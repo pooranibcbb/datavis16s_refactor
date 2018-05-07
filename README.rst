@@ -1,5 +1,5 @@
-datavis16s
-==========
+datavis16s R pipeline
+=============
 
 R package for graphs for Nephele 16S pipelines.
 
@@ -29,7 +29,7 @@ Usage
 -  **Python with rpy2**
 
    -  The generic wrapper function to be called from rpy2 is
-      ```trygraphwrapper`` <doc/Reference_Manual_datavis16s.md#trygraphwrapper>`__.
+      `trygraphwrapper <doc/Reference_Manual_datavis16s.md#trygraphwrapper>`__.
       It returns 0 for success and 1 for failure. See the `function
       help <doc/Reference_Manual_datavis16s.md#trygraphwrapper>`__ for
       examples.
@@ -65,11 +65,9 @@ Usage
    -  For pipelines, the alpha diversity boxplot and the PCoA would
       benefit from having this sampling depth set properly.
 
-      -  Conrad is working on
-         `formula <http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-653>`__.
-      -  Until then, see details section of
-         ```allgraphs`` <doc/Reference_Manual_datavis16s.md#allgraphs>`__
-         help for current pipeline default (similar to N1.0 default).
+      -  Poorani and Conrad implemented the median absolute deviation
+	 method as default across all pipelines.  See
+	 :any:`get_depth` and :any:`left_mad_zscore`
       -  All other functions will not remove samples or rarefy unless
          ``sampdepth`` is specified.
 
