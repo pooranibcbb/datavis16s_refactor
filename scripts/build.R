@@ -65,11 +65,19 @@ file.remove(Rmdfile)
 file.remove(paste0(Rmdfile, ".bak"))
 
 ## User docs
-render("doc/user_doc.Rmd", output_format = "github_document")
-file.rename("doc/user_doc.md", "doc/github_doc.md")
-render("doc/user_doc.Rmd", output_format = "html_document", output_file = "datavis16s_pipeline.html")
+
+userRmd <- "doc/user_doc.Rmd"
+usermd <- "doc/user_doc.md"
+render(userRmd, output_format = "github_document")
+system2(command = "sed" , args=c('-i.bak', '\'s/\\[\`/\\[/g\'', usermd))
+system2(command = "sed" , args=c('-i.bak', '\'s/\`\\]/\\]/g\'', usermd))
+pandoc_convert(usermd, to = "rst", options = c("--columns=1000", "-s", paste0("--template=",templatedir, "/template.rst")), wd = getwd(), output = file.path(docsdir, "datavis16s.user_doc.rst"), verbose = TRUE)
+
+# file.rename("doc/user_doc.md", "doc/github_doc.md")
+render(userRmd, output_format = "html_document", output_file = "datavis16s_pipeline.html")
 system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
 file.remove("doc/datavis16s_pipeline.html.bak")
-file.rename("doc/github_doc.md", "doc/user_doc.md")
-file.remove("doc/user_doc.html")
+# file.rename("doc/github_doc.md", "doc/user_doc.md")
+# file.remove("doc/user_doc.html")
+
 

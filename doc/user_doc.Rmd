@@ -7,7 +7,7 @@ output:
     smart: false
     highlight: null
     theme: null
-    template: /Users/subramanianp4/git/nephele2/misc_examples/docs/user_doc_template.html
+    template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_doc_template.html
     toc: false
   github_document:
     toc: true
