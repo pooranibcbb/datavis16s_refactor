@@ -5,6 +5,7 @@
 #' @param amp  ampvis2 object
 #' @param sampdepth  sampling depth.  See details.
 #' @param rarefy  rarefy the OTU table in addition to subsetting
+#' @param printsummary Logical. print ampvis2 summary of OTU table
 #' @param ... other parameters to pass to amp_subset_samples
 #'
 #' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
@@ -15,7 +16,7 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
+subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) {
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
@@ -28,7 +29,7 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
-  print_ampvis2(amp)
+  if (printsummary) print_ampvis2(amp)
   writeLines('')
   return(amp)
 }
@@ -81,7 +82,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 
     cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
     logoutput(cmnd)
-    eval(parse(text = cmnd))
+    run_cmd(cmnd)
 
     cmnd <- 'tax <- biomformat::observation_metadata(biom)'
     logoutput(cmnd)
@@ -289,7 +290,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
   ## normalize data
   logoutput("Calculate relative abundance.")
-  cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE)'
+  cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE, printsummary = FALSE)'
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
@@ -477,14 +478,10 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' @param mapfile  full path to map file
 #' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
-#' @param sampdepth  sampling depth.  see details.
+#' @param sampdepth  sampling depth.  default: 10000
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
-#'
-#' @details If sampdepth is NULL, then the sampling depth is set to the size of the
-#' smallest sample larger than 0.2*median sample size.  Otherwise, it is set to the
-#' size of the smallest sample larger than sampdepth.
 #'
 #' This value is used to remove samples before for alpha diversity and PCoA plots.
 #' Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
@@ -495,7 +492,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #'
 #' @export
 #'
-allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
+allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   retvalue <- as.integer(0)
 
   amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
@@ -526,20 +523,19 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## Filter out low count samples
-  cs <- colSums(amp$abund)
-  if (is.null(sampdepth)) {
-    sampdepth <- 0.2*median(cs)
-    logoutput('Calculating sampling depth to be count of smallest sample larger than 20% of median read count.', 1)
-  }
-  sampdepth <- min(cs[cs >= sampdepth])
   logoutput(paste('Sampling depth:', sampdepth))
+  cs <- colSums(amp$abund)
+  if (max(cs) < sampdepth) {
+    logoutput(paste("The counts for all samples is below the sampling depth of", sampdepth, ", so diversity and PCoA plots will not be made."), 1)
+    return(as.integer(1))
+  }
 
   logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots.'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth)
 
   if (nrow(ampsub$metadata) < 3) {
-    logoutput("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.", 1)
-    return()
+    logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1)
+    return(as.integer(1))
   }
 
 
@@ -559,7 +555,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
   ## bray-curtis PCoA
   ## Rarefy table
   logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads, and normalizing to 100 for Bray-Curtis distance.'))
-  amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE)
+  amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
 
   cmnd <- 'pcoaplot(outdir = outdir, amp = amp, distm = "bray", colors = allcols)'
   logoutput(cmnd)
@@ -638,11 +634,6 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 
   ## run command
   retvalue <- eval(parse(text=cmnd))
-  ## if (inherits(try(eval(parse(text=cmnd))), "try-error")) {
-  ##   retvalue <- as.integer(1)
-  ## } else {
-  ##   retvalue <- as.integer(0)
-  ## }
 
   return(as.integer(0))
 
