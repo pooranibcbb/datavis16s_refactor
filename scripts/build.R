@@ -4,7 +4,7 @@ library(rmarkdown)
 
 ## Build package
 document(roclets=c('rd', 'collate', 'namespace'))
-install(args = c("--preclean", "--no-multiarch", "--with-keep.source"))
+install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), upgrade_dependencies = F)
 
 ## Imported packages - can check DESCRIPTION
 ns <- scan("NAMESPACE", sep="\n", what = character())
@@ -79,7 +79,7 @@ pandoc_convert(mdfile, to = "rst", options = c("--columns=1000", "-s", paste0("-
 file.remove(Rmdfile)
 file.remove(mdfile)
 file.remove(paste0(mdfile, ".bak"))
-
+file.remove("doc/Reference_Manual_datavis16s.html")
 
 ## User docs
 
@@ -94,7 +94,7 @@ pandoc_convert(usermd, to = "rst", options = c("--columns=1000", "-s", paste0("-
 render(userRmd, output_format = "html_document", output_file = "datavis16s_pipeline.html")
 system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
 file.remove("doc/datavis16s_pipeline.html.bak")
-# file.rename("doc/github_doc.md", "doc/user_doc.md")
+file.remove("doc/user_doc.md")
 file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
 
 

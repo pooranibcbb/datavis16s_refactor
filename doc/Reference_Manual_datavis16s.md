@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-May 07, 2018
+May 08, 2018
 
 DESCRIPTION
 ===========
@@ -112,7 +112,7 @@ Make all 4 types of graphs
 ### Usage
 
 ``` r
-allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
+allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 ```
 
 ### Arguments
@@ -122,18 +122,14 @@ allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
 | `datafile`  | full path to input OTU file (biom or see [readindata](#readindata) ) |
 | `outdir`    | full path to output directory                                        |
 | `mapfile`   | full path to map file                                                |
-| `sampdepth` | sampling depth. see details.                                         |
+| `sampdepth` | sampling depth. default: 10000                                       |
 | `...`       | other parameters to pass to [readindata](#readindata)                |
-
-### Details
-
-If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2\*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth.
-
-This value is used to remove samples before for alpha diversity and PCoA plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
 
 ### Value
 
 graphs are saved to outdir. See [user doc](../doc/user_doc.md).
+
+This value is used to remove samples before for alpha diversity and PCoA plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
 
 ### Source
 
@@ -864,17 +860,18 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
 ```
 
 ### Arguments
 
-| Argument    | Description                                      |
-|-------------|--------------------------------------------------|
-| `amp`       | ampvis2 object                                   |
-| `sampdepth` | sampling depth. See details.                     |
-| `rarefy`    | rarefy the OTU table in addition to subsetting   |
-| `...`       | other parameters to pass to amp\_subset\_samples |
+| Argument       | Description                                      |
+|----------------|--------------------------------------------------|
+| `amp`          | ampvis2 object                                   |
+| `sampdepth`    | sampling depth. See details.                     |
+| `rarefy`       | rarefy the OTU table in addition to subsetting   |
+| `printsummary` | Logical. print ampvis2 summary of OTU table      |
+| `...`          | other parameters to pass to amp\_subset\_samples |
 
 ### Details
 

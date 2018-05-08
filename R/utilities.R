@@ -16,7 +16,6 @@ logoutput <- function(c, bline = 0, aline = 0) {
 }
 
 
-
 #' shortnames for taxonomy
 #'
 #' @param taxtable taxonomy table object from ampvis2 object amp$tax
