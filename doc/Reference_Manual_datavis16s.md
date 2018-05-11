@@ -23,7 +23,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-April 01, 2018
+May 08, 2018
 
 DESCRIPTION
 ===========
@@ -32,18 +32,15 @@ DESCRIPTION
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.0
     Date: 2018-03-20 22:26:33 UTC
-    Authors@R: 
-        person(given = "Poorani",
-               family = "Subramanian",
-               role = c("aut", "cre"),
-               email = "poorani.subramanian@nih.gov")
+    Authors@R (parsed):
+        * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
     Description: betterbetterplots!
     License: none
-    URL: 
+    URL:
         https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
-    Depends: 
+    Depends:
         R (>= 3.4.1)
-    Imports: 
+    Imports:
         ampvis2,
         biomformat,
         bpexploder,
@@ -75,8 +72,8 @@ Plots exploding boxplot of shannon diversity and Chao species richness. If sampl
 ### Usage
 
 ``` r
-adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  colors = NULL, ...)
+adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, colors = NULL, 
+    ...)
 ```
 
 ### Arguments
@@ -115,7 +112,7 @@ Make all 4 types of graphs
 ### Usage
 
 ``` r
-allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
+allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 ```
 
 ### Arguments
@@ -125,18 +122,14 @@ allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
 | `datafile`  | full path to input OTU file (biom or see [readindata](#readindata) ) |
 | `outdir`    | full path to output directory                                        |
 | `mapfile`   | full path to map file                                                |
-| `sampdepth` | sampling depth. see details.                                         |
+| `sampdepth` | sampling depth. default: 10000                                       |
 | `...`       | other parameters to pass to [readindata](#readindata)                |
-
-### Details
-
-If sampdepth is NULL, then the sampling depth is set to the size of the smallest sample larger than 0.2\*median sample size. Otherwise, it is set to the size of the smallest sample larger than sampdepth.
-
-This value is used to remove samples before for alpha diversity and PCoA plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
 
 ### Value
 
 graphs are saved to outdir. See [user doc](../doc/user_doc.md).
+
+This value is used to remove samples before for alpha diversity and PCoA plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
 
 ### Source
 
@@ -154,9 +147,8 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 ### Usage
 
 ``` r
-morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
-  ...)
+morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = FALSE, 
+    filter_level = 0, taxlevel = c("seq"), colors = NULL, ...)
 ```
 
 ### Arguments
@@ -249,9 +241,8 @@ PCoA plots
 ### Usage
 
 ``` r
-pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  distm = "binomial", filter_species = 0.1, rarefy = FALSE,
-  colors = NULL, ...)
+pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, distm = "binomial", 
+    filter_species = 0.1, rarefy = FALSE, colors = NULL, ...)
 ```
 
 ### Arguments
@@ -451,8 +442,8 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 ### Usage
 
 ``` r
-trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
-  info = TRUE, ...)
+trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt", info = TRUE, 
+    ...)
 ```
 
 ### Arguments
@@ -619,9 +610,8 @@ gridCode(data)
 
 ### Value
 
-list of 3 values:
+list of 2 values:
 
--   `jq` optional jquery script
 -   `html` html for plotly export link
 -   `javascript` js function for exporting data
 
@@ -703,7 +693,7 @@ All functions create an output html plot with link which sends the data to a gri
 
 ``` r
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
-htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
+htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib", styletags = NULL)
 ```
 
 ### Arguments
@@ -748,8 +738,16 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib")
 <td><code>jquery</code></td>
 <td>should we load jquery</td>
 </tr>
+<tr class="even">
+<td><code>styletags</code></td>
+<td>html object with style tags for the tagList.</td>
+</tr>
 </tbody>
 </table>
+
+### Details
+
+If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use rmarkdown's bootstrap-3.3.7 css to style the text elements.
 
 ### Value
 
@@ -800,8 +798,7 @@ Save an HTML object to a file
 ### Usage
 
 ``` r
-save_fillhtml(html, file, background = "white", libdir = "lib",
-  bodystyle = "")
+save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 ```
 
 ### Arguments
@@ -863,17 +860,18 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
 ```
 
 ### Arguments
 
-| Argument    | Description                                      |
-|-------------|--------------------------------------------------|
-| `amp`       | ampvis2 object                                   |
-| `sampdepth` | sampling depth. See details.                     |
-| `rarefy`    | rarefy the OTU table in addition to subsetting   |
-| `...`       | other parameters to pass to amp\_subset\_samples |
+| Argument       | Description                                      |
+|----------------|--------------------------------------------------|
+| `amp`          | ampvis2 object                                   |
+| `sampdepth`    | sampling depth. See details.                     |
+| `rarefy`       | rarefy the OTU table in addition to subsetting   |
+| `printsummary` | Logical. print ampvis2 summary of OTU table      |
+| `...`          | other parameters to pass to amp\_subset\_samples |
 
 ### Details
 

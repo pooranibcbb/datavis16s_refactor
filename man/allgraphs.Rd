@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
+allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
@@ -16,21 +16,16 @@ allgraphs(datafile, outdir, mapfile, sampdepth = NULL, ...)
 
 \item{mapfile}{full path to map file}
 
-\item{sampdepth}{sampling depth.  see details.}
+\item{sampdepth}{sampling depth.  default: 10000}
 
 \item{...}{other parameters to pass to \link{readindata}}
 }
 \value{
 graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
-}
-\description{
-Make all 4 types of graphs
-}
-\details{
-If sampdepth is NULL, then the sampling depth is set to the size of the
-smallest sample larger than 0.2*median sample size.  Otherwise, it is set to the
-size of the smallest sample larger than sampdepth.
 
 This value is used to remove samples before for alpha diversity and PCoA plots.
 Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
+}
+\description{
+Make all 4 types of graphs
 }

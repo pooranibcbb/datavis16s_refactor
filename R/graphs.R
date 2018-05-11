@@ -5,6 +5,7 @@
 #' @param amp  ampvis2 object
 #' @param sampdepth  sampling depth.  See details.
 #' @param rarefy  rarefy the OTU table in addition to subsetting
+#' @param printsummary Logical. print ampvis2 summary of OTU table
 #' @param ... other parameters to pass to amp_subset_samples
 #'
 #' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
@@ -15,7 +16,7 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
+subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) {
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
@@ -28,7 +29,7 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, ...) {
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
-  print_ampvis2(amp)
+  if (printsummary) print_ampvis2(amp)
   writeLines('')
   return(amp)
 }
@@ -81,7 +82,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 
     cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
     logoutput(cmnd)
-    eval(parse(text = cmnd))
+    run_cmd(cmnd)
 
     cmnd <- 'tax <- biomformat::observation_metadata(biom)'
     logoutput(cmnd)
@@ -174,10 +175,9 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 
 
   ## save to html and txt file
-  htmlwidgets::saveWidget(rarecurve,  file.path(outdir, "newrarecurve.html"))
   plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
   logoutput(paste0('Saving rarefaction curve table to ', file.path(outdir, 'rarecurve.txt') ))
-  write.csv(df_new, file.path(outdir, 'rarecurve.csv'), quote = FALSE, sep = '\t', row.names = FALSE, na = "null")
+  write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 
   return(as.integer(0))
 
@@ -237,7 +237,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
   plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
   tabletsv <- gsub('.html$', '.txt', outfile)
   logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
-  write.csv(pcoa$dsites, tabletsv, quote=FALSE, row.names=FALSE, na="null")
+  write.table(pcoa$dsites, tabletsv, quote=FALSE, sep='\t', row.names=FALSE, na="")
 
   return(as.integer(0))
 
@@ -279,7 +279,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, normalize=TRUE, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -289,12 +289,11 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
   }
 
   ## normalize data
-  if (normalize) {
-    logoutput("Calculate relative abundance.")
-    cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE)'
-    logoutput(cmnd)
-    eval(parse(text=cmnd))
-  }
+  logoutput("Calculate relative abundance.")
+  cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE, printsummary = FALSE)'
+  logoutput(cmnd)
+  eval(parse(text=cmnd))
+
 
   if (!all(nrow(amp$abund) > 1, ncol(amp$abund) > 1)) {
     stop("OTU table must be at least 2x2 for heatmap.")
@@ -398,6 +397,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @source [graphs.R](../R/graphs.R)
 #'
 #' @importFrom bpexploder bpexploder
+#' @importFrom htmltools HTML
 #'
 adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
 
@@ -436,9 +436,9 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
       lc <- NULL
     }
 
-    shannon <-  bpexploder(alphadiv, settings = list(groupVar = col, yVar = "Shannon", tipText = list(SampleID = "SampleID", Shannon = "Shannon Index", Description = "Desc"), relativeWidth = 0.8, levelColors = lc))
+    shannon <- bpexploder(adiv, settings = list(groupVar = col, yVar = "Shannon", tipText = list(SampleID = "SampleID", Shannon = "Shannon Index", Description = "Desc"), levelColors = lc))
 
-    chao1 <- bpexploder(alphadiv, settings = list(groupVar = col, yVar = "Chao1", tipText = list(SampleID = "SampleID", Chao1 = "Species Richness", Description = "Desc"), relativeWidth = 0.8, levelColors = lc))
+    chao1 <- bpexploder(adiv, settings = list(groupVar = col, yVar = "Chao1", tipText = list(SampleID = "SampleID", Chao1 = "Species Richness", Description = "Desc"), levelColors = lc))
     return(list(shannon, chao1))
   }
 
@@ -449,8 +449,23 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
   )
 
+  ## Make the axis text a little bigger and style the tooltip
+  axisstyle <- HTML(paste(
+    '<style type="text/css">',
+    '.x.axis {',
+    'font-size: 1em !important;',
+    '}',
+    '.axislabel {',
+    'font-size: 1.2em !important;',
+    '}',
+    '.d3-exploding-boxplot.tip {',
+    'background: rgba(51, 51, 51, 0.8);',
+    '}',
+    '</style>'
+  , sep='\n'))
+
   ## save html file
-  htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE)
+  htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE, styletags=axisstyle)
 
   return(as.integer(0))
 
@@ -463,14 +478,10 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' @param mapfile  full path to map file
 #' @param datafile full path to input OTU file (biom or see \link{readindata})
 #' @param outdir  full path to output directory
-#' @param sampdepth  sampling depth.  see details.
+#' @param sampdepth  sampling depth.  default: 10000
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
-#'
-#' @details If sampdepth is NULL, then the sampling depth is set to the size of the
-#' smallest sample larger than 0.2*median sample size.  Otherwise, it is set to the
-#' size of the smallest sample larger than sampdepth.
 #'
 #' This value is used to remove samples before for alpha diversity and PCoA plots.
 #' Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
@@ -481,7 +492,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #'
 #' @export
 #'
-allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
+allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   retvalue <- as.integer(0)
 
   amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
@@ -512,20 +523,19 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## Filter out low count samples
-  cs <- colSums(amp$abund)
-  if (is.null(sampdepth)) {
-    sampdepth <- 0.2*median(cs)
-    logoutput('Calculating sampling depth to be count of smallest sample larger than 20% of median read count.', 1)
-  }
-  sampdepth <- min(cs[cs >= sampdepth])
   logoutput(paste('Sampling depth:', sampdepth))
+  cs <- colSums(amp$abund)
+  if (max(cs) < sampdepth) {
+    logoutput(paste("The counts for all samples is below the sampling depth of", sampdepth, ", so diversity and PCoA plots will not be made."), 1)
+    return(as.integer(1))
+  }
 
   logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots.'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth)
 
   if (nrow(ampsub$metadata) < 3) {
-    logoutput("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.", 1)
-    return()
+    logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1)
+    return(as.integer(1))
   }
 
 
@@ -545,7 +555,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = NULL, ...) {
   ## bray-curtis PCoA
   ## Rarefy table
   logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads, and normalizing to 100 for Bray-Curtis distance.'))
-  amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE)
+  amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
 
   cmnd <- 'pcoaplot(outdir = outdir, amp = amp, distm = "bray", colors = allcols)'
   logoutput(cmnd)
@@ -600,67 +610,7 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 
   ## set error handling options here, since rpy2 does not allow setting globally
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
-  oldopts <- options()
-  options(stringsAsFactors = FALSE, scipen = 999, warn=1)
-
-  ## open log file
-  logfile <- file(logfilename, open = "at")
-  sink(file = logfile, type="output")
-  sink(file = logfile, type= "message")
-
-  on.exit(oldopts)
-  on.exit(closeAllConnections(), add = TRUE)
-
-  ## create output directory
-  outdir <- file.path(outdir, "graphs")
-  dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
-
-
-  ## print sessionInfo
-  if (info) writeLines(capture.output(sessionInfo()))
-
-  ## make function command
-  # cmnd <- paste0('retvalue <- ',deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', ' ...)')
-  # logoutput(cmnd, 1)
-  FUN <- match.fun(FUN)
-  retvalue <- FUN(datafile = datafile, outdir = outdir, mapfile = mapfile, ...)
-
-  return(retvalue)
-
-}
-
-
-#' Debug wrapper
-#'
-#' @description This is a wrapper for any of the graph functions meant to be called using rpy2 in python.
-#'
-#' @param datafile full path to input OTU file (biom or txt, see \link{readindata})
-#' @param outdir  output directory for graphs
-#' @param mapfile full path to map file
-#' @param FUN character string. name of function you would like to run. can be actual
-#' function object if run from R
-#' @param logfilename logfilename
-#' @param info print sessionInfo to logfile
-#' @param ...  parameters needed to pass to FUN
-#'
-#' @return Returns 0 if FUN succeeds and a list of the following on error:
-#'
-#' \describe{
-#' \item{message}{String. Error message.}
-#' \item{call}{String. Error generating call.}
-#' \item{traceback}{Character vector. Traceback calls.}
-#'
-#' @export
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-#' @importFrom utils capture.output sessionInfo
-#'
-trydatavis <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
-
-  ## set error handling options here, since rpy2 does not allow setting globally
-  ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
-  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE)
+  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2))
 
   ## open log file
   logfile <- file(logfilename, open = "at")
@@ -672,6 +622,7 @@ trydatavis <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt"
   outdir <- file.path(outdir, "graphs")
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
+
   ## print sessionInfo
   if (info) writeLines(capture.output(sessionInfo()))
 
@@ -680,25 +631,11 @@ trydatavis <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt"
   logoutput(cmnd, 1)
   FUN <- match.fun(FUN)
 
-  tryenv <- new.env()
-  retvalue <- try(withCallingHandlers(eval(parse(text=cmnd)),
-                      error = function(e) {
-                        tb <- .traceback(3)
 
-                        ## remove eval(parse(text=cmnd)) from stack for error message
-                        nows_tb <- gsub("\\s", "", tb, perl=TRUE)
-                        ev <- grep("eval\\(parse\\(text\\=cmnd\\)\\)", nows_tb)
-                        if (length(ev) > 0) {
-                          tb <- tb[c(1:(min(ev) - 1), (max(ev) + 1):length(tb))]
-                        }
+  ## run command
+  retvalue <- eval(parse(text=cmnd))
 
-                        #e$message <- paste(c(e$message, tb ), collapse = "\n")
-                        tb <- sapply(tb, paste, collapse = "\n")
-                        assign("err", value = list(message=e$message, call = deparse(e$call), traceback = tb),
-                               envir = tryenv)
-                      }))
-  if(inherits(retvalue, "try-error")) retvalue <- tryenv$err
-  return(retvalue)
+  return(as.integer(0))
 
 }
 
