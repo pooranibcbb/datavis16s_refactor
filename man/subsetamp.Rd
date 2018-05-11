@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
 }
 \arguments{
 \item{amp}{ampvis2 object}
@@ -15,6 +15,8 @@ subsetamp(amp, sampdepth = NULL, rarefy = FALSE, ...)
 \item{sampdepth}{sampling depth.  See details.}
 
 \item{rarefy}{rarefy the OTU table in addition to subsetting}
+
+\item{printsummary}{Logical. print ampvis2 summary of OTU table}
 
 \item{...}{other parameters to pass to amp_subset_samples}
 }

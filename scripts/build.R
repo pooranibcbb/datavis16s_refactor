@@ -4,7 +4,7 @@ library(rmarkdown)
 
 ## Build package
 document(roclets=c('rd', 'collate', 'namespace'))
-install(args = c("--preclean", "--no-multiarch", "--with-keep.source"))
+install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), upgrade_dependencies = F)
 
 ## Imported packages - can check DESCRIPTION
 ns <- scan("NAMESPACE", sep="\n", what = character())
@@ -45,31 +45,56 @@ render(Rmdfile)
 file.remove(Rmdfile)
 
 yaml <- "---
-title: \"datavis16s R package\"
+title: \"datavis16s R package manual\"
 author: Poorani Subramanian
-header-includes: |
-:tocdepth: 3
+output:
+  md_document:
+    variant: markdown_strict+grid_tables
+    pandoc_args: \"--columns=1000\"
+header-includes:  |
+  | ---
+  | title: \"datavis16s R package manual\"
+  | author: Poorani Subramanian
+  | header-includes: \\|
+  |   :tocdepth: 3
+  |
+  | ---
+
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, tidy=TRUE, tidy.opts = list(width.cutoff=60))
+```
+
 "
-
-Rmdfile <-  "doc/datavis16s.R.Rmd"
+Rmdfile <-  "doc/Reference_Manual_datavis16s.Rmd"
+mdfile <-  "doc/tempfile.md"
 docsdir <- "../../docs/api_docs/source"
-templatedir <- "../../misc_examples/docs"
+templatedir <- "../../misc_examples/Rdocs"
 
-ReferenceManual(outdir = tempdir(), front.matter = yaml, title.level = 1, run.examples = TRUE, sepexported = TRUE)
-file.rename(file.path(tempdir(),"Reference_Manual_datavis16s.md" ), Rmdfile)
-system2(command = "sed" , args=c('-i.bak', '\'s/\\[\`/\\[/g\'', Rmdfile))
-system2(command = "sed" , args=c('-i.bak', '\'s/\`\\]/\\]/g\'', Rmdfile))
-pandoc_convert(Rmdfile, to = "rst", options = c("--columns=1000", "-s", paste0("--template=",templatedir, "/template.rst")), wd = getwd(), output = file.path(docsdir, "datavis16s.R.rst"), verbose = TRUE)
+ReferenceManual(front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE, man_file = Rmdfile)
+rmarkdown::render(Rmdfile, output_file = basename(mdfile))
+system2('perl', args = c(file.path(templatedir, 'md2rst.pl'), mdfile, 'https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s'))
+
+pandoc_convert(mdfile, to = "rst", options = c("--columns=1000", "-s", paste0("--template=",templatedir, "/template.rst")), wd = getwd(), output = file.path(docsdir, "Reference_Manual_datavis16s.rst"), verbose = TRUE)
 file.remove(Rmdfile)
-file.remove(paste0(Rmdfile, ".bak"))
+file.remove(mdfile)
+file.remove(paste0(mdfile, ".bak"))
+file.remove("doc/Reference_Manual_datavis16s.html")
 
-# ## User docs
-# render("doc/user_doc.Rmd", output_format = "github_document")
+## User docs
+
+userRmd <- "doc/user_doc.Rmd"
+usermd <- "doc/user_doc.md"
+render(userRmd, output_format = "github_document")
+system2(command = "sed" , args=c('-i.bak', '\'s/\\[\`/\\[/g\'', usermd))
+system2(command = "sed" , args=c('-i.bak', '\'s/\`\\]/\\]/g\'', usermd))
+pandoc_convert(usermd, to = "rst", options = c("--columns=1000", "-s", paste0("--template=",templatedir, "/template.rst")), wd = getwd(), output = file.path(docsdir, "datavis16s.user_doc.rst"), verbose = TRUE)
+
 # file.rename("doc/user_doc.md", "doc/github_doc.md")
-# render("doc/user_doc.Rmd", output_format = "html_document", output_file = "datavis16s_pipeline.html")
-# system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
-# file.remove("doc/datavis16s_pipeline.html.bak")
-# file.rename("doc/github_doc.md", "doc/user_doc.md")
-# file.remove("doc/user_doc.html")
-#
+render(userRmd, output_format = "html_document", output_file = "datavis16s_pipeline.html")
+system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
+file.remove("doc/datavis16s_pipeline.html.bak")
+file.remove("doc/user_doc.md")
+file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
+
+

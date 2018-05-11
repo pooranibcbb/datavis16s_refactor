@@ -13,9 +13,8 @@ gridCode(data)
 \item{data}{data to populate plotly grid}
 }
 \value{
-list of 3 values:
+list of 2 values:
 \describe{
-  \item{jq}{optional jquery script}
   \item{html}{html for plotly export link}
   \item{javascript}{js function for exporting data}
 }
