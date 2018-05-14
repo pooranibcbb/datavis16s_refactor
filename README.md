@@ -1,4 +1,4 @@
-datavis16s R pipeline
+datavis16s R package
 ================
 
 -   [Dependencies](#dependencies)
@@ -12,7 +12,7 @@ R package for graphs for Nephele 16S pipelines.
 -   For the Nephele AMI, debian package libxml2-dev is needed.
 -   Requires [rpy2](https://rpy2.bitbucket.io) to use with python.
 -   To install all R dependencies, run the commands in [dependencies.R](scripts/dependencies.R). You may need to change the path to the datavis16s directory.
--   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [github](doc/user_doc.md) and [html](doc/datavis16s_pipeline.html).
+-   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html).
 
     ``` r
     source("scripts/build.R")
