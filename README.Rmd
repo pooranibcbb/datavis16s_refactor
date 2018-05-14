@@ -12,7 +12,7 @@ R package for graphs for Nephele 16S pipelines.
 
 ### Usage
 - **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
-- **User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
+- **Nephele User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
 -   There are 4 main functions for making graphs: `adivboxplot`,
     `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as
     `allgraphs` which makes all 4 (used as [DADA2 pipeline](../DADA2)
@@ -44,7 +44,7 @@ R package for graphs for Nephele 16S pipelines.
         specified.
 
     - For pipelines, the alpha diversity boxplot and the PCoA would benefit from having this sampling depth set properly.
-        - Poorani and Conrad implemented the median absolute deviation method as default across all pipelines. See :any:`get_depth` and :any:`left_mad_zcore`
+        - Poorani and Conrad implemented the median absolute deviation method as default across all pipelines. See :any:`get_depth` and :any:`left_mad_zscore`
         - All other functions will not remove samples or rarefy
                 unless `sampdepth` is specified.
 
