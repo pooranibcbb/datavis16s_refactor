@@ -10,7 +10,7 @@ R package for graphs for Nephele 16S pipelines.
 ### Usage
 
 -   **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
--   **User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
+-   **Nephele User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
 -   There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4 (used as [DADA2 pipeline](../DADA2) function). See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
 -   **Python with rpy2**
     -   The generic wrapper function to be called from rpy2 is [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper). It returns 0 for success and 1 for failure. See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.
@@ -24,7 +24,7 @@ R package for graphs for Nephele 16S pipelines.
     -   For functions with `rarefy` argument, setting to TRUE will rarefy the OTU table to `sampdepth` reads. `adivboxplot` will use the smallest sample size to rarefy if `sampdepth` is not specified.
 
     -   For pipelines, the alpha diversity boxplot and the PCoA would benefit from having this sampling depth set properly.
-        -   Poorani and Conrad implemented the median absolute deviation method as default across all pipelines. See :any:`get_depth` and :any:`left_mad_zcore`
+        -   Poorani and Conrad implemented the median absolute deviation method as default across all pipelines. See :any:`get_depth` and :any:`left_mad_zscore`
         -   All other functions will not remove samples or rarefy unless `sampdepth` is specified.
 
 1Can optionally pass tab-delimited text file to each of the functions instead of the biom file. See \[`readindata`\]\[doc/Reference\_Manual\_datavis16s.md\#readindata\] for more details.
