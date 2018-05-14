@@ -1,27 +1,17 @@
 datavis16s R package
 ================
 
--   [Dependencies](#dependencies)
 -   [Usage](#usage)
+-   [Dependencies](#dependencies)
 -   [Installation](#installation)
 
 R package for graphs for Nephele 16S pipelines.
 
-### Dependencies
-
--   For the Nephele AMI, debian package libxml2-dev is needed.
--   Requires [rpy2](https://rpy2.bitbucket.io) to use with python.
--   To install all R dependencies, run the commands in [dependencies.R](scripts/dependencies.R). You may need to change the path to the datavis16s directory.
--   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html).
-
-    ``` r
-    source("scripts/build.R")
-    ```
-
 ### Usage
 
+-   **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
+-   **User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
 -   There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4 (used as [DADA2 pipeline](../DADA2) function). See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
-
 -   **Python with rpy2**
     -   The generic wrapper function to be called from rpy2 is [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper). It returns 0 for success and 1 for failure. See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.
     -   Must pass the full paths for the output directory, mapping file, biom file[1](#fn1).
@@ -42,6 +32,17 @@ R package for graphs for Nephele 16S pipelines.
 #### Outputs
 
 -   `trygraphwrapper` creates a subdirectory "graphs" in output directory, and passes that as the output directory to the individual functions. The individual graph functions just use the specified output directory passed to them. - Creates html files in outdir as well as subdirectory "lib" which contains the external js,css,etc files for the graphs. See [user doc](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/user_doc.md) for more info.
+
+### Dependencies
+
+-   For the Nephele AMI, debian package libxml2-dev is needed.
+-   Requires [rpy2](https://rpy2.bitbucket.io) to use with python.
+-   To install all R dependencies, run the commands in [dependencies.R](scripts/dependencies.R). You may need to change the path to the datavis16s directory.
+-   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the user docs [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html).
+
+    ``` r
+    source("scripts/build.R")
+    ```
 
 ### Installation
 
