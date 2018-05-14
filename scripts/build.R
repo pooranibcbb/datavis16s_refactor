@@ -2,10 +2,10 @@ library(devtools)
 library(rmarkdown)
 library(Rd2md)
 
-#
-# ## Build package
-# document(roclets=c('rd', 'collate', 'namespace'))
-# install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), upgrade_dependencies = F)
+
+## Build package
+document(roclets=c('rd', 'collate', 'namespace'))
+install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), upgrade_dependencies = F)
 #
 # ## Imported packages - can check DESCRIPTION
 # ns <- scan("NAMESPACE", sep="\n", what = character())
