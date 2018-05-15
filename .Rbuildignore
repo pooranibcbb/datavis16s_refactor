@@ -3,3 +3,4 @@
 ^README\.Rmd$
 testdata/
 check/
+__init__.py
