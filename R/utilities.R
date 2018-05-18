@@ -205,6 +205,172 @@ print_ampvis2 <- function(data) {
   )
 }
 
+#' Print ampvis2 object summary
+#'
+#' @param data ampvis2 object
+#'
+#' @return Prints summary stats about ampvis2 object
+#'
+#' @source [utilities.R](../R/utilities.R)
+#'
+#' @description  This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
+#' ':::' internal calling of function in package.
+#'
+#' @importFrom stats median
+#'
+print_ampvis2 <- function(data) {
+  cat(class(data),
+      "object with",
+      length(data),
+      "elements.\nSummary of OTU table:\n")
+  print.table(
+    c(
+      Samples = as.character(ncol(data$abund)),
+      OTUs = as.character(nrow(data$abund)),
+      `Total#Reads` = as.character(sum(data$abund)),
+      `Min#Reads` = as.character(min(colSums(data$abund))),
+      `Max#Reads` = as.character(max(colSums(data$abund))),
+      `Median#Reads` = as.character(median(colSums(data$abund))),
+      `Avg#Reads` = as.character(round(mean(
+        colSums(data$abund)
+      ),
+      digits = 2))
+    ),
+    justify = "right"
+  )
+  cat("\nAssigned taxonomy:\n")
+  print.table(
+    c(
+      Kingdom = paste(
+        sum(nchar(data$tax$Kingdom) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Kingdom) > 3) / nrow(data$abund),
+              digits = 2) * 100,
+        "%)",
+        sep = ""
+      ),
+      Phylum = paste(
+        sum(nchar(data$tax$Phylum) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Phylum) > 3) / nrow(data$abund) *
+                100, digits = 2),
+        "%)",
+        sep = ""
+      ),
+      Class = paste(
+        sum(nchar(data$tax$Class) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Class) > 3) / nrow(data$abund) *
+                100, digits = 2),
+        "%)",
+        sep = ""
+      ),
+      Order = paste(
+        sum(nchar(data$tax$Order) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Order) > 3) / nrow(data$abund) *
+                100, digits = 2),
+        "%)",
+        sep = ""
+      ),
+      Family = paste(
+        sum(nchar(data$tax$Family) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Family) > 3) / nrow(data$abund) *
+                100, digits = 2),
+        "%)",
+        sep = ""
+      ),
+      Genus = paste(
+        sum(nchar(data$tax$Genus) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Genus) > 3) / nrow(data$abund) *
+                100, digits = 2),
+        "%)",
+        sep = ""
+      ),
+      Species = paste(
+        sum(nchar(data$tax$Species) >
+              3),
+        "(",
+        round(sum(nchar(data$tax$Species) > 3) / nrow(data$abund) *
+                100, digits = 2),
+        "%)",
+        sep = ""
+      )
+    ),
+    justify = "right"
+  )
+  cat(
+    "\nMetadata variables:",
+    as.character(ncol(data$metadata)),
+    "\n",
+    paste(as.character(colnames(data$metadata)), collapse = ", ")
+  )
+}
+
+
+#' Rarefaction curve
+#'
+#' @param data (required) Data list as loaded with amp_load.
+#' @param stepsize Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000)
+#' @param color_by Color curves by a variable in the metadata.
+#'
+#' @return A ggplot2 object.
+#'
+#' @description This function replaces the ampvis2 function amp_rarecurve to fix subsampling labeling bug
+#' in vegan
+#'
+#' @source [utilities.R](../R/utilities.R)
+#'
+amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
+  if (class(data) != "ampvis2")
+    stop("The provided data is not in ampvis2 format. Use amp_load() to load your data before using ampvis functions. (Or class(data) <- \"ampvis2\", if you know what you are doing.)")
+  maxreads <- max(colSums(data$abund))
+  if (maxreads < stepsize) {
+    stop("\"stepsize\" too high, maximum number of reads in any sample is: ",
+         maxreads)
+  }
+  abund <- t(as.matrix(data[["abund"]]))
+  metadata <- data[["metadata"]]
+  if (!identical(all.equal(abund, round(abund)), TRUE))
+    stop("Function accepts only integers (counts)")
+  tot <- rowSums(abund)
+  nr <- nrow(abund)
+  out <- lapply(seq_len(nr), function(i) {
+    n <- seq(1, tot[i], by = stepsize)
+    if (n[length(n)] != tot[i]) {
+      n <- c(n, tot[i])
+    } else {
+      n <- c(n[1:(length(n) - 1)], tot[i])
+    }
+    drop(vegan::rarefy(abund[i, ], n))
+  })
+  df <- data.frame(Reads = as.numeric(), Species = as.numeric(),
+                   SampleID = as.character())
+  for (i in 1:length(out)) {
+    tsample <- names(attributes(out[[i]])$Subsample[length(out[[i]])])
+    tspecies <- unlist(out[[i]])
+    treads <- attributes(out[[i]])$Subsample
+    tdf <- data.frame(Reads = treads, Species = tspecies,
+                      SampleID = tsample)
+    df <- rbind.data.frame(df, tdf)
+  }
+  metadata_col1name <- colnames(metadata)[1]
+  colnames(df)[which(colnames(df) == "SampleID")] <- metadata_col1name
+  dfm <- merge(metadata, df, by = metadata_col1name)
+  p <- ggplot2::ggplot(dfm, ggplot2::aes_string(x = "Reads", y = "Species", group = metadata_col1name,
+                              color = color_by)) + ggplot2::geom_line() + ggplot2::theme_classic() +
+    ggplot2::xlab("Sequencing depth (reads)") + ggplot2::ylab("Number of observed OTUs")
+  return(p)
+}
+
 #' #' Cleanup taxonomy names
 #' #'
 #' #' @param taxtable taxonomy table attribute of ampvis2 object

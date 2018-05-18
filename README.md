@@ -11,9 +11,9 @@ R package for graphs for Nephele 16S pipelines.
 
 -   **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
 -   **Nephele User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
--   There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4 (used as [DADA2 pipeline](../DADA2) function). See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
+-   There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4. See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
 -   **Python with rpy2**
-    -   Will need to import rpy2 module and function:
+    -   Will need to import rpy2 library:
 
         ``` python
         from rpy2.robjects.packages import importr  ## to import R package
@@ -23,7 +23,16 @@ R package for graphs for Nephele 16S pipelines.
 
     -   The generic wrapper function to be called from rpy2 is [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper). It returns 0 for success and 1 for failure. See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.
     -   Must pass the full paths for the output directory, mapping file, biom file[1](#fn1).
-    -   `trygraphwrapper`, by default, prints the R sessionInfo to the logfile before it runs the function. If you do not want it to do this (e.g. if you are calling the function multiple times in the same script), you can pass `info = FALSE`.
+    -   `trygraphwrapper`, by default, prints the R sessionInfo to the logfile before it runs the function. If you do not want it to do NA same script), you can pass `info = FALSE`.
+    -   To call the function, import the R library and call `trygraphwrapper`:
+
+        ``` python
+        datavis16s = importr('datavis16s')
+        exit_code = datavis16s.trygraphwrapper(datafile="/path/to/outputs/out.biom", outdir="/path/to/outputs/", 
+        mapfile = "/path/to/inputs/mapfile.txt", FUN = functionname, otherarguments_for_functionname)
+        ```
+
+    -   On error, rpy2 throws an `rpy2.rinterface.RRuntimeError` which you can catch. See :any:`demo_r_pipe`
 
 -   **R**
     -   You can use `readindata` to create an ampvis2 object, and pass that instead of the mapping file and biom file.
