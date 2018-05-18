@@ -8,10 +8,10 @@
 }
 \usage{
 trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
-  info = TRUE, ...)
+  info = TRUE, tsvfile = FALSE, ...)
 }
 \arguments{
-\item{datafile}{full path to input OTU file (biom or txt, see \link{readindata})}
+\item{datafile}{full path to input OTU file (biom or txt, see \link{readindata} for format of txt file)}
 
 \item{outdir}{output directory for graphs}
 
@@ -23,6 +23,8 @@ function object if run from R}
 \item{logfilename}{logfilename}
 
 \item{info}{print sessionInfo to logfile}
+
+\item{tsvfile}{Is datafile a tab-delimited text file? Default FALSE}
 
 \item{...}{parameters needed to pass to FUN}
 }
@@ -40,6 +42,11 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 # example with no optional arguments for running allgraphs
 trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
 "/path/to/inputs/mapfile.txt", 'allgraphs')
+
+# example with sampdepth argument for running allgraphs
+trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
+"/path/to/inputs/mapfile.txt", 'allgraphs', sampdepth=30000)
+
 
 # example with optional argument sampdepth and tsv file
 trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/",
