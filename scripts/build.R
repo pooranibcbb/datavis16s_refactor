@@ -6,44 +6,44 @@ library(Rd2md)
 ## Build package
 document(roclets=c('rd', 'collate', 'namespace'))
 install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), upgrade_dependencies = F)
-#
-# ## Imported packages - can check DESCRIPTION
-# ns <- scan("NAMESPACE", sep="\n", what = character())
-# importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
-#
-# ## update description
-# #desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
-# # deptable <- desc::desc_get_deps()
-# # deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
-# # desc::desc_set_deps(deptable, normalize = TRUE)
-#
-#
-# ## Documentation
-#
-# ## library function specification
-#
-# yaml <- "---
-# title: \"datavis16s\"
-# output:
-#     github_document:
-#         toc: true
-#         toc_depth: 2
-# ---
-#
-# ```{r setup, include=FALSE}
-# knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
-# ```
-# "
-#
-# mdfile <- "doc/Reference_Manual_datavis16s.md"
-# Rmdfile <- gsub(".md", ".Rmd", mdfile)
-# ## CRAN Rd2md
-# # ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
-# ## My Rd2md https://github.com/pooranis/Rd2md
-# ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE)
-# file.copy(mdfile, Rmdfile, overwrite = TRUE )
-# render(Rmdfile)
-# file.remove(Rmdfile)
+
+## Imported packages - can check DESCRIPTION
+ns <- scan("NAMESPACE", sep="\n", what = character())
+importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
+
+## update description
+#desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
+# deptable <- desc::desc_get_deps()
+# deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
+# desc::desc_set_deps(deptable, normalize = TRUE)
+
+
+## Documentation
+
+## library function specification
+
+yaml <- "---
+title: \"datavis16s\"
+output:
+    github_document:
+        toc: true
+        toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
+```
+"
+
+mdfile <- "doc/Reference_Manual_datavis16s.md"
+Rmdfile <- gsub(".md", ".Rmd", mdfile)
+## CRAN Rd2md
+# ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
+## My Rd2md https://github.com/pooranis/Rd2md
+ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE)
+file.copy(mdfile, Rmdfile, overwrite = TRUE )
+render(Rmdfile)
+file.remove(Rmdfile)
 
 ## Sphinx
 templatedir <- "../../misc_examples/Rdocs"
