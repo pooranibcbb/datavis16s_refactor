@@ -82,7 +82,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 
     cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
     logoutput(cmnd)
-    run_cmd(cmnd)
+    eval(parse(text = cmnd))
 
     cmnd <- 'tax <- biomformat::observation_metadata(biom)'
     logoutput(cmnd)
@@ -329,6 +329,19 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       eval(parse(text = cmnd))
     }
 
+    ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
+    if (nrow(amptax$abund) > 1000 & tl == "seq") {
+      logoutput("Number of sequence variants > 1000.  Making heatmap at species/lowest assigned taxonomic level instead.")
+      tl = "Species"
+      amptax <- highertax(amp, taxlevel=tl)
+      if (filter_level > 0) {
+        logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
+        cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
+        logoutput(cmnd)
+        eval(parse(text = cmnd))
+      }
+    }
+
     ## row and column names for matrix
     if (tl == "seq") {
       sn <- paste(amptax$tax$OTU, amptax$tax$Species)
@@ -341,12 +354,13 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
     ## log scale for colors
     mm <- max(amptax$abund)
-    values <-  c(0,expm1(seq(log1p(filter_level), log1p(100), length.out = 99)))
+    minm <- min(amptax$abund[which(amptax$abund > 0, arr.ind = T)])
+    values <-  c(0,expm1(seq(log1p(minm), log1p(100), length.out = 99)))
     w <- which(values > 10)
     values[w] <- round(values[w])
 
     ## make morpheus heatmap
-    cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows)'
+    cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows, dendrogram="none")'
     logoutput(cmnd)
     eval(parse(text = cmnd))
 

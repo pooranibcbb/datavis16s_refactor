@@ -19,6 +19,12 @@ R package for graphs for Nephele 16S pipelines.
     function). See the [manual](doc/Reference_Manual_datavis16s.md) for
     the arguments for these functions.
 -   **Python with rpy2**
+    -   Will need to import rpy2 module and function:
+    ```python
+        from rpy2.robjects.packages import importr  ## to import R package
+        from rpy2.robjects.vectors import IntVector  ## to handle return values
+        import rpy2.rinterface  ## to start R instance
+    ```
     -   The generic wrapper function to be called from rpy2 is
         [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper).
         It returns 0 for success and 1 for failure. See the [function
