@@ -10,7 +10,7 @@
 allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 }
 \arguments{
-\item{datafile}{full path to input OTU file (biom or see \link{readindata})}
+\item{datafile}{full path to input OTU file (biom or txt file see \link{readindata} for format)}
 
 \item{outdir}{full path to output directory}
 

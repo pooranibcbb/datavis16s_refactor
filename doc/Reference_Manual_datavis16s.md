@@ -11,6 +11,7 @@ datavis16s
     -   [`readindata`](#readindata)
     -   [`trygraphwrapper`](#trygraphwrapper)
 -   [Internal](#internal)
+    -   [`amp_rarecurvefix`](#amp_rarecurvefix)
     -   [`datavis16s-package`](#datavis16s-package)
     -   [`filterlowabund`](#filterlowabund)
     -   [`gridCode`](#gridcode)
@@ -23,7 +24,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-May 08, 2018
+May 18, 2018
 
 DESCRIPTION
 ===========
@@ -117,13 +118,40 @@ allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 
 ### Arguments
 
-| Argument    | Description                                                          |
-|-------------|----------------------------------------------------------------------|
-| `datafile`  | full path to input OTU file (biom or see [readindata](#readindata) ) |
-| `outdir`    | full path to output directory                                        |
-| `mapfile`   | full path to map file                                                |
-| `sampdepth` | sampling depth. default: 10000                                       |
-| `...`       | other parameters to pass to [readindata](#readindata)                |
+<table style="width:43%;">
+<colgroup>
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or txt file see <a href="#readindata">readindata</a> for format)</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>sampdepth</code></td>
+<td>sampling depth. default: 10000</td>
+</tr>
+<tr class="odd">
+<td><code>...</code></td>
+<td>other parameters to pass to <a href="#readindata">readindata</a></td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -405,13 +433,17 @@ readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 <tbody>
 <tr class="odd">
 <td><code>datafile</code></td>
-<td>full path to input data file. must be either biom file or tab delimited text file. See details. #' <span class="citation">@param</span> mapfile full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
+<td>full path to input data file. must be either biom file or tab delimited text file. See details.</td>
 </tr>
 <tr class="even">
+<td><code>mapfile</code></td>
+<td>full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
+</tr>
+<tr class="odd">
 <td><code>tsvfile</code></td>
 <td>Logical. Is datafile a tab-delimited text file? See details.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>mincount</code></td>
 <td>minimum number of reads</td>
 </tr>
@@ -443,7 +475,7 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 
 ``` r
 trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt", info = TRUE, 
-    ...)
+    tsvfile = FALSE, ...)
 ```
 
 ### Arguments
@@ -462,7 +494,7 @@ trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt", inf
 <tbody>
 <tr class="odd">
 <td><code>datafile</code></td>
-<td>full path to input OTU file (biom or txt, see <a href="#readindata">readindata</a> )</td>
+<td>full path to input OTU file (biom or txt, see <a href="#readindata">readindata</a> for format of txt file)</td>
 </tr>
 <tr class="even">
 <td><code>outdir</code></td>
@@ -485,6 +517,10 @@ trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt", inf
 <td>print sessionInfo to logfile</td>
 </tr>
 <tr class="odd">
+<td><code>tsvfile</code></td>
+<td>Is datafile a tab-delimited text file? Default FALSE</td>
+</tr>
+<tr class="even">
 <td><code>...</code></td>
 <td>parameters needed to pass to FUN</td>
 </tr>
@@ -504,6 +540,11 @@ Returns 0 if FUN succeeds and stops on error. In rpy2, it will throw rpy2.rinter
 trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/", "/path/to/inputs/mapfile.txt", 
     "allgraphs")
 
+# example with sampdepth argument for running allgraphs
+trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/", "/path/to/inputs/mapfile.txt", 
+    "allgraphs", sampdepth = 30000)
+
+
 # example with optional argument sampdepth and tsv file
 trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/", "/path/to/inputs/mapfile.txt", 
     "allgraphs", sampdepth = 30000, tsvfile = TRUE)
@@ -521,6 +562,58 @@ trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs", "/path
 
 Internal
 ========
+
+`amp_rarecurvefix`
+------------------
+
+Rarefaction curve
+
+### Description
+
+This function replaces the ampvis2 function amp\_rarecurve to fix subsampling labeling bug in vegan
+
+### Usage
+
+``` r
+amp_rarecurvefix(data, stepsize = 1000, color_by = NULL)
+```
+
+### Arguments
+
+<table style="width:43%;">
+<colgroup>
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data</code></td>
+<td>(required) Data list as loaded with amp_load.</td>
+</tr>
+<tr class="even">
+<td><code>stepsize</code></td>
+<td>Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000)</td>
+</tr>
+<tr class="odd">
+<td><code>color_by</code></td>
+<td>Color curves by a variable in the metadata.</td>
+</tr>
+</tbody>
+</table>
+
+### Value
+
+A ggplot2 object.
+
+### Source
+
+[utilities.R](../R/utilities.R)
 
 `datavis16s-package`
 --------------------
@@ -766,9 +859,12 @@ Print ampvis2 object summary
 
 This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
 
+This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
+
 ### Usage
 
 ``` r
+print_ampvis2(data)
 print_ampvis2(data)
 ```
 
@@ -777,12 +873,17 @@ print_ampvis2(data)
 | Argument | Description    |
 |----------|----------------|
 | `data`   | ampvis2 object |
+| `data`   | ampvis2 object |
 
 ### Value
 
 Prints summary stats about ampvis2 object
 
+Prints summary stats about ampvis2 object
+
 ### Source
+
+[utilities.R](../R/utilities.R)
 
 [utilities.R](../R/utilities.R)
 

@@ -11,8 +11,9 @@ readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 }
 \arguments{
 \item{datafile}{full path to input data file.  must be either biom file or tab delimited text file.
-See details.
-#' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns}
+See details.}
+
+\item{mapfile}{full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns}
 
 \item{tsvfile}{Logical.  Is datafile a tab-delimited text file? See details.}
 
