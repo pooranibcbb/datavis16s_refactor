@@ -38,7 +38,7 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
 #'
 #' @param datafile  full path to input data file.  must be either biom file or tab delimited text file.
 #' See details.
-#' #' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
+#' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
 #' @param tsvfile  Logical.  Is datafile a tab-delimited text file? See details.
 #' @param mincount  minimum number of reads
 #' @return ampvis2 object
@@ -55,7 +55,8 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
 #' @export
 #'
 readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
-
+#  locale <- Sys.getlocale()
+  Sys.setlocale('LC_ALL','C')
   ## mapfile
   logoutput(paste("Reading in map file", mapfile))
   map <- read.delim(mapfile, check.names = FALSE, colClasses = "character",  na.strings = '', comment.char = '')
@@ -82,7 +83,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 
     cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
     logoutput(cmnd)
-    run_cmd(cmnd)
+    eval(parse(text = cmnd))
 
     cmnd <- 'tax <- biomformat::observation_metadata(biom)'
     logoutput(cmnd)
@@ -116,7 +117,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
   if (sum(amp$abund) < mincount) {
     stop(paste0("Not enough counts in OTU table to make any graphs. At least ", mincount, " are needed."))
   }
-
+#  Sys.setlocale('LC_ALL',locale)
   return(amp)
 
 }
@@ -147,7 +148,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
-  rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup") + ggtitle("Rarefaction Curves")
+  rarecurve <- amp_rarecurvefix(amp, color_by = "TreatmentGroup") + ggtitle("Rarefaction Curves")
 
   on.exit(graphics.off())
 
@@ -329,6 +330,19 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       eval(parse(text = cmnd))
     }
 
+    ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
+    if (nrow(amptax$abund) > 1000 & tl == "seq") {
+      logoutput("Number of sequence variants > 1000.  Making heatmap at species/lowest assigned taxonomic level instead.")
+      tl = "Species"
+      amptax <- highertax(amp, taxlevel=tl)
+      if (filter_level > 0) {
+        logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
+        cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
+        logoutput(cmnd)
+        eval(parse(text = cmnd))
+      }
+    }
+
     ## row and column names for matrix
     if (tl == "seq") {
       sn <- paste(amptax$tax$OTU, amptax$tax$Species)
@@ -341,12 +355,13 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
     ## log scale for colors
     mm <- max(amptax$abund)
-    values <-  c(0,expm1(seq(log1p(filter_level), log1p(100), length.out = 99)))
+    minm <- min(amptax$abund[which(amptax$abund > 0, arr.ind = T)])
+    values <-  c(0,expm1(seq(log1p(minm), log1p(100), length.out = 99)))
     w <- which(values > 10)
     values[w] <- round(values[w])
 
     ## make morpheus heatmap
-    cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows)'
+    cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows, dendrogram="none")'
     logoutput(cmnd)
     eval(parse(text = cmnd))
 
@@ -453,10 +468,10 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   axisstyle <- HTML(paste(
     '<style type="text/css">',
     '.x.axis {',
-    'font-size: 1em !important;',
+    'font-size: 0.9em !important;',
     '}',
-    '.axislabel {',
-    'font-size: 1.2em !important;',
+    'text.axislabel {',
+    'font-size: 1.1em !important;',
     '}',
     '.d3-exploding-boxplot.tip {',
     'background: rgba(51, 51, 51, 0.8);',
@@ -464,9 +479,19 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     '</style>'
   , sep='\n'))
 
+
   ## save html file
   htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE, styletags=axisstyle)
 
+  ## Remove later
+  bpjsfile <- file.path(outdir, "lib", "bpexplode-0.2.1", "bpexplode.js")
+  if (file.exists(bpjsfile)) {
+    bpjs <- readLines(bpjsfile)
+    bpjs[55] <- "    var height = 500;"
+    bpjs[58] <- "    var margin = {top:10,bottom:50,left:50,right:10};"
+    bpjs[172] <- '        .attr("dy", "1em")'
+    writeLines(bpjs, bpjsfile)
+  }
   return(as.integer(0))
 
 }
@@ -476,7 +501,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' @description Make all 4 types of graphs
 #'
 #' @param mapfile  full path to map file
-#' @param datafile full path to input OTU file (biom or see \link{readindata})
+#' @param datafile full path to input OTU file (biom or txt file see \link{readindata} for format)
 #' @param outdir  full path to output directory
 #' @param sampdepth  sampling depth.  default: 10000
 #' @param ... other parameters to pass to \link{readindata}
@@ -569,13 +594,14 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 #'
 #' @description This is a wrapper for any of the graph functions meant to be called using rpy2 in python.
 #'
-#' @param datafile full path to input OTU file (biom or txt, see \link{readindata})
+#' @param datafile full path to input OTU file (biom or txt, see \link{readindata} for format of txt file)
 #' @param outdir  output directory for graphs
 #' @param mapfile full path to map file
 #' @param FUN character string. name of function you would like to run. can be actual
 #' function object if run from R
 #' @param logfilename logfilename
 #' @param info print sessionInfo to logfile
+#' @param tsvfile Is datafile a tab-delimited text file? Default FALSE
 #' @param ...  parameters needed to pass to FUN
 #'
 #' @return Returns 0 if FUN succeeds and stops on error.  In rpy2, it will throw
@@ -595,6 +621,11 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 #' trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
 #' "/path/to/inputs/mapfile.txt", 'allgraphs')
 #'
+#' # example with sampdepth argument for running allgraphs
+#' trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
+#' "/path/to/inputs/mapfile.txt", 'allgraphs', sampdepth=30000)
+#'
+#'
 #' # example with optional argument sampdepth and tsv file
 #' trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/",
 #' "/path/to/inputs/mapfile.txt", 'allgraphs', sampdepth = 30000, tsvfile=TRUE)
@@ -606,7 +637,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 #' }
 #'
 #'
-trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt", info = TRUE, ... ) {
+trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile.txt", info = TRUE, tsvfile=FALSE, ... ) {
 
   ## set error handling options here, since rpy2 does not allow setting globally
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
@@ -627,7 +658,7 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   if (info) writeLines(capture.output(sessionInfo()))
 
   ## make function command
-  cmnd <- paste0(deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', ' ...)')
+  cmnd <- paste0(deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', 'tsvfile=',tsvfile, ', ...)')
   logoutput(cmnd, 1)
   FUN <- match.fun(FUN)
 
