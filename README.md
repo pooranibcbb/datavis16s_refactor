@@ -21,9 +21,10 @@ R package for graphs for Nephele 16S pipelines.
         import rpy2.rinterface  ## to start R instance
         ```
 
-    -   The generic wrapper function to be called from rpy2 is [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper). It returns 0 for success and 1 for failure. See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.
+    -   The generic wrapper function to be called from rpy2 is [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper). See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.
+    -   It returns 0 for success and raises `rpy2.rinterface.RRuntimeError` on error, which you can catch.
     -   Must pass the full paths for the output directory, mapping file, biom file[1](#fn1).
-    -   `trygraphwrapper`, by default, prints the R sessionInfo to the logfile before it runs the function. If you do not want it to do NA same script), you can pass `info = FALSE`.
+    -   `trygraphwrapper`, by default, prints the R sessionInfo to the logfile before it runs the function. If you do not want it to do this (e.g. if you are calling the function multiple times in the same script), you can pass `info = FALSE`.
     -   To call the function, import the R library and call `trygraphwrapper`:
 
         ``` python
@@ -31,8 +32,6 @@ R package for graphs for Nephele 16S pipelines.
         exit_code = datavis16s.trygraphwrapper(datafile="/path/to/outputs/out.biom", outdir="/path/to/outputs/", 
         mapfile = "/path/to/inputs/mapfile.txt", FUN = functionname, otherarguments_for_functionname)
         ```
-
-    -   On error, rpy2 throws an `rpy2.rinterface.RRuntimeError` which you can catch. See :any:`demo_r_pipe`
 
 -   **R**
     -   You can use `readindata` to create an ampvis2 object, and pass that instead of the mapping file and biom file.
