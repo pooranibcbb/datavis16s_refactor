@@ -117,6 +117,7 @@ highertax <- function(amp, taxlevel) {
   otu <- data.frame(dt[,otucols, with=FALSE], check.names = FALSE)
   tax <- data.frame(dt[,taxcols, with=FALSE])
   row.names(otu) <- tax[,ncol(tax)]
+  row.names(tax) <- tax[,ncol(tax)]
   amp$abund <- as.data.frame(otu)
   amp$tax <- tax
   return(amp)
@@ -142,7 +143,7 @@ filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
   } else {
     mat <- apply(otu, 2, function(x) { y <- sum(x); 100*x/y  } )
   }
-  v <- which(mat < level & mat > 0)
+  v <- which(mat < level & mat > 0, arr.ind = T)
   otu[v] <- 0
   w <- which(rowSums(otu) == 0)
   ps <- which(apply(otu, 1, function(x) length(which(x > 0))/ncol(otu)) < persamp/100)
