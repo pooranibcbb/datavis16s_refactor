@@ -34,6 +34,8 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
   return(amp)
 }
 
+
+
 #' Read in data
 #'
 #' @param datafile  full path to input data file.  must be either biom file or tab delimited text file.
@@ -55,7 +57,7 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
 #' @export
 #'
 readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
-#  locale <- Sys.getlocale()
+  #  locale <- Sys.getlocale()
   Sys.setlocale('LC_ALL','C')
   ## mapfile
   logoutput(paste("Reading in map file", mapfile))
@@ -76,10 +78,13 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     logoutput(cmnd)
     eval(parse(text = cmnd))
   } else {
+
+    assignInNamespace("generate_matrix", generate_matrix_fix, ns = "biomformat")
+
     ## biom file
     cmnd <- 'biom <- biomformat::read_biom(datafile)'
     logoutput(cmnd)
-    eval(parse(text = cmnd))
+    eval(parse(text=cmnd))
 
     cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
     logoutput(cmnd)
@@ -88,6 +93,10 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     cmnd <- 'tax <- biomformat::observation_metadata(biom)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
+
+    ## delete biom structure
+    rm(biom)
+    gc()
 
     ## qiime biom file
     if (class(tax) == "list") {
@@ -117,7 +126,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
   if (sum(amp$abund) < mincount) {
     stop(paste0("Not enough counts in OTU table to make any graphs. At least ", mincount, " are needed."))
   }
-#  Sys.setlocale('LC_ALL',locale)
+  #  Sys.setlocale('LC_ALL',locale)
   return(amp)
 
 }
@@ -280,7 +289,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -288,6 +297,22 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
+
+
+  ## filter low abundant taxa, if desired
+  if (!is.null(filter_level)) {
+    logoutput(paste('Filter taxa below', filter_level, 'counts/abundance.'))
+    if (filter_level < 1) {
+      cmnd <- paste0('amp <- filterlowabund(amp, level = ', filter_level,')')
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
+    } else {
+      cmnd <- paste0('amp <- filterlowabund(amp, level = ', filter_level,', abs=T)')
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
+    }
+  }
+
 
   ## normalize data
   logoutput("Calculate relative abundance.")
@@ -322,25 +347,13 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       amptax$tax <- shortnames(amptax$tax)
     }
 
-    ## filter low abundant taxa, if desired
-    if (filter_level > 0) {
-      logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
-      cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
-      logoutput(cmnd)
-      eval(parse(text = cmnd))
-    }
+    print(dim(amptax$abund))
 
     ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
-    if (nrow(amptax$abund) > 1000 & tl == "seq") {
+    if (nrow(amptax$abund) > 2000 & tl == "seq") {
       logoutput("Number of sequence variants > 1000.  Making heatmap at species/lowest assigned taxonomic level instead.")
       tl = "Species"
-      amptax <- highertax(amp, taxlevel=tl)
-      if (filter_level > 0) {
-        logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
-        cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
-        logoutput(cmnd)
-        eval(parse(text = cmnd))
-      }
+      amptax <- highertax(amptax, taxlevel=tl)
     }
 
     ## row and column names for matrix
@@ -543,7 +556,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## Heatmap
   logoutput('Relative abundance heatmaps', 1)
-  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols)'
+  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols, filter_level = 5)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
