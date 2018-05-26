@@ -372,6 +372,36 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
   return(p)
 }
 
+#' biomformat generate_matrix
+#'
+#' @param x
+#'
+#' @return counts matrix
+#'
+#' @description This function replaces the biomformat function generate_matrix to deal with reading in
+#' crappy hdf5 biom file.
+#'
+generate_matrix_fix <- function(x){
+
+  indptr  = x$sample$matrix$indptr+1
+  indices = x$sample$matrix$indices+1
+  data    = x$sample$matrix$data
+  nr = length(x$observation$ids)
+
+  counts = sapply(2:length(indptr),function(i){
+    x = rep(0,nr)
+    seq = indptr[i-1]:(indptr[i]-1)
+    try(x[indices[seq]] <- data[seq])
+    x
+  })
+  rownames(counts) = x$observation$ids
+  colnames(counts) = x$sample$ids
+  # I wish this next line wasn't necessary
+  lapply(1:nrow(counts),function(i){
+    counts[i,]
+  })
+}
+
 #' #' Cleanup taxonomy names
 #' #'
 #' #' @param taxtable taxonomy table attribute of ampvis2 object
