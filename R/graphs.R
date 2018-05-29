@@ -240,7 +240,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 
   logoutput(cmnd)
   eval(parse(text = cmnd))
-  if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
+  if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + scale_fill_manual(values=colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
   ## save to file
   outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
