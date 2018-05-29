@@ -211,7 +211,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 #'
 #' @return Saves pcoa plots to outdir.
 #'
-#' @importFrom ggplot2 scale_color_manual ggtitle
+#' @importFrom ggplot2 scale_color_manual scale_fill_manual ggtitle
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
