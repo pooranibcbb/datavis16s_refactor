@@ -139,6 +139,9 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #' @param mapfile  full path mapping file
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+#' @param cat Category/column in mapping file by which to color the curves in the graph.
+#' (default TreatmentGroup)
+#' @param stepsize for rarefaction plotting.
 #' @param ... parameters to pass to \code{\link{readindata}}
 #'
 #' @return Saves rarefaction curve plot to output directory.
@@ -149,7 +152,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
-rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, ...) {
+rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, cat = "TreatmentGroup", stepsize=1000, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -157,7 +160,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
-  rarecurve <- amp_rarecurvefix(amp, color_by = "TreatmentGroup") + ggtitle("Rarefaction Curves")
+  rarecurve <- amp_rarecurvefix(amp, color_by = cat, stepsize=stepsize) + ggtitle("Rarefaction Curves")
 
   on.exit(graphics.off())
 
@@ -165,13 +168,13 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
   if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values = colors)
 
   ## suppress ggplotly warning to install dev version of ggplot2, as it is out of date
-  #  withCallingHandlers({
-  ## plot curves
-  rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
-  #  }, message = function(c) {
-  #    if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
-  #      invokeRestart("muffleMessage")
-  #  })
+  withCallingHandlers({
+    ## plot curves
+    rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID", "x", "y"))
+   }, message = function(c) {
+     if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
+       invokeRestart("muffleMessage")
+   })
 
   ## make table of data for plotly export
   df <- plotly_data(rarecurve)
@@ -414,6 +417,8 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth  sampling depth.  see details.
 #' @param colors colors to use for plots
+#' @param cats categories/columns in mapping file to use as groups.  If NULL (default), will use
+#' all columns starting with TreatmentGroup to (but not including) Description
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return Save alpha diversity boxplots to outdir.
@@ -427,7 +432,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @importFrom bpexploder bpexploder
 #' @importFrom htmltools HTML
 #'
-adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
+adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -453,10 +458,6 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   logoutput(paste0('Saving alpha diversity table to ', file.path(outdir, 'alphadiv.txt') ))
   write.table(alphadiv, file.path(outdir, 'alphadiv.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 
-  ## make plots for each category (between treatmentgroup and description)
-  tg <- which(colnames(amp$metadata) == "TreatmentGroup")
-  desc <- which(colnames(amp$metadata) == "Description") - 1
-
   divplots <- function(adiv, col, colors) {
     if (col == "TreatmentGroup") {
       lc <- colors
@@ -470,8 +471,15 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     return(list(shannon, chao1))
   }
 
+  if (is.null(cats)) {
+    ## make plots for each category (between treatmentgroup and description)
+    tg <- which(colnames(amp$metadata) == "TreatmentGroup")
+    desc <- which(colnames(amp$metadata) == "Description") - 1
+    cats <- colnames(amp$metadata)[tg:desc]
+  }
+
   ## style widgets 2 across
-  divwidget <- unlist(lapply(colnames(amp$metadata)[tg:desc], function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
+  divwidget <- unlist(lapply(cats, function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
   tt <- tags$div(
     style = "display: grid; grid-template-columns: 1fr 1fr; grid-row-gap: 5em;",
     lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
@@ -499,11 +507,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   ## Remove later
   bpjsfile <- file.path(outdir, "lib", "bpexplode-0.2.1", "bpexplode.js")
   if (file.exists(bpjsfile)) {
-    bpjs <- readLines(bpjsfile)
-    bpjs[55] <- "    var height = 500;"
-    bpjs[58] <- "    var margin = {top:10,bottom:50,left:50,right:10};"
-    bpjs[172] <- '        .attr("dy", "1em")'
-    writeLines(bpjs, bpjsfile)
+    file.copy(file.path(find.package("datavis16s"), "htmlwidgets", "bpexplode.js"), bpjsfile, overwrite = T)
   }
   return(as.integer(0))
 
@@ -538,7 +542,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   ## Choose colors
   amp$metadata <-  amp$metadata[order(amp$metadata$TreatmentGroup),]
   numtg <- length(unique(amp$metadata$TreatmentGroup))
-  allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:7,9,11:14, 10, 15:16,18:20)]
+  allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:6,9,11:13,16, 15,14,18:20)]
   coln <- length(allcols)
   if (numtg <= coln){
     st <- sample.int(coln, size=1)
