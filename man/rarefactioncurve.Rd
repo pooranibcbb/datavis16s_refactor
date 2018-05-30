@@ -7,7 +7,8 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, ...)
+rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
+  cat = "TreatmentGroup", stepsize = 1000, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
@@ -19,6 +20,11 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, ...)
 \item{amp}{(Optional) ampvis2 object. may be specified instead of mapfile and datafile}
 
 \item{colors}{(Optional) color vector - length equal to number of TreatmentGroups in mapfile}
+
+\item{cat}{Category/column in mapping file by which to color the curves in the graph.
+(default TreatmentGroup)}
+
+\item{stepsize}{for rarefaction plotting.}
 
 \item{...}{parameters to pass to \code{\link{readindata}}}
 }

@@ -345,7 +345,11 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
   tot <- rowSums(abund)
   nr <- nrow(abund)
   out <- lapply(seq_len(nr), function(i) {
-    n <- seq(1, tot[i], by = stepsize)
+    if (tot[i] < stepsize) {
+      n <- c(1, tot[i])
+    } else {
+      n <- seq(1, tot[i], by = stepsize)
+    }
     if (n[length(n)] != tot[i]) {
       n <- c(n, tot[i])
     } else {

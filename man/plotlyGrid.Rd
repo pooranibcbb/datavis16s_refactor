@@ -33,6 +33,7 @@ Useful for multiple graphs sharing the same lib.}
 }
 \value{
 html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
+Invisibly returns the plotly html widget.
 }
 \description{
 All functions create an output html plot  with link which sends the data to a grid in the plotly chart
