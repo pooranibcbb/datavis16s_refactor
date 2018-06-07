@@ -79,10 +79,8 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     eval(parse(text = cmnd))
   } else {
 
-    assignInNamespace("generate_matrix", generate_matrix_fix, ns = "biomformat")
-
     ## biom file
-    cmnd <- 'biom <- biomformat::read_biom(datafile)'
+    cmnd <- 'biom <- read_biom(datafile)'
     logoutput(cmnd)
     eval(parse(text=cmnd))
 

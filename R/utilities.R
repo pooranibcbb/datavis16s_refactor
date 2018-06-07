@@ -376,58 +376,51 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
   return(p)
 }
 
-#' biomformat generate_matrix
+
+#' biomformat read_biom
 #'
-#' @param x
+#' @param biom_file
 #'
-#' @return counts matrix
+#' @return biom object
 #'
-#' @description This function replaces the biomformat function generate_matrix to deal with reading in
+#' @description This function replaces the biomformat function read_biom to deal with reading in
 #' crappy hdf5 biom file.
 #'
-generate_matrix_fix <- function(x){
+#' @importFrom jsonlite fromJSON
+#'
+read_biom <- function (biom_file)
+{
 
-  indptr  = x$sample$matrix$indptr+1
-  indices = x$sample$matrix$indices+1
-  data    = x$sample$matrix$data
-  nr = length(x$observation$ids)
+  errmsg <- paste0("Both attempts to read input file:\n", biom_file,
+                   "\n", "either as JSON (BIOM-v1) or HDF5 (BIOM-v2) failed.\n",
+                   "Check file path, file name, file itself, then try again.")
 
-  counts = sapply(2:length(indptr),function(i){
-    x = rep(0,nr)
-    seq = indptr[i-1]:(indptr[i]-1)
-    try(x[indices[seq]] <- data[seq])
-    x
+  trash = try(silent = TRUE, expr = {
+    x <- fromJSON(biom_file, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
   })
-  rownames(counts) = x$observation$ids
-  colnames(counts) = x$sample$ids
-  # I wish this next line wasn't necessary
-  lapply(1:nrow(counts),function(i){
-    counts[i,]
-  })
+  if (inherits(trash, "try-error")) {
+    tempbiom <- file.path(tempdir(), "temp.biom")
+    logoutput(paste("Attempting to convert biom file to", tempbiom))
+    trash = try(silent = TRUE, expr = {
+      system2("biom", c("convert", "-i", biom_file, "-o", tempbiom, "--to-json", "--header-key", "taxonomy"))
+    })
+  }
+  if (file.exists(tempbiom)) on.exit(file.remove(tempbiom))
+
+  if (inherits(trash, "try-error")) {
+    logoutput("file conversion failed")
+    stop(errmsg)
+  } else {
+    trash = try(silent = TRUE, expr = {
+      x <- fromJSON(tempbiom, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
+    })
+  }
+
+  if (inherits(trash, "try-error")) {
+    logoutput("reading from json failed")
+    stop(errmsg)
+  }
+
+  return(biomformat::biom(x))
 }
 
-#' #' Cleanup taxonomy names
-#' #'
-#' #' @param taxtable taxonomy table attribute of ampvis2 object
-#' #'
-#' #' @return data frame of taxonomy table with sanitized taxonomy
-#' #'
-#' #'
-#' #'
-#' taxonomycleanup <- function(taxtable) {
-#'
-#'   ## greengenes
-#'   taxtable <- apply(taxtable, 2, function(x) { v <- grep("_unclassified$|^Unassigned$", x); x[v] <- NA; x })
-#'   taxtable <- apply(taxtable, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
-#'
-#'   ## SILVA97
-#'   taxtable <- apply(taxtable, 2, function(x) { gsub("^D_\\d+__", "", x) })
-#'   taxtable[which(taxtable %in% c("", "none"), arr.ind = TRUE)] <- NA
-#'
-#'   vd <- which(is.na(taxtable[,"Kingdom"]))
-#'   taxtable[vd,"Kingdom"] <- paste(row.names(taxtable)[vd], "unclassified")
-#'
-#'   return(as.data.frame(taxtable))
-#'
-#'
-#' }
