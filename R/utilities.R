@@ -116,8 +116,12 @@ highertax <- function(amp, taxlevel) {
   dt <- dt[, lapply(.SD, sum) , by = c(taxcols)]
   otu <- data.frame(dt[,otucols, with=FALSE], check.names = FALSE)
   tax <- data.frame(dt[,taxcols, with=FALSE])
-  row.names(otu) <- tax[,ncol(tax)]
-  row.names(tax) <- tax[,ncol(tax)]
+  dupes <- tax[duplicated(tax[,tc]),tc]
+  dupes <- which(tax[,tc] %in% dupes)
+  tax[dupes,tc] <- paste(tax[dupes,tc-1], tax[dupes,tc])
+
+  row.names(otu) <- tax[,tc]
+  row.names(tax) <- tax[,tc]
   amp$abund <- as.data.frame(otu)
   amp$tax <- tax
   return(amp)
