@@ -25,12 +25,19 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
   }
 
   if (is.null(sampdepth)) sampdepth = 0
+  samples <-  amp$metadata$SampleID
   cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth, ...)'
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
   if (printsummary) print_ampvis2(amp)
   writeLines('')
+  if (length(excluded <- setdiff(samples, amp$metadata$SampleID)) > 0) {
+    writeLines(c("Samples excluded:", excluded))
+
+  }
+
+
   return(amp)
 }
 
@@ -578,6 +585,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
     return(as.integer(1))
   }
 
+  ## Check which samples were removed
 
   ## Alpha diversity
   logoutput('Alpha diversity boxplot', 1)
