@@ -3,14 +3,22 @@
 {% block page_content %}
 <div style="padding: 20px 30px 20px 30px">
 <h1>16S Visualization Pipeline</h1>
+<nav id="TOC">
+<ul>
+<li><a href="#ampvis2-and-plotly">ampvis2 and Plotly</a></li>
+<li><a href="#plots">Plots</a></li>
+<li><a href="#output-files">Output Files</a></li>
+<li><a href="#tools-and-references">Tools and References</a></li>
+</ul>
+</nav>
 <h2 id="ampvis2-and-plotly">ampvis2 and Plotly</h2>
-<p>Nephele uses the <a href="https://madsalbertsen.github.io/ampvis2/">ampvis2 R package</a> v2.3.2 for statistical computation. We also make use of the <a href="https://plot.ly/r/">Plotly R interface</a> for the <a href="https://plot.ly">plotly.js</a> charting library. The plots can be minimally edited interactively. However, they also have a link to export the data to the <a href="https://plot.ly/online-chart-maker/">Plotly Chart Studio</a> which allows for <a href="https://help.plot.ly/tutorials/">making a variety of charts</a>.</p>
+<p>Nephele uses the <a href="https://madsalbertsen.github.io/ampvis2/">ampvis2 R package</a> v2.3.2 for statistical computation. We also make use of the <a href="https://plot.ly/r/">Plotly R interface</a> for the <a href="https://plot.ly">plotly.js</a> charting library. The plots can be minimally edited interactively. However, they also have a link to export the data to the <a href="https://plot.ly/online-chart-maker/">Plotly Chart Studio</a> which allows for <a href="https://help.plot.ly/tutorials/">making a variety of charts</a>. We have a tutorial for <a href="{{ url_for('show_tutorials') }}">modifying the plots here</a>.</p>
 <h2 id="plots">Plots</h2>
 <h3 id="rarefaction-curve">Rarefaction Curve</h3>
 <p>The rarefaction curves are made with the <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_rarecurve.html">amp_rarecurve</a> function. The table is written to <em>rarecurve.txt</em> and the plot to <em>rarecurve.html</em>.</p>
 <pre class="r"><code>rarecurve &lt;- amp_rarecurve(amp, color_by = &quot;TreatmentGroup&quot;)</code></pre>
 <h3 id="pcoa">PCoA</h3>
-<p>Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html">amp_ordinate</a>. Samples which fall below the specified sampling depth are removed from the OTU table using <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html">amp_subset_samples</a> before the distance measures are computed.</p>
+<p>Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html">amp_ordinate</a>. Samples which fall below the specified sampling depth are removed from the OTU table using <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html">amp_subset_samples</a> before the distance measures are computed. The names of samples that are removed are output to <em>samples_being_ignored.txt</em>.</p>
 <p>The binomial distance is able to handle varying sample sizes. However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using <a href="https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy">rrarefy</a> from the vegan R package. At least 3 samples are needed in the OTU table for the plot to be generated. The tables are written to <em>pcoa_binomial.txt</em> and <em>pcoa_bray.txt</em> and the plots to <em>pcoa_binomial.html</em> and <em>pcoa_bray.html</em>.</p>
 <pre class="r"><code>amp &lt;- amp_subset_samples(amp, minreads = sampdepth)
 pcoa_binomial &lt;- amp_ordinate(amp, filter_species = 0.01, type = &quot;PCOA&quot;, distmeasure = &quot;binomial&quot;, 
@@ -29,6 +37,18 @@ pcoa_bray &lt;- amp_ordinate(amp, filter_species = 0.01, type = &quot;PCOA&quot;
 heatmap &lt;- morpheus(amp$abund, columns = columns, columnAnnotations = amptax$metadata, 
     columnColorModel = list(type = as.list(colors)), colorScheme = list(scalingMode = &quot;fixed&quot;, 
         stepped = FALSE), rowAnnotations = amptax$tax, rows = rows)</code></pre>
+<h2 id="output-files">Output Files</h2>
+<p>Complete descriptions of the output files can be found in the <a href="#plots">Plots section above</a>.</p>
+<ul>
+<li><em>rarecurve.html</em>: rarefaction curve plot</li>
+<li><em>rarecurve.txt</em>: tabular data used to make the rarefaction curve plot</li>
+<li><em>samples_being_ignored.txt</em>: list of samples removed from the analysis</li>
+<li><em>pcoa_*.html</em>: PCoA plots</li>
+<li><em>pcoa_*.txt</em>: tabular data used to make the PCoA plots</li>
+<li><em>alphadiv.html</em>: alpha diversity boxplots</li>
+<li><em>alphadiv.txt</em>: tabular data used to make the alpha diversity plots</li>
+<li><em>seq_heatmap.html</em>: heatmap of OTU/sequence variant abundances</li>
+</ul>
 <h2 id="tools-and-references">Tools and References</h2>
 <p>
 M A, SM K, AS Z, RH K and PH N (2015). "Back to Basics - The Influence of DNA Extraction and Primer Choice on Phylogenetic Analysis of Activated Sludge Communities." <em>PLoS ONE</em>, <b>10</b>(7), pp. e0132783. <a href="http://dx.plos.org/10.1371/journal.pone.0132783">http://dx.plos.org/10.1371/journal.pone.0132783</a>.
