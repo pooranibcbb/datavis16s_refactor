@@ -398,31 +398,34 @@ read_biom <- function (biom_file)
   errmsg <- paste0("Both attempts to read input file:\n", biom_file,
                    "\n", "either as JSON (BIOM-v1) or HDF5 (BIOM-v2) failed.\n",
                    "Check file path, file name, file itself, then try again.")
-  tempbiom <- file.path(tempdir(), "temp.biom")
+
+
   trash = try(silent = TRUE, expr = {
     x <- fromJSON(biom_file, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
   })
+  print(class(trash))
   if (inherits(trash, "try-error")) {
-
+    tempbiom <- file.path(tempdir(), "temp.biom")
     logoutput(paste("Attempting to convert biom file to", tempbiom))
     trash = try(silent = TRUE, expr = {
       system2("biom", c("convert", "-i", biom_file, "-o", tempbiom, "--to-json", "--header-key", "taxonomy"))
     })
-  }
-  if (file.exists(tempbiom)) on.exit(file.remove(tempbiom))
 
-  if (inherits(trash, "try-error")) {
-    logoutput("file conversion failed")
-    stop(errmsg)
-  } else {
-    trash = try(silent = TRUE, expr = {
-      x <- fromJSON(tempbiom, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
-    })
-  }
+    if (file.exists(tempbiom)) on.exit(file.remove(tempbiom))
 
-  if (inherits(trash, "try-error")) {
-    logoutput("reading from json failed")
-    stop(errmsg)
+    if (inherits(trash, "try-error")) {
+      logoutput("file conversion failed")
+      stop(errmsg)
+    } else {
+      trash = try(silent = TRUE, expr = {
+        x <- fromJSON(tempbiom, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
+      })
+
+      if (inherits(trash, "try-error")) {
+        logoutput("reading from json failed")
+        stop(errmsg)
+      }
+    }
   }
 
   return(biomformat::biom(x))
