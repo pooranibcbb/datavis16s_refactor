@@ -7,7 +7,8 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T,
+  outdir = NULL, ...)
 }
 \arguments{
 \item{amp}{ampvis2 object}
@@ -17,6 +18,9 @@ subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
 \item{rarefy}{rarefy the OTU table in addition to subsetting}
 
 \item{printsummary}{Logical. print ampvis2 summary of OTU table}
+
+\item{outdir}{Output directory.  If not null, and samples are removed from amp, the sample names will be output
+to outdir/samples_being_ignored.txt}
 
 \item{...}{other parameters to pass to amp_subset_samples}
 }

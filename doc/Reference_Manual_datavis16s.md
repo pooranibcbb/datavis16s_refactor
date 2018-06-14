@@ -25,7 +25,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-June 07, 2018
+June 14, 2018
 
 DESCRIPTION
 ===========
@@ -1033,18 +1033,50 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, outdir = NULL, 
+    ...)
 ```
 
 ### Arguments
 
-| Argument       | Description                                      |
-|----------------|--------------------------------------------------|
-| `amp`          | ampvis2 object                                   |
-| `sampdepth`    | sampling depth. See details.                     |
-| `rarefy`       | rarefy the OTU table in addition to subsetting   |
-| `printsummary` | Logical. print ampvis2 summary of OTU table      |
-| `...`          | other parameters to pass to amp\_subset\_samples |
+<table style="width:43%;">
+<colgroup>
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>amp</code></td>
+<td>ampvis2 object</td>
+</tr>
+<tr class="even">
+<td><code>sampdepth</code></td>
+<td>sampling depth. See details.</td>
+</tr>
+<tr class="odd">
+<td><code>rarefy</code></td>
+<td>rarefy the OTU table in addition to subsetting</td>
+</tr>
+<tr class="even">
+<td><code>printsummary</code></td>
+<td>Logical. print ampvis2 summary of OTU table</td>
+</tr>
+<tr class="odd">
+<td><code>outdir</code></td>
+<td>Output directory. If not null, and samples are removed from amp, the sample names will be output to outdir/samples_being_ignored.txt</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>other parameters to pass to amp_subset_samples</td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 
