@@ -8,10 +8,11 @@ output:
     highlight: null
     theme: null
     template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_doc_template.html
-    toc: false
+    toc: true
+    toc_depth: 2
   github_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(wid
 ```
 
 ## ampvis2 and Plotly
-Nephele uses the [ampvis2 R package](https://madsalbertsen.github.io/ampvis2/) v2.3.2 for statistical computation.  We also make use of the [Plotly R interface](https://plot.ly/r/) for the [plotly.js](https://plot.ly) charting library.  The plots can be minimally edited interactively.  However, they also have a link to export the data to the [Plotly Chart Studio](https://plot.ly/online-chart-maker/) which allows for [making a variety of charts](https://help.plot.ly/tutorials/).
+Nephele uses the [ampvis2 R package](https://madsalbertsen.github.io/ampvis2/) v2.3.2 for statistical computation.  We also make use of the [Plotly R interface](https://plot.ly/r/) for the [plotly.js](https://plot.ly) charting library.  The plots can be minimally edited interactively.  However, they also have a link to export the data to the [Plotly Chart Studio](https://plot.ly/online-chart-maker/) which allows for [making a variety of charts](https://help.plot.ly/tutorials/).  We have a tutorial for <a href="{{ url_for('show_tutorials') }}">modifying the plots here</a>.
 
 ## Plots
 ### Rarefaction Curve
@@ -33,7 +34,7 @@ rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 ```
 
 ### PCoA
-Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html).  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed.  
+Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html).  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html) before the distance measures are computed.  The names of samples that are removed are output to *samples_being_ignored.txt*. 
 
 The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy) from the vegan R package.  At least 3 samples are needed in the OTU table for the plot to be generated.  The tables are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.
 ```{r}
@@ -60,6 +61,17 @@ The OTU table is first normalized to represent the relative abundances using amp
     heatmap <- morpheus(amp$abund, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", stepped=FALSE), rowAnnotations = amptax$tax, rows = rows)
 ```
 
+## Output Files
+Complete descriptions of the output files can be found in the [Plots section above](#plots).
+
+- *rarecurve.html*: rarefaction curve plot
+- *rarecurve.txt*: tabular data used to make the rarefaction curve plot
+- *samples_being_ignored.txt*: list of samples removed from the analysis
+- *pcoa_\*.html*: PCoA plots
+- *pcoa_\*.txt*: tabular data used to make the PCoA plots
+- *alphadiv.html*: alpha diversity boxplots
+- *alphadiv.txt*: tabular data used to make the alpha diversity plots
+- *seq_heatmap.html*: heatmap of OTU/sequence variant abundances
 
 ## Tools and References
 ```{r, echo=FALSE,eval=TRUE, results = 'asis'}
