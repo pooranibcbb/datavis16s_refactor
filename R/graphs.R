@@ -6,6 +6,8 @@
 #' @param sampdepth  sampling depth.  See details.
 #' @param rarefy  rarefy the OTU table in addition to subsetting
 #' @param printsummary Logical. print ampvis2 summary of OTU table
+#' @param outdir Output directory.  If not null, and samples are removed from amp, the sample names will be output
+#' to outdir/samples_being_ignored.txt
 #' @param ... other parameters to pass to amp_subset_samples
 #'
 #' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
@@ -16,7 +18,7 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) {
+subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdir=NULL, ...) {
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
@@ -34,6 +36,13 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
   writeLines('')
   if (length(excluded <- setdiff(samples, amp$metadata$SampleID)) > 0) {
     writeLines(c("Samples excluded:", excluded))
+
+    ## output excluded samples to file as well
+    if (!is.null(outdir)) {
+      excludedpath <- file.path(outdir, "samples_being_ignored.txt")
+      logoutput(paste("Excluded samples are also being written to", excludedpath))
+      write(excluded, file=excludedpath, ncolumns=1)
+    }
 
   }
 
@@ -577,8 +586,8 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
     return(as.integer(1))
   }
 
-  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots.'))
-  ampsub <- subsetamp(amp, sampdepth=sampdepth)
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and Bray-Curtis PCOA plots'))
+  ampsub <- subsetamp(amp, sampdepth=sampdepth, outdir = outdir)
 
   if (nrow(ampsub$metadata) < 3) {
     logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1)
@@ -596,16 +605,16 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## binomial PCoA
   logoutput('PCoA plots', 1)
-  cmnd <- paste0('pcoaplot(outdir = outdir, amp = ampsub, distm = "binomial", colors = allcols)')
+  cmnd <- paste0('pcoaplot(outdir = outdir, amp = amp, distm = "binomial", colors = allcols)')
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## bray-curtis PCoA
   ## Rarefy table
   logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads, and normalizing to 100 for Bray-Curtis distance.'))
-  amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
+  ampsub <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
 
-  cmnd <- 'pcoaplot(outdir = outdir, amp = amp, distm = "bray", colors = allcols)'
+  cmnd <- 'pcoaplot(outdir = outdir, amp = ampsub, distm = "bray", colors = allcols)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
