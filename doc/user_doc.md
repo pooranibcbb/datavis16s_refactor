@@ -30,12 +30,14 @@ The binomial distance is able to handle varying sample sizes. However, for the B
 
 ``` r
 amp <- amp_subset_samples(amp, minreads = sampdepth)
-pcoa_binomial <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure = "binomial", 
-    sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform = "none")
+pcoa_binomial <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", 
+    distmeasure = "binomial", sample_color_by = "TreatmentGroup", 
+    detailed_output = TRUE, transform = "none")
 otu <- rrarefy(t(amp$abund), sampdepth)
 amp$abund <- t(otu)
-pcoa_bray <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", distmeasure = "bray", 
-    sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform = "none")
+pcoa_bray <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", 
+    distmeasure = "bray", sample_color_by = "TreatmentGroup", 
+    detailed_output = TRUE, transform = "none")
 ```
 
 ### Alpha diversity
@@ -54,9 +56,10 @@ The OTU table is first normalized to represent the relative abundances using amp
 
 ``` r
 amptax <- amp_subset_samples(amp, normalise = TRUE)
-heatmap <- morpheus(amp$abund, columns = columns, columnAnnotations = amptax$metadata, 
-    columnColorModel = list(type = as.list(colors)), colorScheme = list(scalingMode = "fixed", 
-        stepped = FALSE), rowAnnotations = amptax$tax, rows = rows)
+heatmap <- morpheus(amp$abund, columns = columns, rows = rows, 
+    columnColorModel = list(type = as.list(colors)), 
+    colorScheme = list(scalingMode = "fixed", stepped = FALSE), 
+    columnAnnotations = amptax$metadata, rowAnnotations = amptax$tax)
 ```
 
 Output Files
