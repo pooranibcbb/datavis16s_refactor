@@ -16,11 +16,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
-# knitr::knit_hooks$set(document = function(x){
-#   gsub("```\n+\\s*``` r", "", x, perl = TRUE)
-# })
-
+#knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=FALSE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE)
 ```
 
 ## ampvis2 and Plotly
@@ -37,7 +34,7 @@ rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html){target="_blank" rel="noopener noreferrer"}.  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html){target="_blank" rel="noopener noreferrer"} before the distance measures are computed.  The names of samples that are removed are output to *samples_being_ignored.txt*. 
 
 The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy){target="_blank" rel="noopener noreferrer"} from the vegan R package.  At least 3 samples are needed in the OTU table for the plot to be generated.  The tables are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.
-```{r}
+```{r, tidy.opts=list(width.cutoff=60)}
 amp <- amp_subset_samples(amp, minreads = sampdepth)
 pcoa_binomial <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "binomial", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
 otu <- rrarefy(t(amp$abund), sampdepth)
@@ -56,9 +53,9 @@ alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = sampd
 The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R){target="_blank" rel="noopener noreferrer"} developed at the Broad Institute.  [Documentation](https://software.broadinstitute.org/morpheus/documentation.html){target="_blank" rel="noopener noreferrer"} for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/){target="_blank" rel="noopener noreferrer"}.
 
 The OTU table is first normalized to represent the relative abundances using amp_subset_samples before the heatmap is made with morpheus.  In order for the heatmap to be generated, the OTU table must be at least 2x2.  The heatmap is made from the raw OTU table (*seq_heatmap.html*).
-```{r}
-    amptax <- amp_subset_samples(amp, normalise = TRUE)
-    heatmap <- morpheus(amp$abund, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", stepped=FALSE), rowAnnotations = amptax$tax, rows = rows)
+```{r,  tidy.opts=list(width.cutoff=50)}
+amptax <- amp_subset_samples(amp, normalise = TRUE)
+heatmap <- morpheus(amp$abund, columns=columns, rows = rows, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", stepped=FALSE), columnAnnotations = amptax$metadata, rowAnnotations = amptax$tax)
 ```
 
 ## Output Files
