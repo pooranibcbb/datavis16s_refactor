@@ -1,0 +1,44 @@
+---
+title: "Importing Nephele Results into Phyloseq"
+output: 
+  html_document:
+    smart: false  
+    mathjax: null
+    section_divs: false
+    highlight: tango
+    theme: null
+    template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_guide_template.html
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy=TRUE, eval=FALSE)
+```
+
+These are some general instructions for how to create your own plots in [phyloseq](https://joey711.github.io/phyloseq/){target="_blank" rel="noopener noreferrer"} using the outputs from Nephele.
+
+### Software requirements
+Please refer to the websites linked here for installation and usage instructions:
+
+- [R](https://cran.r-project.org/){target="_blank" rel="noopener noreferrer"}
+- [phyloseq](https://joey711.github.io/phyloseq/install.html){target="_blank" rel="noopener noreferrer"} - installing phyloseq will also install the other packages used in this tutorial.
+- [RStudio](https://www.rstudio.com/products/rstudio/download/#download){target="_blank" rel="noopener noreferrer"} - not required, but helpful if you are new to R.
+
+### Tutorial
+@. Download and unzip the PipelineResults folder from your Nephele job. This folder contains all of the data and files used in processing your job.
+@. In the files pane of RStudio navigate to your unzipped outputs folder and under the "More" dropdown, choose `Set As Working Directory`.
+@. In the Console, enter the following:
+    ```{r}
+    library(phyloseq)
+    ```
+@. To import the data as a phyloseq object, we will use phyloseq's `import_qiime` command.  Subsititute the name of your mapping file for *map_file.txt* inside the quotes.
+    ```{r}
+    mydata <- import_qiime(otufilename="OTU_table.txt", mapfilename="map_file.txt")
+    ```
+@. (Optional) To add a tree to the phyloseq object, we will use the [ape package](https://cran.rstudio.com/web/packages/ape/index.html){target="_blank" rel="noopener noreferrer"} to read in the tree file, and then add it to `mydata` using `phy_tree`.
+    ```{r}
+    library(ape)
+    tree <- read.tree('tree.tre')
+    phy_tree(mydata) <- tree
+    ```
