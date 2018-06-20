@@ -1,0 +1,37 @@
+{% extends &quot;guide_base.html&quot; %}
+
+{% block guide_content %}
+<div style="padding: 20px 30px 20px 30px">
+<h1>Importing Nephele Results into Phyloseq</h1>
+<style>
+code > span.kw { color: #152166; font-weight: bold; } /* Keyword^ */
+code > span.dt { color: #152166; } /* DataType^ */
+code > span.fl { color: #099; } /* Float^ */
+code > span.st { color: #d14; } /* String^ */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #990073; } /* Other^ */
+code > span.op { color: #006666; font-weight: bold; } /* Operator^ */
+</style>
+<p>These are some general instructions for how to create your own plots in <a href="https://joey711.github.io/phyloseq/" target="_blank" rel="noopener noreferrer">phyloseq</a> using the outputs from Nephele.</p>
+<h3 id="software-requirements">Software requirements</h3>
+<p>Please refer to the websites linked here for installation and usage instructions:</p>
+<ul>
+<li><a href="https://cran.r-project.org/" target="_blank" rel="noopener noreferrer">R</a></li>
+<li><a href="https://joey711.github.io/phyloseq/install.html" target="_blank" rel="noopener noreferrer">phyloseq</a> - installing phyloseq will also install the other packages used in this tutorial.</li>
+<li><a href="https://www.rstudio.com/products/rstudio/download/#download" target="_blank" rel="noopener noreferrer">RStudio</a> - not required, but helpful if you are new to R.</li>
+</ul>
+<h3 id="tutorial">Tutorial</h3>
+<ol class="example" style="list-style-type: decimal">
+<li>Download and unzip the PipelineResults folder from your Nephele job. This folder contains all of the data and files used in processing your job.</li>
+<li>In the files pane of RStudio navigate to your unzipped outputs folder and under the &quot;More&quot; dropdown, choose <code>Set As Working Directory</code>.</li>
+<li><p>In the Console, enter the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(phyloseq)</code></pre></div></li>
+<li><p>To import the data as a phyloseq object, we will use phyloseq's <code>import_qiime</code> command. Subsititute the name of your mapping file for <em>map_file.txt</em> inside the quotes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydata &lt;-<span class="st"> </span><span class="kw">import_qiime</span>(<span class="dt">otufilename =</span> <span class="st">&quot;OTU_table.txt&quot;</span>, <span class="dt">mapfilename =</span> <span class="st">&quot;map_file.txt&quot;</span>)</code></pre></div></li>
+<li><p>(Optional) To add a tree to the phyloseq object, we will use the <a href="https://cran.rstudio.com/web/packages/ape/index.html" target="_blank" rel="noopener noreferrer">ape package</a> to read in the tree file, and then add it to <code>mydata</code> using <code>phy_tree</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ape)
+tree &lt;-<span class="st"> </span><span class="kw">read.tree</span>(<span class="st">&quot;tree.tre&quot;</span>)
+<span class="kw">phy_tree</span>(mydata) &lt;-<span class="st"> </span>tree</code></pre></div></li>
+</ol>
+</div>
+{% endblock %}
