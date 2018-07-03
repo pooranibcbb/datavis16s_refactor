@@ -108,7 +108,7 @@ render(userRmd, output_format = "html_document", output_file = "datavis16s_pipel
 system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
 file.remove("doc/datavis16s_pipeline.html.bak")
 file.remove("doc/user_doc.md")
-file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak", "doc/user_doc.Rmd.bak"))
+file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
 
 render("README.Rmd")
 pcrst("README.md", "datavis16s.readme.rst")

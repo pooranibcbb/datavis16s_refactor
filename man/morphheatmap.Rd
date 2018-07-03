@@ -8,8 +8,8 @@
 }
 \usage{
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = 0, taxlevel = c("seq"), colors = NULL,
-  ...)
+  rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"),
+  colors = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
