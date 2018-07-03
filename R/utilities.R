@@ -116,7 +116,12 @@ highertax <- function(amp, taxlevel) {
   dt <- dt[, lapply(.SD, sum) , by = c(taxcols)]
   otu <- data.frame(dt[,otucols, with=FALSE], check.names = FALSE)
   tax <- data.frame(dt[,taxcols, with=FALSE])
-  row.names(otu) <- tax[,ncol(tax)]
+  dupes <- tax[duplicated(tax[,tc]),tc]
+  dupes <- which(tax[,tc] %in% dupes)
+  tax[dupes,tc] <- paste(tax[dupes,tc-1], tax[dupes,tc])
+
+  row.names(otu) <- tax[,tc]
+  row.names(tax) <- tax[,tc]
   amp$abund <- as.data.frame(otu)
   amp$tax <- tax
   return(amp)
@@ -142,7 +147,7 @@ filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
   } else {
     mat <- apply(otu, 2, function(x) { y <- sum(x); 100*x/y  } )
   }
-  v <- which(mat < level & mat > 0)
+  v <- which(mat < level & mat > 0, arr.ind = T)
   otu[v] <- 0
   w <- which(rowSums(otu) == 0)
   ps <- which(apply(otu, 1, function(x) length(which(x > 0))/ncol(otu)) < persamp/100)
@@ -344,7 +349,11 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
   tot <- rowSums(abund)
   nr <- nrow(abund)
   out <- lapply(seq_len(nr), function(i) {
-    n <- seq(1, tot[i], by = stepsize)
+    if (tot[i] < stepsize) {
+      n <- c(1, tot[i])
+    } else {
+      n <- seq(1, tot[i], by = stepsize)
+    }
     if (n[length(n)] != tot[i]) {
       n <- c(n, tot[i])
     } else {
@@ -371,28 +380,54 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
   return(p)
 }
 
-#' #' Cleanup taxonomy names
-#' #'
-#' #' @param taxtable taxonomy table attribute of ampvis2 object
-#' #'
-#' #' @return data frame of taxonomy table with sanitized taxonomy
-#' #'
-#' #'
-#' #'
-#' taxonomycleanup <- function(taxtable) {
+
+#' biomformat read_biom
 #'
-#'   ## greengenes
-#'   taxtable <- apply(taxtable, 2, function(x) { v <- grep("_unclassified$|^Unassigned$", x); x[v] <- NA; x })
-#'   taxtable <- apply(taxtable, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
+#' @param biom_file
 #'
-#'   ## SILVA97
-#'   taxtable <- apply(taxtable, 2, function(x) { gsub("^D_\\d+__", "", x) })
-#'   taxtable[which(taxtable %in% c("", "none"), arr.ind = TRUE)] <- NA
+#' @return biom object
 #'
-#'   vd <- which(is.na(taxtable[,"Kingdom"]))
-#'   taxtable[vd,"Kingdom"] <- paste(row.names(taxtable)[vd], "unclassified")
+#' @description This function replaces the biomformat function read_biom to deal with reading in
+#' crappy hdf5 biom file.
 #'
-#'   return(as.data.frame(taxtable))
+#' @importFrom jsonlite fromJSON
 #'
-#'
-#' }
+read_biom <- function (biom_file)
+{
+
+  errmsg <- paste0("Both attempts to read input file:\n", biom_file,
+                   "\n", "either as JSON (BIOM-v1) or HDF5 (BIOM-v2) failed.\n",
+                   "Check file path, file name, file itself, then try again.")
+
+
+  trash = try(silent = TRUE, expr = {
+    x <- fromJSON(biom_file, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
+  })
+  print(class(trash))
+  if (inherits(trash, "try-error")) {
+    tempbiom <- file.path(tempdir(), "temp.biom")
+    logoutput(paste("Attempting to convert biom file to", tempbiom))
+    trash = try(silent = TRUE, expr = {
+      system2("biom", c("convert", "-i", biom_file, "-o", tempbiom, "--to-json", "--header-key", "taxonomy"))
+    })
+
+    if (file.exists(tempbiom)) on.exit(file.remove(tempbiom))
+
+    if (inherits(trash, "try-error")) {
+      logoutput("file conversion failed")
+      stop(errmsg)
+    } else {
+      trash = try(silent = TRUE, expr = {
+        x <- fromJSON(tempbiom, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
+      })
+
+      if (inherits(trash, "try-error")) {
+        logoutput("reading from json failed")
+        stop(errmsg)
+      }
+    }
+  }
+
+  return(biomformat::biom(x))
+}
+

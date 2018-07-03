@@ -8,7 +8,7 @@
 }
 \usage{
 adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  colors = NULL, ...)
+  colors = NULL, cats = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file}
@@ -22,6 +22,9 @@ adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 \item{sampdepth}{sampling depth.  see details.}
 
 \item{colors}{colors to use for plots}
+
+\item{cats}{categories/columns in mapping file to use as groups.  If NULL (default), will use
+all columns starting with TreatmentGroup to (but not including) Description}
 
 \item{...}{other parameters to pass to \link{readindata}}
 }

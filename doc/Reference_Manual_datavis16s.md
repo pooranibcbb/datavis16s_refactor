@@ -19,12 +19,13 @@ datavis16s
     -   [`logoutput`](#logoutput)
     -   [`plotlyGrid`](#plotlygrid)
     -   [`print_ampvis2`](#print_ampvis2)
+    -   [`read_biom`](#read_biom)
     -   [`save_fillhtml`](#save_fillhtml)
     -   [`shortnames`](#shortnames)
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-May 18, 2018
+June 14, 2018
 
 DESCRIPTION
 ===========
@@ -74,20 +75,57 @@ Plots exploding boxplot of shannon diversity and Chao species richness. If sampl
 
 ``` r
 adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, colors = NULL, 
-    ...)
+    cats = NULL, ...)
 ```
 
 ### Arguments
 
-| Argument    | Description                                                      |
-|-------------|------------------------------------------------------------------|
-| `datafile`  | full path to input OTU file                                      |
-| `outdir`    | full path to output directory                                    |
-| `mapfile`   | full path to map file                                            |
-| `amp`       | ampvis2 object. may be specified instead of mapfile and datafile |
-| `sampdepth` | sampling depth. see details.                                     |
-| `colors`    | colors to use for plots                                          |
-| `...`       | other parameters to pass to [readindata](#readindata)            |
+<table style="width:43%;">
+<colgroup>
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>amp</code></td>
+<td>ampvis2 object. may be specified instead of mapfile and datafile</td>
+</tr>
+<tr class="odd">
+<td><code>sampdepth</code></td>
+<td>sampling depth. see details.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>colors to use for plots</td>
+</tr>
+<tr class="odd">
+<td><code>cats</code></td>
+<td>categories/columns in mapping file to use as groups. If NULL (default), will use all columns starting with TreatmentGroup to (but not including) Description</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>other parameters to pass to <a href="#readindata">readindata</a></td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 
@@ -176,7 +214,7 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 
 ``` r
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = FALSE, 
-    filter_level = 0, taxlevel = c("seq"), colors = NULL, ...)
+    filter_level = NULL, taxlevel = c("seq"), colors = NULL, ...)
 ```
 
 ### Arguments
@@ -350,7 +388,8 @@ Make rarefaction curve graph
 ### Usage
 
 ``` r
-rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, ...)
+rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, cat = "TreatmentGroup", 
+    stepsize = 1000, ...)
 ```
 
 ### Arguments
@@ -386,6 +425,14 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, ...)
 <tr class="odd">
 <td><code>colors</code></td>
 <td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
+</tr>
+<tr class="even">
+<td><code>cat</code></td>
+<td>Category/column in mapping file by which to color the curves in the graph. (default TreatmentGroup)</td>
+</tr>
+<tr class="odd">
+<td><code>stepsize</code></td>
+<td>for rarefaction plotting.</td>
 </tr>
 <tr class="even">
 <td><code>...</code></td>
@@ -844,7 +891,7 @@ If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also us
 
 ### Value
 
-html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
+html plot is saved to filename. external libraries are saved to outlib in same directory as filename. Invisibly returns the plotly html widget.
 
 ### Source
 
@@ -886,6 +933,31 @@ Prints summary stats about ampvis2 object
 [utilities.R](../R/utilities.R)
 
 [utilities.R](../R/utilities.R)
+
+`read_biom`
+-----------
+
+biomformat read\_biom
+
+### Description
+
+This function replaces the biomformat function read\_biom to deal with reading in crappy hdf5 biom file.
+
+### Usage
+
+``` r
+read_biom(biom_file)
+```
+
+### Arguments
+
+| Argument    | Description |
+|-------------|-------------|
+| `biom_file` |             |
+
+### Value
+
+biom object
 
 `save_fillhtml`
 ---------------
@@ -961,18 +1033,50 @@ Subset and/or rarefy OTU table.
 ### Usage
 
 ``` r
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, ...)
+subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, outdir = NULL, 
+    ...)
 ```
 
 ### Arguments
 
-| Argument       | Description                                      |
-|----------------|--------------------------------------------------|
-| `amp`          | ampvis2 object                                   |
-| `sampdepth`    | sampling depth. See details.                     |
-| `rarefy`       | rarefy the OTU table in addition to subsetting   |
-| `printsummary` | Logical. print ampvis2 summary of OTU table      |
-| `...`          | other parameters to pass to amp\_subset\_samples |
+<table style="width:43%;">
+<colgroup>
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>amp</code></td>
+<td>ampvis2 object</td>
+</tr>
+<tr class="even">
+<td><code>sampdepth</code></td>
+<td>sampling depth. See details.</td>
+</tr>
+<tr class="odd">
+<td><code>rarefy</code></td>
+<td>rarefy the OTU table in addition to subsetting</td>
+</tr>
+<tr class="even">
+<td><code>printsummary</code></td>
+<td>Logical. print ampvis2 summary of OTU table</td>
+</tr>
+<tr class="odd">
+<td><code>outdir</code></td>
+<td>Output directory. If not null, and samples are removed from amp, the sample names will be output to outdir/samples_being_ignored.txt</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>other parameters to pass to amp_subset_samples</td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 

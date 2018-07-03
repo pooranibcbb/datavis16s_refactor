@@ -6,6 +6,8 @@
 #' @param sampdepth  sampling depth.  See details.
 #' @param rarefy  rarefy the OTU table in addition to subsetting
 #' @param printsummary Logical. print ampvis2 summary of OTU table
+#' @param outdir Output directory.  If not null, and samples are removed from amp, the sample names will be output
+#' to outdir/samples_being_ignored.txt
 #' @param ... other parameters to pass to amp_subset_samples
 #'
 #' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
@@ -16,7 +18,7 @@
 #'
 #' @importFrom vegan rrarefy
 #'
-subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) {
+subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdir=NULL, ...) {
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
@@ -25,14 +27,30 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
   }
 
   if (is.null(sampdepth)) sampdepth = 0
+  samples <-  amp$metadata$SampleID
   cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth, ...)'
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
   if (printsummary) print_ampvis2(amp)
   writeLines('')
+  if (length(excluded <- setdiff(samples, amp$metadata$SampleID)) > 0) {
+    writeLines(c("Samples excluded:", excluded))
+
+    ## output excluded samples to file as well
+    if (!is.null(outdir)) {
+      excludedpath <- file.path(outdir, "samples_being_ignored.txt")
+      logoutput(paste("Excluded samples are also being written to", excludedpath))
+      write(excluded, file=excludedpath, ncolumns=1)
+    }
+
+  }
+
+
   return(amp)
 }
+
+
 
 #' Read in data
 #'
@@ -55,7 +73,7 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, ...) 
 #' @export
 #'
 readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
-#  locale <- Sys.getlocale()
+  #  locale <- Sys.getlocale()
   Sys.setlocale('LC_ALL','C')
   ## mapfile
   logoutput(paste("Reading in map file", mapfile))
@@ -76,10 +94,11 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     logoutput(cmnd)
     eval(parse(text = cmnd))
   } else {
+
     ## biom file
-    cmnd <- 'biom <- biomformat::read_biom(datafile)'
+    cmnd <- 'biom <- read_biom(datafile)'
     logoutput(cmnd)
-    eval(parse(text = cmnd))
+    eval(parse(text=cmnd))
 
     cmnd <- 'otu <- as.data.frame(as.matrix(biomformat::biom_data(biom)))'
     logoutput(cmnd)
@@ -88,6 +107,10 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     cmnd <- 'tax <- biomformat::observation_metadata(biom)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
+
+    ## delete biom structure
+    rm(biom)
+    gc()
 
     ## qiime biom file
     if (class(tax) == "list") {
@@ -117,7 +140,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
   if (sum(amp$abund) < mincount) {
     stop(paste0("Not enough counts in OTU table to make any graphs. At least ", mincount, " are needed."))
   }
-#  Sys.setlocale('LC_ALL',locale)
+  #  Sys.setlocale('LC_ALL',locale)
   return(amp)
 
 }
@@ -130,6 +153,9 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #' @param mapfile  full path mapping file
 #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
 #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+#' @param cat Category/column in mapping file by which to color the curves in the graph.
+#' (default TreatmentGroup)
+#' @param stepsize for rarefaction plotting.
 #' @param ... parameters to pass to \code{\link{readindata}}
 #'
 #' @return Saves rarefaction curve plot to output directory.
@@ -140,7 +166,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
-rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, ...) {
+rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, cat = "TreatmentGroup", stepsize=1000, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -148,7 +174,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
-  rarecurve <- amp_rarecurvefix(amp, color_by = "TreatmentGroup") + ggtitle("Rarefaction Curves")
+  rarecurve <- amp_rarecurvefix(amp, color_by = cat, stepsize=stepsize) + ggtitle("Rarefaction Curves")
 
   on.exit(graphics.off())
 
@@ -156,13 +182,13 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
   if (!is.null(colors)) rarecurve <- rarecurve + scale_color_manual(values = colors)
 
   ## suppress ggplotly warning to install dev version of ggplot2, as it is out of date
-  #  withCallingHandlers({
-  ## plot curves
-  rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID"))
-  #  }, message = function(c) {
-  #    if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
-  #      invokeRestart("muffleMessage")
-  #  })
+  withCallingHandlers({
+    ## plot curves
+    rarecurve <- ggplotly(rarecurve, tooltip = c("SampleID", "x", "y"))
+   }, message = function(c) {
+     if (startsWith(conditionMessage(c), "We recommend that you use the dev version of ggplot2"))
+       invokeRestart("muffleMessage")
+   })
 
   ## make table of data for plotly export
   df <- plotly_data(rarecurve)
@@ -202,7 +228,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 #'
 #' @return Saves pcoa plots to outdir.
 #'
-#' @importFrom ggplot2 scale_color_manual ggtitle
+#' @importFrom ggplot2 scale_color_manual scale_fill_manual ggtitle
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
@@ -231,7 +257,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 
   logoutput(cmnd)
   eval(parse(text = cmnd))
-  if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + ggtitle(paste("PCoA with", distm, "distance"))
+  if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + scale_fill_manual(values=colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
   ## save to file
   outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
@@ -280,7 +306,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = 0, taxlevel=c("seq"), colors = NULL, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -288,6 +314,22 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
+
+
+  ## filter low abundant taxa, if desired
+  if (!is.null(filter_level)) {
+    logoutput(paste('Filter taxa below', filter_level, 'counts/abundance.'))
+    if (filter_level < 1) {
+      cmnd <- paste0('amp <- filterlowabund(amp, level = ', filter_level,')')
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
+    } else {
+      cmnd <- paste0('amp <- filterlowabund(amp, level = ', filter_level,', abs=T)')
+      logoutput(cmnd)
+      eval(parse(text = cmnd))
+    }
+  }
+
 
   ## normalize data
   logoutput("Calculate relative abundance.")
@@ -322,25 +364,13 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       amptax$tax <- shortnames(amptax$tax)
     }
 
-    ## filter low abundant taxa, if desired
-    if (filter_level > 0) {
-      logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
-      cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
-      logoutput(cmnd)
-      eval(parse(text = cmnd))
-    }
+    print(dim(amptax$abund))
 
     ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
-    if (nrow(amptax$abund) > 1000 & tl == "seq") {
+    if (nrow(amptax$abund) > 2000 & tl == "seq") {
       logoutput("Number of sequence variants > 1000.  Making heatmap at species/lowest assigned taxonomic level instead.")
       tl = "Species"
-      amptax <- highertax(amp, taxlevel=tl)
-      if (filter_level > 0) {
-        logoutput(paste('Filter taxa below', filter_level, 'abundance.'))
-        cmnd <- paste0('amptax <- filterlowabund(amptax, level = ', filter_level,')')
-        logoutput(cmnd)
-        eval(parse(text = cmnd))
-      }
+      amptax <- highertax(amptax, taxlevel=tl)
     }
 
     ## row and column names for matrix
@@ -401,6 +431,8 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
 #' @param sampdepth  sampling depth.  see details.
 #' @param colors colors to use for plots
+#' @param cats categories/columns in mapping file to use as groups.  If NULL (default), will use
+#' all columns starting with TreatmentGroup to (but not including) Description
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return Save alpha diversity boxplots to outdir.
@@ -414,7 +446,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @importFrom bpexploder bpexploder
 #' @importFrom htmltools HTML
 #'
-adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, ...) {
+adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -440,10 +472,6 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   logoutput(paste0('Saving alpha diversity table to ', file.path(outdir, 'alphadiv.txt') ))
   write.table(alphadiv, file.path(outdir, 'alphadiv.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 
-  ## make plots for each category (between treatmentgroup and description)
-  tg <- which(colnames(amp$metadata) == "TreatmentGroup")
-  desc <- which(colnames(amp$metadata) == "Description") - 1
-
   divplots <- function(adiv, col, colors) {
     if (col == "TreatmentGroup") {
       lc <- colors
@@ -457,8 +485,15 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
     return(list(shannon, chao1))
   }
 
+  if (is.null(cats)) {
+    ## make plots for each category (between treatmentgroup and description)
+    tg <- which(colnames(amp$metadata) == "TreatmentGroup")
+    desc <- which(colnames(amp$metadata) == "Description") - 1
+    cats <- colnames(amp$metadata)[tg:desc]
+  }
+
   ## style widgets 2 across
-  divwidget <- unlist(lapply(colnames(amp$metadata)[tg:desc], function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
+  divwidget <- unlist(lapply(cats, function(x) divplots(alphadiv, x, colors)), recursive = FALSE)
   tt <- tags$div(
     style = "display: grid; grid-template-columns: 1fr 1fr; grid-row-gap: 5em;",
     lapply(divwidget, function(x) { x$width = '90%'; x$height = '100%'; tags$div(x) })
@@ -486,11 +521,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   ## Remove later
   bpjsfile <- file.path(outdir, "lib", "bpexplode-0.2.1", "bpexplode.js")
   if (file.exists(bpjsfile)) {
-    bpjs <- readLines(bpjsfile)
-    bpjs[55] <- "    var height = 500;"
-    bpjs[58] <- "    var margin = {top:10,bottom:50,left:50,right:10};"
-    bpjs[172] <- '        .attr("dy", "1em")'
-    writeLines(bpjs, bpjsfile)
+    file.copy(file.path(find.package("datavis16s"), "htmlwidgets", "bpexplode.js"), bpjsfile, overwrite = T)
   }
   return(as.integer(0))
 
@@ -525,7 +556,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   ## Choose colors
   amp$metadata <-  amp$metadata[order(amp$metadata$TreatmentGroup),]
   numtg <- length(unique(amp$metadata$TreatmentGroup))
-  allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:7,9,11:14, 10, 15:16,18:20)]
+  allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:6,9,11:13,16, 15,14,18:20)]
   coln <- length(allcols)
   if (numtg <= coln){
     st <- sample.int(coln, size=1)
@@ -543,7 +574,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## Heatmap
   logoutput('Relative abundance heatmaps', 1)
-  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols)'
+  cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols, filter_level = 5)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
@@ -555,14 +586,15 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
     return(as.integer(1))
   }
 
-  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots.'))
-  ampsub <- subsetamp(amp, sampdepth=sampdepth)
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and Bray-Curtis PCOA plots'))
+  ampsub <- subsetamp(amp, sampdepth=sampdepth, outdir = outdir)
 
   if (nrow(ampsub$metadata) < 3) {
     logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1)
     return(as.integer(1))
   }
 
+  ## Check which samples were removed
 
   ## Alpha diversity
   logoutput('Alpha diversity boxplot', 1)
@@ -573,16 +605,16 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## binomial PCoA
   logoutput('PCoA plots', 1)
-  cmnd <- paste0('pcoaplot(outdir = outdir, amp = ampsub, distm = "binomial", colors = allcols)')
+  cmnd <- paste0('pcoaplot(outdir = outdir, amp = amp, distm = "binomial", colors = allcols)')
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## bray-curtis PCoA
   ## Rarefy table
   logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads, and normalizing to 100 for Bray-Curtis distance.'))
-  amp <- subsetamp(amp, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
+  ampsub <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
 
-  cmnd <- 'pcoaplot(outdir = outdir, amp = amp, distm = "bray", colors = allcols)'
+  cmnd <- 'pcoaplot(outdir = outdir, amp = ampsub, distm = "bray", colors = allcols)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
