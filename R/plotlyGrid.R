@@ -41,8 +41,8 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 
   list2env(gridCode(data), envir=environment())
 
-  pp <- prependContent(pp, html)
-  pp <- prependContent(pp,javascript)
+  pp <- htmlwidgets::appendContent(pp, html)
+  pp <- htmlwidgets::appendContent(pp,javascript)
 
   if (is.null(title)) {
     title <- tools::file_path_sans_ext(basename(filename))
