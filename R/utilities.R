@@ -5,12 +5,20 @@
 #' @param c String. Log message/command to print.
 #' @param bline Number of blank lines to precede output.
 #' @param aline Number of blank lines to follow output.
+#' @param type  String.  Must be one of "WARNING", or "ERROR" or NULL.
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
-logoutput <- function(c, bline = 0, aline = 0) {
+logoutput <- function(c, bline = 0, aline = 0, type=NULL) {
 
-  lo <- paste0("[", date(), "] ", c)
+  if (!is.null(type)) {
+    if (!(type %in% c('WARNING', 'ERROR'))) {
+      stop('type parameter must be one of "WARNING" or "ERROR" or NULL.')
+    }
+    type <- paste0(" - ", type)
+  }
+
+  lo <- paste0("[", Sys.time(), type, "] ", c)
   writeLines(c(rep("", bline), lo, rep("", aline)))
 
 }
