@@ -25,7 +25,7 @@ datavis16s
     -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
-June 14, 2018
+July 08, 2018
 
 DESCRIPTION
 ===========
@@ -801,16 +801,17 @@ Prints time along with log message.
 ### Usage
 
 ``` r
-logoutput(c, bline = 0, aline = 0)
+logoutput(c, bline = 0, aline = 0, type = NULL)
 ```
 
 ### Arguments
 
-| Argument | Description                              |
-|----------|------------------------------------------|
-| `c`      | String. Log message/command to print.    |
-| `bline`  | Number of blank lines to precede output. |
-| `aline`  | Number of blank lines to follow output.  |
+| Argument | Description                                           |
+|----------|-------------------------------------------------------|
+| `c`      | String. Log message/command to print.                 |
+| `bline`  | Number of blank lines to precede output.              |
+| `aline`  | Number of blank lines to follow output.               |
+| `type`   | String. Must be one of "WARNING", or "ERROR" or NULL. |
 
 ### Source
 
@@ -906,12 +907,9 @@ Print ampvis2 object summary
 
 This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
 
-This is a copy of the internal ampvis2 function print.ampvis2. CRAN does not allow ':::' internal calling of function in package.
-
 ### Usage
 
 ``` r
-print_ampvis2(data)
 print_ampvis2(data)
 ```
 
@@ -920,17 +918,12 @@ print_ampvis2(data)
 | Argument | Description    |
 |----------|----------------|
 | `data`   | ampvis2 object |
-| `data`   | ampvis2 object |
 
 ### Value
 
 Prints summary stats about ampvis2 object
 
-Prints summary stats about ampvis2 object
-
 ### Source
-
-[utilities.R](../R/utilities.R)
 
 [utilities.R](../R/utilities.R)
 
