@@ -10,7 +10,9 @@ output:
     template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_guide_template.html
     toc: true
     toc_depth: 2
-  github_document:
+  md_document:
+    variant: markdown_github-ascii_identifiers+link_attributes
+    pandoc_args: "--template=/Library/Frameworks/R.framework/Versions/3.4/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/default.md"
     toc: true
     toc_depth: 2
 ---

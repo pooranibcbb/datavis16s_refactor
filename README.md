@@ -22,7 +22,7 @@ R package for graphs for Nephele 16S pipelines.
         ```
 
     -   The generic wrapper function to be called from rpy2 is [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper). See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for examples.
-    -   It returns 0 for success and raises `rpy2.rinterface.RRuntimeError` on error, which you can catch.
+    -   It returns 0 for success, 1 for warnings, and raises `rpy2.rinterface.RRuntimeError` on major error (like problems with input file), which you can catch.
     -   Must pass the full paths for the output directory, mapping file, biom file[1](#fn1).
     -   `trygraphwrapper`, by default, prints the R sessionInfo to the logfile before it runs the function. If you do not want it to do this (e.g. if you are calling the function multiple times in the same script), you can pass `info = FALSE`.
     -   To call the function, import the R library and call `trygraphwrapper`:

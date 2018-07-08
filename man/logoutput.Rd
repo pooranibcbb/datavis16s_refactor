@@ -7,7 +7,7 @@
 [utilities.R](../R/utilities.R)
 }
 \usage{
-logoutput(c, bline = 0, aline = 0)
+logoutput(c, bline = 0, aline = 0, type = NULL)
 }
 \arguments{
 \item{c}{String. Log message/command to print.}
@@ -15,6 +15,8 @@ logoutput(c, bline = 0, aline = 0)
 \item{bline}{Number of blank lines to precede output.}
 
 \item{aline}{Number of blank lines to follow output.}
+
+\item{type}{String.  Must be one of "WARNING", or "ERROR" or NULL.}
 }
 \description{
 Prints time along with log message.

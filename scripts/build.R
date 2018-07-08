@@ -56,7 +56,7 @@ pcrst <- function(markdownfile, rstfile, path=F) {
   } else {
     outfile = file.path(docsdir, rstfile)
   }
-  pandoc_convert(paste0(markdownfile, ".bak"), to = "rst", options = c("--columns=1000", "-s", "--template=/Users/subramanianp4/git/nephele2/misc_examples/Rdocs/template.rst"), wd = getwd(), output = outfile, verbose = TRUE)
+  pandoc_convert(paste0(markdownfile, ".bak"), from="markdown+raw_html", to = "rst+raw_html", options = c("--columns=1000", "-s", "--template=/Users/subramanianp4/git/nephele2/misc_examples/Rdocs/template.rst"), wd = getwd(), output = outfile, verbose = TRUE)
 }
 
 
@@ -99,7 +99,7 @@ file.remove("doc/Reference_Manual_datavis16s.html")
 
 userRmd <- "doc/user_doc.Rmd"
 usermd <- "doc/user_doc.md"
-render(userRmd, output_format = "github_document")
+render(userRmd, output_format = "md_document")
 pcrst(usermd,"datavis16s.user_doc.rst" )
 
 
