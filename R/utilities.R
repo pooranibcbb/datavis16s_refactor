@@ -210,117 +210,6 @@ print_ampvis2 <- function(data) {
   )
 }
 
-#' Print ampvis2 object summary
-#'
-#' @param data ampvis2 object
-#'
-#' @return Prints summary stats about ampvis2 object
-#'
-#' @source [utilities.R](../R/utilities.R)
-#'
-#' @description  This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
-#' ':::' internal calling of function in package.
-#'
-#' @importFrom stats median
-#'
-print_ampvis2 <- function(data) {
-  cat(class(data),
-      "object with",
-      length(data),
-      "elements.\nSummary of OTU table:\n")
-  print.table(
-    c(
-      Samples = as.character(ncol(data$abund)),
-      OTUs = as.character(nrow(data$abund)),
-      `Total#Reads` = as.character(sum(data$abund)),
-      `Min#Reads` = as.character(min(colSums(data$abund))),
-      `Max#Reads` = as.character(max(colSums(data$abund))),
-      `Median#Reads` = as.character(median(colSums(data$abund))),
-      `Avg#Reads` = as.character(round(mean(
-        colSums(data$abund)
-      ),
-      digits = 2))
-    ),
-    justify = "right"
-  )
-  cat("\nAssigned taxonomy:\n")
-  print.table(
-    c(
-      Kingdom = paste(
-        sum(nchar(data$tax$Kingdom) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Kingdom) > 3) / nrow(data$abund),
-              digits = 2) * 100,
-        "%)",
-        sep = ""
-      ),
-      Phylum = paste(
-        sum(nchar(data$tax$Phylum) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Phylum) > 3) / nrow(data$abund) *
-                100, digits = 2),
-        "%)",
-        sep = ""
-      ),
-      Class = paste(
-        sum(nchar(data$tax$Class) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Class) > 3) / nrow(data$abund) *
-                100, digits = 2),
-        "%)",
-        sep = ""
-      ),
-      Order = paste(
-        sum(nchar(data$tax$Order) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Order) > 3) / nrow(data$abund) *
-                100, digits = 2),
-        "%)",
-        sep = ""
-      ),
-      Family = paste(
-        sum(nchar(data$tax$Family) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Family) > 3) / nrow(data$abund) *
-                100, digits = 2),
-        "%)",
-        sep = ""
-      ),
-      Genus = paste(
-        sum(nchar(data$tax$Genus) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Genus) > 3) / nrow(data$abund) *
-                100, digits = 2),
-        "%)",
-        sep = ""
-      ),
-      Species = paste(
-        sum(nchar(data$tax$Species) >
-              3),
-        "(",
-        round(sum(nchar(data$tax$Species) > 3) / nrow(data$abund) *
-                100, digits = 2),
-        "%)",
-        sep = ""
-      )
-    ),
-    justify = "right"
-  )
-  cat(
-    "\nMetadata variables:",
-    as.character(ncol(data$metadata)),
-    "\n",
-    paste(as.character(colnames(data$metadata)), collapse = ", ")
-  )
-}
-
-
 #' Rarefaction curve
 #'
 #' @param data (required) Data list as loaded with amp_load.
@@ -399,11 +288,9 @@ read_biom <- function (biom_file)
                    "\n", "either as JSON (BIOM-v1) or HDF5 (BIOM-v2) failed.\n",
                    "Check file path, file name, file itself, then try again.")
 
-
   trash = try(silent = TRUE, expr = {
     x <- fromJSON(biom_file, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
   })
-  print(class(trash))
   if (inherits(trash, "try-error")) {
     tempbiom <- file.path(tempdir(), "temp.biom")
     logoutput(paste("Attempting to convert biom file to", tempbiom))
