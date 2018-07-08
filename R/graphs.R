@@ -19,6 +19,7 @@
 #' @importFrom vegan rrarefy
 #'
 subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdir=NULL, ...) {
+  ## rarefy
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
@@ -26,24 +27,29 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdi
     amp$abund <- as.data.frame(t(otu))
   }
 
+  ## subset samples
   if (is.null(sampdepth)) sampdepth = 0
   samples <-  amp$metadata$SampleID
-  cmnd <- 'amp <- amp_subset_samples(amp, minreads = sampdepth, ...)'
-  logoutput(cmnd)
+  cmnd <- paste0('amp <- amp_subset_samples(amp, minreads = ', sampdepth,', ...)')
+  if (printsummary) logoutput(cmnd)
   eval(parse(text=cmnd))
 
-  if (printsummary) print_ampvis2(amp)
-  writeLines('')
+  ## excluded samples
   if (length(excluded <- setdiff(samples, amp$metadata$SampleID)) > 0) {
     writeLines(c("Samples excluded:", excluded))
 
     ## output excluded samples to file as well
     if (!is.null(outdir)) {
       excludedpath <- file.path(outdir, "samples_being_ignored.txt")
-      logoutput(paste("Excluded samples are also being written to", excludedpath))
+      logoutput(paste("Saving excluded sample ids to", excludedpath))
       write(excluded, file=excludedpath, ncolumns=1)
     }
+  }
 
+  ## print ampvis summary
+  if (printsummary) {
+    print_ampvis2(amp)
+    writeLines('')
   }
 
 
@@ -331,7 +337,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
   ## normalize data
   logoutput("Calculate relative abundance.")
-  cmnd <- 'amp <- subsetamp(amp, sampdepth = sampdepth, rarefy=rarefy, normalise = TRUE, printsummary = FALSE)'
+  cmnd <- paste0("amp <- subsetamp(amp, sampdepth = ", deparse(sampdepth) ,", rarefy=", rarefy, ", normalise = TRUE, printsummary = FALSE)")
   logoutput(cmnd)
   eval(parse(text=cmnd))
 
@@ -545,8 +551,16 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' @export
 #'
 allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
-  retvalue <- as.integer(0)
 
+  ## Set initial return value to 0.  Set log message on exit if return value is 1 (some errors) or 0 success.
+  retvalue <- as.integer(0)
+  on.exit(if(retvalue == 1) {
+    logoutput("allgraphs complete with some warnings/errors.", bline=1, aline=1, type='WARNING')
+  } else {
+    logoutput("allgraphs complete.", bline=1, aline=1)
+  })
+
+  ## Read in abundance data and mapfile
   amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
 
   ## Choose colors
@@ -575,19 +589,21 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
   ## Filter out low count samples
-  logoutput(paste('Sampling depth:', sampdepth))
+  logoutput(paste('Sampling depth:', sampdepth), 1)
   cs <- colSums(amp$abund)
   if (max(cs) < sampdepth) {
-    logoutput(paste("The counts for all samples is below the sampling depth of", sampdepth, ", so diversity and PCoA plots will not be made."), 1)
-    return(as.integer(1))
+    logoutput(paste("The counts for all samples is below the sampling depth of", sampdepth, ", so diversity and PCoA plots will not be made."), 1, type="WARNING")
+    retvalue <- as.integer(1)
+    return(retvalue)
   }
 
   logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and Bray-Curtis PCOA plots'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth, outdir = outdir)
 
   if (nrow(ampsub$metadata) < 3) {
-    logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1)
-    return(as.integer(1))
+    logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1, type='WARNING')
+    retvalue <- as.integer(1)
+    return(retvalue)
   }
 
   ## Check which samples were removed
@@ -669,7 +685,7 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 
   ## set error handling options here, since rpy2 does not allow setting globally
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
-  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2))
+  options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2), digits.secs = 3)
 
   ## open log file
   logfile <- file(logfilename, open = "at")
