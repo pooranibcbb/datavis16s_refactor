@@ -79,8 +79,6 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
   logoutput(paste("Reading in map file", mapfile))
   map <- read.delim(mapfile, check.names = FALSE, colClasses = "character",  na.strings = '', comment.char = '')
   colnames(map) <- gsub("^\\#SampleID$", "SampleID", colnames(map))
-  map$BarcodeSequence <- NULL
-  map$LinkerPrimerSequence <- NULL
 
   if (!all(c("SampleID", "TreatmentGroup", "Description") %in% colnames(map))) {
     stop("Map file missing necessary columns.")
@@ -363,8 +361,6 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       amptax <- amp
       amptax$tax <- shortnames(amptax$tax)
     }
-
-    print(dim(amptax$abund))
 
     ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
     if (nrow(amptax$abund) > 2000 & tl == "seq") {
