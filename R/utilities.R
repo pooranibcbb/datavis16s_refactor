@@ -296,6 +296,9 @@ read_biom <- function (biom_file)
                    "\n", "either as JSON (BIOM-v1) or HDF5 (BIOM-v2) failed.\n",
                    "Check file path, file name, file itself, then try again.")
 
+  if (!file.exists(biom_file)) {
+    stop(paste(biom_file, "does not exist."))
+  }
   trash = try(silent = TRUE, expr = {
     x <- fromJSON(biom_file, simplifyDataFrame = FALSE, simplifyMatrix = FALSE)
   })

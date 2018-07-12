@@ -552,13 +552,8 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #'
 allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
-  ## Set initial return value to 0.  Set log message on exit if return value is 1 (some errors) or 0 success.
+  ## Set initial return value to 0.
   retvalue <- as.integer(0)
-  on.exit(if(retvalue == 1) {
-    logoutput("allgraphs complete with some warnings/errors.", bline=1, aline=1, type='WARNING')
-  } else {
-    logoutput("allgraphs complete.", bline=1, aline=1)
-  })
 
   ## Read in abundance data and mapfile
   amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
@@ -702,15 +697,23 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   if (info) writeLines(capture.output(sessionInfo()))
 
   ## make function command
-  cmnd <- paste0(deparse(substitute(FUN)), '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', 'tsvfile=',tsvfile, ', ...)')
+  functionstring <- deparse(substitute(FUN))
+  cmnd <- paste0(functionstring, '(datafile="', datafile, '", outdir="', outdir, '", mapfile="', mapfile, '",', 'tsvfile=',tsvfile, ', ...)')
   logoutput(cmnd, 1)
   FUN <- match.fun(FUN)
 
 
   ## run command
-  retvalue <- eval(parse(text=cmnd))
+  tryCatch(retvalue <- eval(parse(text=cmnd)),
+           finally = if (!exists("retvalue")) {
+             logoutput(paste(functionstring, "completed with some warnings/errors."), bline=1, aline=1, type='ERROR')
+           } else if (retvalue == 1) {
+             logoutput(paste(functionstring, "completed with some warnings/errors."), bline=1, aline=1, type='WARNING')
+           } else {
+             logoutput(paste(functionstring,"complete."), bline=1, aline=1)
+           })
 
-  return(as.integer(0))
+  return(retvalue)
 
 }
 

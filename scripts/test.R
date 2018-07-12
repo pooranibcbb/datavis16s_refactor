@@ -7,3 +7,5 @@ outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/graph
 
 trygraphwrapper("testdata/taxa_species.biom", outdir=dirname(outdir), mapfile = "testdata/testmapfile.txt", FUN="allgraphs", info=F, sampdepth=40000, logfilename = "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/logfile.txt")
 #allgraphs("testdata/taxa_species.biom", outdir=outdir, mapfile = "testdata/testmapfile.txt", sampdepth = 30000)
+
+
