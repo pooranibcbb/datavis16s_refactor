@@ -99,7 +99,7 @@ file.remove("doc/Reference_Manual_datavis16s.html")
 
 userRmd <- "doc/user_doc.Rmd"
 usermd <- "doc/user_doc.md"
-render(userRmd, output_format = "md_document")
+render(userRmd, output_format = "md_document", output_options=list(pandoc_args=paste0("--template=", file.path(find.package("rmarkdown"), "rmarkdown/templates/github_document/resources/default.md"))))
 pcrst(usermd,"datavis16s.user_doc.rst" )
 
 
@@ -113,5 +113,5 @@ file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
 render("README.Rmd")
 pcrst("README.md", "datavis16s.readme.rst")
 file.remove(c("README.md.bak", "README.html"))
-system2("/Users/subramanianp4/git/n2_docs/sphinx.sh")
+#system2("/Users/subramanianp4/git/n2_docs/sphinx.sh")
 

@@ -257,7 +257,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
   on.exit(graphics.off())
 
   ## plot PCoA
-  cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", sample_colorframe = TRUE, detailed_output = TRUE, transform="none")')
+  cmnd <- paste0('pcoa <- amp_ordinate(amp, filter_species =', filter_species, ',type="PCOA", distmeasure ="', distm, '",sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")')
 
   logoutput(cmnd)
   eval(parse(text = cmnd))
@@ -564,8 +564,6 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:6,9,11:13,16, 15,14,18:20)]
   coln <- length(allcols)
   if (numtg <= coln){
-    st <- sample.int(coln, size=1)
-    st <- ((st:(st+(numtg - 1)) - 1) %% coln) + 1
     allcols <- allcols[st]
   } else {
     allcols <- NULL
