@@ -12,7 +12,6 @@ output:
     toc_depth: 2
   md_document:
     variant: markdown_github-ascii_identifiers+link_attributes
-    pandoc_args: "--template=/Library/Frameworks/R.framework/Versions/3.4/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/default.md"
     toc: true
     toc_depth: 2
 ---
