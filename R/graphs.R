@@ -564,7 +564,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   allcols <- c(RColorBrewer::brewer.pal(8, "Set2"), RColorBrewer::brewer.pal(12, "Set3"))[c(1:6,9,11:13,16, 15,14,18:20)]
   coln <- length(allcols)
   if (numtg <= coln){
-    allcols <- allcols[st]
+    allcols <- allcols[1:numtg]
   } else {
     allcols <- NULL
   }
