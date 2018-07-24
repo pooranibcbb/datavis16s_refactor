@@ -704,14 +704,14 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   ## run command
   tryCatch(retvalue <- eval(parse(text=cmnd)),
            finally = if (!exists("retvalue")) {
-             logoutput(paste(functionstring, "completed with some warnings/errors."), bline=1, aline=1, type='ERROR')
+             logoutput(paste(functionstring, "completed with some errors."), bline=1, aline=1, type='ERROR')
            } else if (retvalue == 1) {
-             logoutput(paste(functionstring, "completed with some warnings/errors."), bline=1, aline=1, type='WARNING')
+             logoutput(paste(functionstring, "completed with some warnings."), bline=1, aline=1, type='WARNING')
            } else {
              logoutput(paste(functionstring,"complete."), bline=1, aline=1)
            })
 
-  return(retvalue)
+  return(as.integer(0))
 
 }
 
