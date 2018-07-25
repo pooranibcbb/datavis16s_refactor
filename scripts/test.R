@@ -5,7 +5,7 @@ outdir <- "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/graph
 #write.tab.table(head(A, 2), "testdata/twosamplesmapfile.txt")
 #amp <- readindata(datafile="testdata/taxa_species.biom", mapfile = "testdata/testmapfile.txt")
 
-trygraphwrapper("testdata/taxa_species.biom", outdir=dirname(outdir), mapfile = "testdata/complete_corrected.txt", FUN="allgraphs", info=F, sampdepth=40000, logfilename = "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/logfile.txt")
+vvv <- trygraphwrapper("testdata/taxa_species.biom", outdir=dirname(outdir), mapfile = "testdata/complete_corrected.txt", FUN="allgraphs", info=F, sampdepth=100000, logfilename = "/Users/subramanianp4/git/nephele2/pipelines/datavis16s/testdata/logfile.txt")
 #allgraphs("testdata/taxa_species.biom", outdir=outdir, mapfile = "testdata/testmapfile.txt", sampdepth = 30000)
 
 
