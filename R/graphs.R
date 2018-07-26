@@ -590,7 +590,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
     return(retvalue)
   }
 
-  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and Bray-Curtis PCOA plots'))
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCOA plots'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth, outdir = outdir)
 
   if (nrow(ampsub$metadata) < 3) {
@@ -610,7 +610,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## binomial PCoA
   logoutput('PCoA plots', 1)
-  cmnd <- paste0('pcoaplot(outdir = outdir, amp = amp, distm = "binomial", colors = allcols)')
+  cmnd <- paste0('pcoaplot(outdir = outdir, amp = ampsub, distm = "binomial", colors = allcols)')
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
