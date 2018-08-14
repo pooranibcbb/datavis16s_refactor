@@ -123,9 +123,19 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
       eval(parse(text = cmnd))
     }
 
+    ## Check for bootstrap columns, i.e. mothur
+    if ("bootstrap1" %in% colnames(tax)) {
+      bootstrapcols <- grep("bootstrap", colnames(tax))
+      tax <- tax[,-bootstrapcols]
+    }
+
     ## Check if tax has 7 columns
     if (ncol(tax) != 7) {
-      stop("taxonomy does not have 7 levels.")
+      if (ncol(tax) == 6) {
+        tax <- cbind.data.frame(tax, tax[,ncol(tax)])
+      } else {
+        stop("taxonomy does not have 7 levels.")
+      }
     }
 
     colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
