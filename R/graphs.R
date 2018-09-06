@@ -320,7 +320,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -394,6 +394,9 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     mat <- amptax$abund
     row.names(mat) <- sn
     mat <- mat[,amptax$metadata$SampleID]
+    if (!is.null(rowAnnotations)) {
+      amptax$tax <- cbind.data.frame(amptax$tax, rowAnnotations[match(row.names(amptax$tax), rowAnnotations$taxa),])
+    }
 
     ## log scale for colors
     mm <- max(amptax$abund)
@@ -401,6 +404,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     values <-  c(0,expm1(seq(log1p(minm), log1p(100), length.out = 99)))
     w <- which(values > 10)
     values[w] <- round(values[w])
+
 
     ## make morpheus heatmap
     cmnd <- 'heatmap <- morpheus(mat, columns=columns, columnAnnotations = amptax$metadata, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", values=values, colors=hmapcolors, stepped=FALSE), rowAnnotations = amptax$tax, rows = rows, dendrogram="none")'
