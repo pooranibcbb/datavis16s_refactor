@@ -113,5 +113,3 @@ file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
 render("README.Rmd")
 pcrst("README.md", "datavis16s.readme.rst")
 file.remove(c("README.md.bak", "README.html"))
-#system2("/Users/subramanianp4/git/n2_docs/sphinx.sh")
-

@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "tutorials_base.html" %}
 
-{% block content %}
+{% block guide_content %}
 <div style="padding: 20px 30px 20px 30px">
 $for(include-before)$
 $include-before$
@@ -20,9 +20,9 @@ $endif$
 $if(toc_float)$
 $else$
 $if(toc)$
-<div id="$idprefix$TOC">
+<nav id="$idprefix$TOC">
 $toc$
-</div>
+</nav>
 $endif$
 $endif$
 $body$

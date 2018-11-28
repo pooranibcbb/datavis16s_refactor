@@ -7,7 +7,7 @@ output:
     smart: false
     highlight: null
     theme: null
-    template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_doc_template.html
+    template: /Users/subramanianp4/git/nephele2/pipelines/datavis16s/doc/tutorial_template.html
     toc: true
   # github_document:
   #   toc: true
@@ -21,18 +21,18 @@ The visualizations are a set of html files that can be viewed in the browser.
 
 ## Plotly Graphs
 - The title and axis labels can be edited by clicking on them.  
-<edit_text_plotly.mp4><https://youtu.be/ONBAjvhWZkM>
+<a href="https://youtu.be/ONBAjvhWZkM" target="_blank" rel="noopener noreferrer">Video<span class="glyphicon glyphicon-facetime-video video-icon"></span></a>
 - The legend can also be edited, and can be moved by clicking and dragging.  
-<edit_legend_plotly.mp4><https://youtu.be/vUjhMzbKtp8>
-- To save the plot, click on the camera icon in the menu.  The browser will download the png file.  
-<save_plotly_whole.mp4><https://youtu.be/Lbe9IaeEEyY>
-- To edit the graph further, you can export the data to Plotly Chart Studio by clicking on "Export Data to Plotly."  See the [Plotly Chart Studio tutorials](http://help.plot.ly/tutorials/) for more information.
+<a href="https://youtu.be/vUjhMzbKtp8" target="_blank" rel="noopener noreferrer">Video<span class="glyphicon glyphicon-facetime-video video-icon"></span></a>
+- To save the plot, click on the camera icon in the menu.  The browser will download the png file.<br />
+<a href="https://youtu.be/Lbe9IaeEEyY" target="_blank" rel="noopener noreferrer">Video<span class="glyphicon glyphicon-facetime-video video-icon"></span></a>
+- To edit the graph further, you can export the data to Plotly Chart Studio by clicking on "Export Data to Plotly."  See the [Plotly Chart Studio tutorials](http://help.plot.ly/tutorials/){target="_blank" rel="noopener noreferrer"} for more information.
 
 ## Heatmap
-The [Morpheus documentation](https://software.broadinstitute.org/morpheus/documentation.html) shows how to use the various features of the heatmap.  We will show some examples of how these features could be used specifically for the output of the Nephele 16S pipelines.
+The [Morpheus documentation](https://software.broadinstitute.org/morpheus/documentation.html){target="_blank" rel="noopener noreferrer"} shows how to use the various features of the heatmap.  We will show some examples of how these features could be used specifically for the output of the Nephele 16S pipelines.  Note: the features work best in Google Chrome; you may have problems with other browsers. 
 
 ### Filter Low Abundant Taxa
-Filter taxa based on maximum abundance across all samples or the number of samples for which they are present.
+Taxa can be filtered based on maximum abundance across all samples or the number of samples for which they are present.
 
 1. Select **Tools** > **Create Calculated Annotation**.
     - Maximum abundance: Enter `Max` for **Annotation Name** and `MAX()` for **Formula**.
@@ -42,7 +42,7 @@ Filter taxa based on maximum abundance across all samples or the number of sampl
     - Maximum abundance: Choose **Field** `Max`.  You can choose a minimum value for the range.  This will filter out taxa which are below this value across all samples.  Or you can `Switch to top filter` to see the top most abundant taxa.
     - Number of samples: Choose **Field** `Num samples` .  You can choose a range for the number of samples or you can `Switch to top filter` to see the most frequent taxa across all samples.  
 
-<filter_heatmap.mp4><https://youtu.be/nnZCI_dTULw>
+<a href="https://youtu.be/nnZCI_dTULw" target="_blank" rel="noopener noreferrer">Video<span class="glyphicon glyphicon-facetime-video video-icon"></span></a>
 
 
 ### View the heatmap at different taxonomic levels
@@ -53,11 +53,19 @@ Filter taxa based on maximum abundance across all samples or the number of sampl
 5. Select **View** > **Options** > **Annotations** > **Row Annotations** > `taxonomic level` > **Close**.  
 This will show the new row names for the heatmap.
 
-<heatmap_taxlevel.mp4><https://youtu.be/iQMVc7Beoc0>
+<a href="https://youtu.be/iQMVc7Beoc0" target="_blank" rel="noopener noreferrer">Video<span class="glyphicon glyphicon-facetime-video video-icon"></span></a>
 
 ### Sort the heatmap by taxonomic level
 1. Select **View** > **Options** > **Annotations** > **Row Annotations** > `taxonomic level` > **Close**.  
 This will show a column with the taxonomic level annotations for the heatmap.
 2. Select **Tools** > **Sort/Group** > **Add sort level** > `taxonomic level`.  Then select **Group By** > `taxonomic level`.
 
-<heatmap_sort.mp4><https://youtu.be/iAQiUNSzMfw>
+<a href="https://youtu.be/iAQiUNSzMfw" target="_blank" rel="noopener noreferrer">Video<span class="glyphicon glyphicon-facetime-video video-icon"></span></a>
+
+{% if download_url %}
+
+### Here are some example visualization files <span><a class="glyphicon glyphicon-download-alt" href="{{ download_url }}" target="_blank" rel="noopener noreferrer"></a></span> {#example-files}
+
+These data are from a 2018 publication in Journal of Experimental Medicine entitled "Contextual control of skin immunity and inflammation by Corynebacterium" ([http://jem.rupress.org/content/early/2018/01/30/jem.20171079.long](http://jem.rupress.org/content/early/2018/01/30/jem.20171079.long){target="_blank" rel="noopener noreferrer"}).
+
+{% endif %}
