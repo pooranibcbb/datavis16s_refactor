@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, eval=FALSE, tidy = TRUE, tidy.opts = list(wid
 R package for graphs for Nephele 16S pipelines.
 
 ### Usage
-- **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.rst)
+- **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
 - **Nephele User docs:** [sphinx](datavis16s.user_doc.html) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
 -   There are 4 main functions for making graphs: `adivboxplot`,
     `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as
@@ -25,8 +25,8 @@ R package for graphs for Nephele 16S pipelines.
         import rpy2.rinterface  ## to start R instance
     ```
     -   The generic wrapper function to be called from rpy2 is
-        [trygraphwrapper](doc/Reference_Manual_datavis16s.rst#trygraphwrapper).
-        See the [function help](doc/Reference_Manual_datavis16s.rst#trygraphwrapper) for
+        [trygraphwrapper](doc/Reference_Manual_datavis16s.md#trygraphwrapper).
+        See the [function help](doc/Reference_Manual_datavis16s.md#trygraphwrapper) for
         examples.
     -   It returns 0 for success, 1 for warnings, and raises  `rpy2.rinterface.RRuntimeError` on major error (like problems with input file), which you can catch.
     -   Must pass the full paths for the output directory, mapping file,
