@@ -7,7 +7,7 @@ R package for graphs for Nephele 16S pipelines.
 Usage
 -----
 
--  **Function reference:** `datavis16s R package manual <doc/Reference_Manual_datavis16s.rst>`__
+-  **Function reference:** `datavis16s R package manual <Reference_Manual_datavis16s.html>`__
 -  **Nephele User docs:** `sphinx <datavis16s.user_doc.html>`__ and `html for Nephele2 website <https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html>`__
 -  There are 4 main functions for making graphs: ``adivboxplot``, ``morphheatmap``, ``pcoaplot``, and ``rarefactioncurve``, as well as ``allgraphs`` which makes all 4. See the `manual <Reference_Manual_datavis16s.html>`__ for the arguments for these functions.
 -  **Python with rpy2**
@@ -20,7 +20,7 @@ Usage
           from rpy2.robjects.vectors import IntVector  ## to handle return values
           import rpy2.rinterface  ## to start R instance
 
-   -  The generic wrapper function to be called from rpy2 is `trygraphwrapper <doc/Reference_Manual_datavis16s.rst#trygraphwrapper>`__. See the `function help <doc/Reference_Manual_datavis16s.rst#trygraphwrapper>`__ for examples.
+   -  The generic wrapper function to be called from rpy2 is `trygraphwrapper <Reference_Manual_datavis16s.html#trygraphwrapper>`__. See the `function help <Reference_Manual_datavis16s.html#trygraphwrapper>`__ for examples.
    -  It returns 0 for success, 1 for warnings, and raises ``rpy2.rinterface.RRuntimeError`` on major error (like problems with input file), which you can catch.
    -  Must pass the full paths for the output directory, mapping file, biom file\ `1 <#fn1>`__.
    -  ``trygraphwrapper``, by default, prints the R sessionInfo to the logfile before it runs the function. If you do not want it to do this (e.g. if you are calling the function multiple times in the same script), you can pass ``info = FALSE``.
