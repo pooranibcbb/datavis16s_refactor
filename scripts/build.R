@@ -5,14 +5,14 @@ library(Rd2md)
 
 ## Build package
 document(roclets=c('rd', 'collate', 'namespace'))
-devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
+install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), upgrade_dependencies = F)
 
 ## Imported packages - can check DESCRIPTION
 ns <- scan("NAMESPACE", sep="\n", what = character())
 importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
 
 ## update description
-# desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
+#desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
 # deptable <- desc::desc_get_deps()
 # deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
 # desc::desc_set_deps(deptable, normalize = TRUE)
@@ -88,7 +88,7 @@ mdfile <-  "doc/tempfile.md"
 
 ReferenceManual(front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE, man_file = Rmdfile)
 rmarkdown::render(Rmdfile, output_file = basename(mdfile))
-pcrst(mdfile, "./doc/Reference_Manual_datavis16s.rst", path=T)
+pcrst(mdfile, "Reference_Manual_datavis16s.rst")
 
 file.remove(Rmdfile)
 file.remove(mdfile)
@@ -97,19 +97,19 @@ file.remove("doc/Reference_Manual_datavis16s.html")
 
 ## User docs
 
-# userRmd <- "doc/user_doc.Rmd"
-# usermd <- "doc/user_doc.md"
-# render(userRmd, output_format = "md_document", output_options=list(pandoc_args=paste0("--template=", file.path(find.package("rmarkdown"), "rmarkdown/templates/github_document/resources/default.md"))))
-# pcrst(usermd,"datavis16s.user_doc.rst" )
+userRmd <- "doc/user_doc.Rmd"
+usermd <- "doc/user_doc.md"
+render(userRmd, output_format = "md_document", output_options=list(pandoc_args=paste0("--template=", file.path(find.package("rmarkdown"), "rmarkdown/templates/github_document/resources/default.md"))))
+pcrst(usermd,"datavis16s.user_doc.rst" )
 
 
 # file.rename("doc/user_doc.md", "doc/github_doc.md")
-# render(userRmd, output_format = "html_document", output_file = "datavis16s_pipeline.html")
-# system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
-# file.remove("doc/datavis16s_pipeline.html.bak")
-# file.remove("doc/user_doc.md")
-# file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
+render(userRmd, output_format = "html_document", output_file = "datavis16s_pipeline.html")
+system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
+file.remove("doc/datavis16s_pipeline.html.bak")
+file.remove("doc/user_doc.md")
+file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
 
 render("README.Rmd")
-pcrst("README.md", "./README.rst", path=T)
+pcrst("README.md", "datavis16s.readme.rst")
 file.remove(c("README.md.bak", "README.html"))

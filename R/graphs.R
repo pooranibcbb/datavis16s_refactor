@@ -380,7 +380,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
     ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
     if (nrow(amptax$abund) > 2000 & tl == "seq") {
-      logoutput("Number of sequence variants > 2000.  Making heatmap at species/lowest assigned taxonomic level instead.")
+      logoutput("Number of sequence variants > 1000.  Making heatmap at species/lowest assigned taxonomic level instead.")
       tl = "Species"
       amptax <- highertax(amptax, taxlevel=tl)
     }
@@ -546,10 +546,10 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' Pipeline function
 #'
 #' @description Make all 4 types of graphs
-
+#'
+#' @param mapfile  full path to map file
 #' @param datafile full path to input OTU file (biom or txt file see \link{readindata} for format)
 #' @param outdir  full path to output directory
-#' @param mapfile  full path to map file
 #' @param sampdepth  sampling depth.  default: 10000
 #' @param ... other parameters to pass to \link{readindata}
 #'

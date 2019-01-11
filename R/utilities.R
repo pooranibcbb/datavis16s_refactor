@@ -51,7 +51,7 @@ shortnames <- function(taxtable) {
 
 
   ## Output Genus species instead of just species
-  vn <- which(apply(taxtable,1, function(x) !(is.na(x["Species"]) | x["Species"] %in% uncnames | grepl(paste0("^",stringr::str_replace_all(x['Genus'], "(\\W)", "\\\\\\1")), x["Species"]))))
+  vn <- which(apply(taxtable,1, function(x) !(is.na(x["Species"]) | x["Species"] %in% uncnames | grepl(paste0("^",x['Genus']), x["Species"]))))
   if (length(vn) > 0) {
     taxtable[vn,"Species"] <- paste(taxtable[vn,"Genus"],taxtable[vn,"Species"] )
   }
