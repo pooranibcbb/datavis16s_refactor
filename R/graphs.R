@@ -97,6 +97,15 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     cmnd <- "otu <- read.delim(datafile, check.names = FALSE, na.strings = '', row.names = 1)"
     logoutput(cmnd)
     eval(parse(text = cmnd))
+
+    cmnd <- 'tax <- otu[,!names(otu) %in% map$SampleID]'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
+
+    cmnd <- 'otu <- otu[, names(otu) %in% map$SampleID]'
+    logoutput(cmnd)
+    eval(parse(text = cmnd))
+
   } else {
 
     ## biom file
@@ -128,20 +137,21 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
       bootstrapcols <- grep("bootstrap", colnames(tax))
       tax <- tax[,-bootstrapcols]
     }
-
-    ## Check if tax has 7 columns
-    if (ncol(tax) != 7) {
-      if (ncol(tax) == 6) {
-        tax <- cbind.data.frame(tax, tax[,ncol(tax)])
-      } else {
-        stop("taxonomy does not have 7 levels.")
-      }
-    }
-
-    cmnd <- 'otu <- cbind(otu, tax)'
-    logoutput(cmnd)
-    eval(parse(text = cmnd))
   }
+
+  ## Check if tax has 7 columns
+  if (ncol(tax) != 7) {
+    if (ncol(tax) == 6) {
+      tax <- cbind.data.frame(tax, tax[,ncol(tax)])
+    } else {
+      stop("taxonomy does not have 7 levels.")
+    }
+  }
+
+  cmnd <- 'otu <- cbind(otu, tax)'
+  logoutput(cmnd)
+  eval(parse(text = cmnd))
+
 
   colnames(otu)[seq.int(to = ncol(otu), length.out = 7)] <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
