@@ -138,12 +138,12 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
       }
     }
 
-    colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-
     cmnd <- 'otu <- cbind(otu, tax)'
     logoutput(cmnd)
     eval(parse(text = cmnd))
   }
+
+  colnames(otu)[seq.int(to = ncol(otu), length.out = 7)] <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
   cmnd <- 'amp <- amp_load(otu, map)'
   logoutput(cmnd)
@@ -728,4 +728,3 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   return(as.integer(0))
 
 }
-
