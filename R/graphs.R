@@ -330,7 +330,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, force=FALSE, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -389,7 +389,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     }
 
     ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
-    if (nrow(amptax$abund) > 2000 & tl == "seq") {
+    if (nrow(amptax$abund) > 2000 & tl == "seq" & !force) {
       logoutput("Number of sequence variants > 2000.  Making heatmap at species/lowest assigned taxonomic level instead.")
       tl = "Species"
       amptax <- highertax(amptax, taxlevel=tl)
