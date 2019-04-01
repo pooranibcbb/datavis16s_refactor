@@ -1,16 +1,39 @@
 datavis16s
 ================
 
+  - [DESCRIPTION](#description)
+  - [Exported](#exported)
+      - [`adivboxplot`](#adivboxplot)
+      - [`allgraphs`](#allgraphs)
+      - [`morphheatmap`](#morphheatmap)
+      - [`pcoaplot`](#pcoaplot)
+      - [`rarefactioncurve`](#rarefactioncurve)
+      - [`readindata`](#readindata)
+      - [`trygraphwrapper`](#trygraphwrapper)
+  - [Internal](#internal)
+      - [`amp_rarecurvefix`](#amp_rarecurvefix)
+      - [`datavis16s-package`](#datavis16s-package)
+      - [`filterlowabund`](#filterlowabund)
+      - [`gridCode`](#gridcode)
+      - [`highertax`](#highertax)
+      - [`logoutput`](#logoutput)
+      - [`plotlyGrid`](#plotlygrid)
+      - [`print_ampvis2`](#print_ampvis2)
+      - [`read_biom`](#read_biom)
+      - [`save_fillhtml`](#save_fillhtml)
+      - [`shortnames`](#shortnames)
+      - [`subsetamp`](#subsetamp)
+
 <!-- toc -->
 
-January 10, 2019
+April 01, 2019
 
 # DESCRIPTION
 
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
-    Version: 0.1.1
-    Date: 2019-01-10 20:36:27 UTC
+    Version: 0.1.2
+    Date: 2019-04-01 21:35:23 UTC
     Authors@R (parsed):
         * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
     Description: betterbetterplots!
@@ -31,8 +54,10 @@ January 10, 2019
         morpheus,
         plotly,
         RColorBrewer,
-        vegan,
-        stringr
+        rmarkdown,
+        shiny,
+        stringr,
+        vegan
     Encoding: UTF-8
     LazyData: true
     RoxygenNote: 6.1.1
@@ -47,8 +72,7 @@ Alpha diversity boxplot
 
 Plots exploding boxplot of shannon diversity and Chao species richness.
 If sampling depth is NULL, rarefies OTU table to the minimum readcount
-of any sample. If this is low, then the plot will
-fail.
+of any sample. If this is low, then the plot will fail.
 
 ### Usage
 
@@ -89,8 +113,7 @@ Pipeline function
 
 ### Description
 
-Make all 4 types of
-graphs
+Make all 4 types of graphs
 
 ### Usage
 
@@ -128,15 +151,14 @@ Morpheus heatmap
 
 Creates heatmaps using Morpheus R API
 <https://software.broadinstitute.org/morpheus/> . The heatmaps are made
-using relative
-abundances.
+using relative abundances.
 
 ### Usage
 
 ``` r
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = FALSE, 
     filter_level = NULL, taxlevel = c("seq"), colors = NULL, rowAnnotations = NULL, 
-    ...)
+    force = FALSE, ...)
 ```
 
 ### Arguments
@@ -182,8 +204,7 @@ PCoA plots
 
 ### Description
 
-PCoA
-plots
+PCoA plots
 
 ### Usage
 
@@ -221,8 +242,7 @@ Make rarefaction curve graph
 
 ### Description
 
-Make rarefaction curve
-graph
+Make rarefaction curve graph
 
 ### Usage
 
@@ -258,8 +278,7 @@ Read in data
 
 ### Description
 
-Read in
-data
+Read in data
 
 ### Usage
 
@@ -299,8 +318,7 @@ Wrapper for any graph function
 ### Description
 
 This is a wrapper for any of the graph functions meant to be called
-using rpy2 in
-python.
+using rpy2 in python.
 
 ### Usage
 
@@ -365,8 +383,7 @@ Rarefaction curve
 ### Description
 
 This function replaces the ampvis2 function amp\_rarecurve to fix
-subsampling labeling bug in
-vegan
+subsampling labeling bug in vegan
 
 ### Usage
 
@@ -404,8 +421,7 @@ Filter low abundant taxa
 
 ### Description
 
-Filter low abundant
-taxa
+Filter low abundant taxa
 
 ### Usage
 
@@ -554,7 +570,7 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib", style
 ### Details
 
 If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We
-also use rmarkdown’s bootstrap-3.3.7 css to style the text elements.
+also use shiny’s bootstrap-3.3.7 css to style the text elements.
 
 ### Value
 
@@ -625,8 +641,7 @@ Save an HTML object to a file
 
 ### Description
 
-Save an HTML object to a
-file
+Save an HTML object to a file
 
 ### Usage
 
@@ -687,8 +702,7 @@ Subset and rarefy OTU table.
 
 ### Description
 
-Subset and/or rarefy OTU
-table.
+Subset and/or rarefy OTU table.
 
 ### Usage
 

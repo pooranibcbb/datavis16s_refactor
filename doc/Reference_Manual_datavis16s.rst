@@ -11,7 +11,7 @@
 
    <!-- toc -->
 
-January 10, 2019
+April 01, 2019
 
 DESCRIPTION
 ===========
@@ -20,8 +20,8 @@ DESCRIPTION
 
    Package: datavis16s
    Title: Graphs for Nephele 16S Pipelines
-   Version: 0.1.1
-   Date: 2019-01-10 20:36:27 UTC
+   Version: 0.1.2
+   Date: 2019-04-01 21:35:23 UTC
    Authors@R (parsed):
        * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
    Description: betterbetterplots!
@@ -42,8 +42,10 @@ DESCRIPTION
        morpheus,
        plotly,
        RColorBrewer,
-       vegan,
-       stringr
+       rmarkdown,
+       shiny,
+       stringr,
+       vegan
    Encoding: UTF-8
    LazyData: true
    RoxygenNote: 6.1.1
@@ -190,7 +192,7 @@ Usage
 
    morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, 
        rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"), 
-       colors = NULL, rowAnnotations = NULL, ...)
+       colors = NULL, rowAnnotations = NULL, force = FALSE, ...)
 
 .. _arguments-2:
 
@@ -864,7 +866,7 @@ Arguments
 Details
 ~~~~~~~
 
-If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use rmarkdown’s bootstrap-3.3.7 css to style the text elements.
+If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We also use shiny’s bootstrap-3.3.7 css to style the text elements.
 
 .. _value-11:
 

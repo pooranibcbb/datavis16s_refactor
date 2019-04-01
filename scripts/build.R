@@ -11,11 +11,12 @@ devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source")
 ns <- scan("NAMESPACE", sep="\n", what = character())
 importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
 
+
 ## update description
-# desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
-# deptable <- desc::desc_get_deps()
+desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
+deptable <- desc::desc_get_deps()
 # deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
-# desc::desc_set_deps(deptable, normalize = TRUE)
+desc::desc_set_deps(deptable, normalize = TRUE)
 
 
 ## Documentation

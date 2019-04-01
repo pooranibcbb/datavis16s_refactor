@@ -2,6 +2,10 @@
 datavis16s R package
 ====================
 
+-  `Usage <#usage>`__
+-  `Dependencies <#dependencies>`__
+-  `Installation <#installation>`__
+
 R package for graphs for Nephele 16S pipelines.
 
 Usage
