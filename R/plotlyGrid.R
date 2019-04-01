@@ -66,9 +66,10 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 #' @param styletags html object with style tags for the tagList.
 #'
 #' @importFrom htmltools tagList tags
+#' @importFrom rmarkdown html_dependency_jquery
 #'
 #' @details If jquery is needed, we use jquery-1.11.3 from the rmarkdown library.  We also use
-#'  rmarkdown's bootstrap-3.3.7 css to style the text elements.
+#'  shiny's bootstrap-3.3.7 css to style the text elements.
 #'
 #' @rdname plotlyGrid
 #'
@@ -78,11 +79,13 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
   tl <- tagList(javascript, ht)
 
   if (jquery) {
-    jq <- htmltools::htmlDependency("jquery", "1.11.3", c(file=file.path(find.package("rmarkdown"), "rmd/h/jquery-1.11.3"), href="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3"), script="jquery.min.js", all_files = FALSE)
+    jq <- html_dependency_jquery()
     tl <- htmltools::attachDependencies(tl, jq, append=TRUE)
   }
 
-  mc <- htmltools::htmlDependency("bootstrap-css", "3.3.7", c(file=file.path(find.package("shiny"), "www/shared/bootstrap/css")), stylesheet = "bootstrap.min.css", all_files = F)
+  mc <- shiny::bootstrapLib()
+  mc <- htmltools::htmlDependency("bootstrap-css", version=mc$version, src=mc$src, stylesheet = mc$stylesheet, all_files = F)
+#  mc <- htmltools::htmlDependency("bootstrap-css", "3.3.7", c(file=file.path(find.package("shiny"), "www/shared/bootstrap/css")), stylesheet = "bootstrap.min.css", all_files = F)
   tl <- htmltools::attachDependencies(tl, mc, append=TRUE)
   if (!is.null(title)) {
     tl <- tags$div(class="container-fluid", style="max-width:1200px", tags$h2(title), tags$p(html), tl)

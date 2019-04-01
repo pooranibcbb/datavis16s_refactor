@@ -1,6 +1,10 @@
 datavis16s R package
 ================
 
+  - [Usage](#usage)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+
 R package for graphs for Nephele 16S pipelines.
 
 ### Usage
@@ -16,8 +20,7 @@ R package for graphs for Nephele 16S pipelines.
     [manual](doc/Reference_Manual_datavis16s.md) for the arguments for
     these functions.
   - **Python with rpy2**
-      - Will need to import rpy2
-    library:
+      - Will need to import rpy2 library:
     <!-- end list -->
     ``` python
         from rpy2.robjects.packages import importr  ## to import R package
