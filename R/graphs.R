@@ -21,6 +21,9 @@
 subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdir=NULL, ...) {
   ## rarefy
   if (rarefy & !is.null(sampdepth)) {
+    cmnd <- "set.seed(500)"
+    logoutput(cmnd)
+    eval(parse(text=cmnd))
     cmnd <- 'otu <- rrarefy(t(amp$abund), sampdepth)'
     logoutput(cmnd)
     eval(parse(text=cmnd))
