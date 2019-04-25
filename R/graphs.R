@@ -105,7 +105,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
     logoutput(cmnd)
     eval(parse(text = cmnd))
 
-    cmnd <- 'otu <- otu[, names(otu) %in% map$SampleID]'
+    cmnd <- 'otu <- otu[, names(otu) %in% map$SampleID, drop=F]'
     logoutput(cmnd)
     eval(parse(text = cmnd))
 
@@ -157,7 +157,6 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 
 
   colnames(otu)[seq.int(to = ncol(otu), length.out = 7)] <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-
   cmnd <- 'amp <- amp_load(otu, map)'
   logoutput(cmnd)
   eval(parse(text = cmnd))
@@ -391,13 +390,6 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
       amptax$tax <- shortnames(amptax$tax)
     }
 
-    ## If number of sequence variants is very high, we will plot collapsed species or higher graph instead.
-    if (nrow(amptax$abund) > 2000 & tl == "seq" & !force) {
-      logoutput("Number of sequence variants > 2000.  Making heatmap at species/lowest assigned taxonomic level instead.")
-      tl = "Species"
-      amptax <- highertax(amptax, taxlevel=tl)
-    }
-
     ## row and column names for matrix
     if (tl == "seq") {
       sn <- paste(amptax$tax$OTU, amptax$tax$Species)
@@ -437,6 +429,11 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
   ## make heatmap at different taxonomic levels
   for (t in taxlevel) {
+    if (nrow(amp$abund) > 2000 & t == "seq" & !force) {
+      logoutput("Number of sequence variants > 2000. Making heatmap at species/lowest assigned taxonomic level.")
+      t = "Species"
+    }
+
     cmnd <- paste0('makeheatmap("', t, '", amp)')
     logoutput(cmnd)
     if (inherits(try(eval(parse(text = cmnd))), "try-error")) {
@@ -546,7 +543,6 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 
   ## save html file
   htmlGrid(tt, filename = file.path(outdir, "alphadiv.html"),  data = alphadiv, title = "species diversity", jquery = TRUE, styletags=axisstyle)
-
   ## Remove later
   bpjsfile <- file.path(outdir, "lib", "bpexplode-0.2.1", "bpexplode.js")
   if (file.exists(bpjsfile)) {
@@ -604,6 +600,12 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## Heatmap
   logoutput('Relative abundance heatmaps', 1)
+  if (!all(nrow(amp$abund) > 1, ncol(amp$abund) > 1)) {
+    logoutput(paste("OTU table needs to be at least 2x2 for heatmaps.  Only", nrow(amp$metadata), "samples and", nrow(amp$abund) ,"sequence variants are in the dataset.  Heatmaps and diversity plots will not be made."), 1, type='WARNING')
+    return(retvalue)
+  }
+
+
   cmnd <- 'morphheatmap(outdir = outdir, amp = amp, colors=allcols, filter_level = 5)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
@@ -617,23 +619,13 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
     return(retvalue)
   }
 
-  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCOA plots'))
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth, outdir = outdir)
 
   if (nrow(ampsub$metadata) < 3) {
     logoutput(paste("Alpha diversity and PCoA plots will not be made, as they require at least 3 samples.  Only", nrow(ampsub$metadata), "remain after filtering."), 1, type='WARNING')
-    retvalue <- as.integer(1)
     return(retvalue)
   }
-
-  ## Check which samples were removed
-
-  ## Alpha diversity
-  logoutput('Alpha diversity boxplot', 1)
-  cmnd <- 'adivboxplot(outdir = outdir, amp = ampsub, sampdepth = sampdepth, colors = allcols)'
-  logoutput(cmnd)
-  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
-
 
   ## binomial PCoA
   logoutput('PCoA plots', 1)
@@ -641,14 +633,29 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
-  ## bray-curtis PCoA
   ## Rarefy table
-  logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads, and normalizing to 100 for Bray-Curtis distance.'))
-  ampsub <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=TRUE, printsummary = F)
+  logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads for Bray-Curtis PCoA and alpha diversity.'))
+  ampsub <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=FALSE, printsummary = F)
+  logoutput(paste('Saving rarefied OTU Table to ', file.path(outdir, 'rarefied_OTU_table.txt') ))
+  rareotutable <- cbind.data.frame(ampsub$abund, ampsub$tax)
+  rareotutable$OTU <- NULL
+  write.table(rareotutable, file.path(outdir, 'rarefied_OTU_table.txt'), quote = FALSE, sep = '\t', col.names = NA, na = "")
 
-  cmnd <- 'pcoaplot(outdir = outdir, amp = ampsub, distm = "bray", colors = allcols)'
+  ## bray-curtis PCoA
+  logoutput(paste('Normalizing rarefied OTU table to 100 for Bray-Curtis distance.'))
+  ampbc <- subsetamp(ampsub, sampdepth = sampdepth, normalise=TRUE, printsummary = F)
+
+  cmnd <- 'pcoaplot(outdir = outdir, amp = ampbc, distm = "bray", colors = allcols)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
+
+
+  ## Alpha diversity
+  logoutput('Alpha diversity boxplot', 1)
+  cmnd <- 'adivboxplot(outdir = outdir, amp = ampsub, sampdepth = sampdepth, colors = allcols)'
+  logoutput(cmnd)
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
+
 
   return(retvalue)
 
