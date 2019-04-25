@@ -2,12 +2,14 @@
 title: "16S Visualization Pipeline"
 output:
   html_document:
+    md_extensions: +raw_html-smart
     smart: false  
     mathjax: null
     section_divs: false
     highlight: tango
     theme: null
     template: /Users/subramanianp4/git/nephele2/misc_examples/Rdocs/user_guide_template.html
+    self_contained: false 
     toc: true
     toc_depth: 2
   md_document:
@@ -31,10 +33,20 @@ The rarefaction curves are made with the [amp_rarecurve](https://madsalbertsen.g
 rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 ```
 
+### Heatmap
+The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R){target="_blank" rel="noopener noreferrer"} developed at the Broad Institute.  [Documentation](https://software.broadinstitute.org/morpheus/documentation.html){target="_blank" rel="noopener noreferrer"} for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/){target="_blank" rel="noopener noreferrer"}.
+
+The heatmap is made from the raw OTU table which is then normalized to represent the relative abundances using `amp_subset_samples` before the heatmap is made with morpheus (*seq_heatmap.html*).
+```{r,  tidy.opts=list(width.cutoff=50)}
+amptax <- amp_subset_samples(amp, normalise = TRUE)
+heatmap <- morpheus(amp$abund, columns=columns, rows = rows, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", stepped=FALSE), columnAnnotations = amptax$metadata, rowAnnotations = amptax$tax)
+```
+
+
 ### PCoA
 Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using [amp_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html){target="_blank" rel="noopener noreferrer"}.  Samples which fall below the specified sampling depth are removed from the OTU table using [amp_subset_samples](https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html){target="_blank" rel="noopener noreferrer"} before the distance measures are computed.  The names of samples that are removed are output to *samples_being_ignored.txt*. 
 
-The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy){target="_blank" rel="noopener noreferrer"} from the vegan R package.  At least 3 samples are needed in the OTU table for the plot to be generated.  The tables are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.
+The binomial distance is able to handle varying sample sizes.  However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using [rrarefy](https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy){target="_blank" rel="noopener noreferrer"} from the vegan R package.  The table of the rarefied counts is saved as *rarefied_OTU_table.txt*.  The coordinates from the plots are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*.  At least 3 samples are needed for these plots.
 ```{r, tidy.opts=list(width.cutoff=60)}
 amp <- amp_subset_samples(amp, minreads = sampdepth)
 pcoa_binomial <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = "binomial", sample_color_by = "TreatmentGroup", detailed_output = TRUE, transform="none")
@@ -44,19 +56,10 @@ pcoa_bray <- amp_ordinate(amp,filter_species = 0.01, type="PCOA", distmeasure = 
 ```
 
 ### Alpha diversity
-The Shannon diversity and Chao species richness are computed using [amp_alphadiv](https://madsalbertsen.github.io/ampvis2/reference/amp_alphadiv.html){target="_blank" rel="noopener noreferrer"}. Samples which fall below the specified sampling depth are removed, and the OTU table is rarefied to the sampling depth before the diversity computation.  The table is written to *alphadiv.txt*, and boxplots are output to *alphadiv.html*.  At least 3 samples are needed to produce these plots.
+The Shannon diversity and Chao species richness are computed using [amp_alphadiv](https://madsalbertsen.github.io/ampvis2/reference/amp_alphadiv.html){target="_blank" rel="noopener noreferrer"}. The rarefied counts are used for this computation.  The diversity values are saved in *alphadiv.txt*, and boxplots are output to *alphadiv.html*.  At least 3 samples are needed to produce these plots.
 
 ```{r}
 alphadiv <- amp_alphadiv(amp, measure="shannon", richness = TRUE, rarefy = sampdepth)
-```
-
-### Heatmap
-The interactive heatmap is implemented using the [morpheus R API](https://github.com/cmap/morpheus.R){target="_blank" rel="noopener noreferrer"} developed at the Broad Institute.  [Documentation](https://software.broadinstitute.org/morpheus/documentation.html){target="_blank" rel="noopener noreferrer"} for how to use the heatmap can be found on the [morpheus website](https://software.broadinstitute.org/morpheus/){target="_blank" rel="noopener noreferrer"}.
-
-The OTU table is first normalized to represent the relative abundances using amp_subset_samples before the heatmap is made with morpheus.  In order for the heatmap to be generated, the OTU table must be at least 2x2.  The heatmap is made from the raw OTU table (*seq_heatmap.html*).
-```{r,  tidy.opts=list(width.cutoff=50)}
-amptax <- amp_subset_samples(amp, normalise = TRUE)
-heatmap <- morpheus(amp$abund, columns=columns, rows = rows, columnColorModel = list(type=as.list(colors)), colorScheme = list(scalingMode="fixed", stepped=FALSE), columnAnnotations = amptax$metadata, rowAnnotations = amptax$tax)
 ```
 
 ## Output Files
@@ -64,12 +67,14 @@ Complete descriptions of the output files can be found in the [Plots section abo
 
 - *rarecurve.html*: rarefaction curve plot
 - *rarecurve.txt*: tabular data used to make the rarefaction curve plot
+- *seq_heatmap.html*: heatmap of OTU/sequence variant abundances
 - *samples_being_ignored.txt*: list of samples removed from the analysis
 - *pcoa_\*.html*: PCoA plots
 - *pcoa_\*.txt*: tabular data used to make the PCoA plots
+- *rarefied_OTU_table.txt*: rarefied OTU table used for Bray-Curtis PCoA and alpha diversity plots
 - *alphadiv.html*: alpha diversity boxplots
 - *alphadiv.txt*: tabular data used to make the alpha diversity plots
-- *seq_heatmap.html*: heatmap of OTU/sequence variant abundances
+
 
 ## Tools and References
 <p>M A, SM K, AS Z, RH K and PH N (2015). "Back to Basics - The Influence of DNA Extraction and Primer Choice on Phylogenetic Analysis of Activated Sludge Communities." <em>PLoS ONE</em>, <b>10</b>(7), pp. e0132783. <a href="http://dx.plos.org/10.1371/journal.pone.0132783" target="_blank" rel="noopener noreferrer">http://dx.plos.org/10.1371/journal.pone.0132783</a>.</p>

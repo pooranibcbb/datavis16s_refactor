@@ -11,7 +11,7 @@
 
    <!-- toc -->
 
-April 01, 2019
+April 25, 2019
 
 DESCRIPTION
 ===========
@@ -21,7 +21,7 @@ DESCRIPTION
    Package: datavis16s
    Title: Graphs for Nephele 16S Pipelines
    Version: 0.1.2
-   Date: 2019-04-01 21:35:23 UTC
+   Date: 2019-04-25 18:57:39 UTC
    Authors@R (parsed):
        * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
    Description: betterbetterplots!
@@ -46,6 +46,8 @@ DESCRIPTION
        shiny,
        stringr,
        vegan
+   Suggests:
+       testthat
    Encoding: UTF-8
    LazyData: true
    RoxygenNote: 6.1.1

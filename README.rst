@@ -1,6 +1,6 @@
 
-datavis16s R package
-====================
+dada2nephele R package README
+=============================
 
 -  `Usage <#usage>`__
 -  `Dependencies <#dependencies>`__

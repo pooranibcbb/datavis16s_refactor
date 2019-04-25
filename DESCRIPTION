@@ -1,7 +1,7 @@
 Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.2
-Date: 2019-04-01 21:35:23 UTC
+Date: 2019-04-25 18:57:39 UTC
 Authors@R: 
     person(given = "Poorani",
            family = "Subramanian",
@@ -29,8 +29,8 @@ Imports:
     shiny,
     stringr,
     vegan
+Suggests: 
+    testthat
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Suggests: 
-    testthat

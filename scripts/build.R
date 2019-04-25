@@ -3,7 +3,7 @@ library(rmarkdown)
 library(Rd2md)
 
 
-## Build package
+# Build package ----------------------------------------------------------------------------------
 document(roclets=c('rd', 'collate', 'namespace'))
 devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
 
@@ -19,16 +19,39 @@ deptable <- desc::desc_get_deps()
 desc::desc_set_deps(deptable, normalize = TRUE)
 
 
-## Documentation
+# Documentation --------------------------------
 
-## library function specification
+myoutputoptions <- list(pandoc_args=paste0("--template=", file.path(find.package("rmarkdown"), "rmarkdown/templates/github_document/resources/default.md")))
+
+remove.file <- function(x) {
+  suppressWarnings(file.remove(x))
+}
+
+templatedir <- tools::file_path_as_absolute("../../misc_examples/Rdocs")
+
+clean_pandoc2_highlight_tags = function(x) {
+  x = gsub('(</a></code></pre>)</div>', '\\1', x)
+  x = gsub('<div class="sourceCode"[^>]+>(<pre)', '\\1', x)
+  x = gsub('<a class="sourceLine"[^>]+>(.*)</a>', '\\1', x)
+  x
+}
+
+pcrst <- function(markdownfile, rstfile, docsd) {
+  system2('perl', args = c(file.path(templatedir, 'md2rst.pl'), markdownfile, 'https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s'))
+  pandoc_convert(paste0(markdownfile, ".bak"), to = "rst", options = c("--columns=1000", "-s", paste0("--template=", templatedir,"/template.rst")), wd = getwd(), output = file.path(docsd, rstfile), verbose = TRUE)
+}
+
+
+
+## library function specification ============
 
 yaml <- "---
 title: \"datavis16s\"
 output:
-    github_document:
-        toc: true
-        toc_depth: 2
+  md_document:
+    variant: markdown_github-ascii_identifiers+link_attributes
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
@@ -42,25 +65,16 @@ Rmdfile <- gsub(".md", ".Rmd", mdfile)
 # ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
 ## My Rd2md https://github.com/pooranis/Rd2md
 ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE)
-file.copy(mdfile, Rmdfile, overwrite = TRUE )
-render(Rmdfile)
+file.rename(mdfile, Rmdfile)
+render(Rmdfile, output_options = myoutputoptions)
 file.remove(Rmdfile)
 
-## Sphinx
+## Sphinx ==========
 templatedir <- "../../misc_examples/Rdocs"
 docsdir <- "../../docs/api_docs/source"
 
-pcrst <- function(markdownfile, rstfile, path=F) {
-  system2('perl', args = c(file.path(templatedir, 'md2rst.pl'), markdownfile, 'https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s'))
-  if (path) {
-    outfile = rstfile
-  } else {
-    outfile = file.path(docsdir, rstfile)
-  }
-  pandoc_convert(paste0(markdownfile, ".bak"), from="markdown+raw_html", to = "rst+raw_html", options = c("--columns=1000", "-s", "--template=/Users/subramanianp4/git/nephele2/misc_examples/Rdocs/template.rst"), wd = getwd(), output = outfile, verbose = TRUE)
-}
 
-
+#
 yaml <- "---
 title: \"datavis16s R package manual\"
 author: Poorani Subramanian
@@ -89,28 +103,34 @@ mdfile <-  "doc/tempfile.md"
 
 ReferenceManual(front.matter = yaml, title.level = 1, run.examples = FALSE, sepexported = TRUE, man_file = Rmdfile)
 rmarkdown::render(Rmdfile, output_file = basename(mdfile))
-pcrst(mdfile, "./doc/Reference_Manual_datavis16s.rst", path=T)
+pcrst(mdfile, "./doc/Reference_Manual_datavis16s.rst", docsd = ".")
 
 file.remove(Rmdfile)
 file.remove(mdfile)
 file.remove(paste0(mdfile, ".bak"))
 file.remove("doc/Reference_Manual_datavis16s.html")
 
-## User docs
+# User docs ---------------------------------------------------------------
 
-# userRmd <- "doc/user_doc.Rmd"
-# usermd <- "doc/user_doc.md"
-# render(userRmd, output_format = "md_document", output_options=list(pandoc_args=paste0("--template=", file.path(find.package("rmarkdown"), "rmarkdown/templates/github_document/resources/default.md"))))
-# pcrst(usermd,"datavis16s.user_doc.rst" )
+userRmd <- "doc/user_doc.Rmd"
+mdfile <- "doc/user_doc.md"
+render(userRmd, output_format = "md_document", output_options=myoutputoptions)
+pcrst(mdfile, "user_doc.rst", docsd = './doc')
+
+render("doc/user_doc.Rmd", output_format = "html_document", output_file = "datavis16s_pipeline.html", output_options=list(pandoc_args = c("--ascii")))
+htmlfile <- readLines("doc/datavis16s_pipeline.html")
+htmlfile <- sapply(htmlfile, clean_pandoc2_highlight_tags)
+writeLines(htmlfile, "doc/datavis16s_pipeline.html")
+remove.file("doc/user_doc.md.bak")
+remove.file("doc/user_doc.md")
 
 
-# file.rename("doc/user_doc.md", "doc/github_doc.md")
-# render(userRmd, output_format = "html_document", output_file = "datavis16s_pipeline.html")
-# system2(command = "sed" , args=c('-i.bak', '\'s/[\\“\\”]/\"/g\'', "doc/datavis16s_pipeline.html"))
-# file.remove("doc/datavis16s_pipeline.html.bak")
-# file.remove("doc/user_doc.md")
-# file.remove(c("doc/user_doc.html", "doc/user_doc.md.bak"))
+# README ------------------------------------------------------------------
 
-render("README.Rmd")
-pcrst("README.md", "./README.rst", path=T)
-file.remove(c("README.md.bak", "README.html"))
+rmarkdown::render("R_README.Rmd", output_options=myoutputoptions, output_file = "README.md")
+pcrst("README.md", "README.rst", docsd = '.')
+
+remove.file("README.md.bak")
+remove.file("README.md")
+
+

@@ -1,39 +1,40 @@
 datavis16s
 ================
 
-  - [DESCRIPTION](#description)
-  - [Exported](#exported)
-      - [`adivboxplot`](#adivboxplot)
-      - [`allgraphs`](#allgraphs)
-      - [`morphheatmap`](#morphheatmap)
-      - [`pcoaplot`](#pcoaplot)
-      - [`rarefactioncurve`](#rarefactioncurve)
-      - [`readindata`](#readindata)
-      - [`trygraphwrapper`](#trygraphwrapper)
-  - [Internal](#internal)
-      - [`amp_rarecurvefix`](#amp_rarecurvefix)
-      - [`datavis16s-package`](#datavis16s-package)
-      - [`filterlowabund`](#filterlowabund)
-      - [`gridCode`](#gridcode)
-      - [`highertax`](#highertax)
-      - [`logoutput`](#logoutput)
-      - [`plotlyGrid`](#plotlygrid)
-      - [`print_ampvis2`](#print_ampvis2)
-      - [`read_biom`](#read_biom)
-      - [`save_fillhtml`](#save_fillhtml)
-      - [`shortnames`](#shortnames)
-      - [`subsetamp`](#subsetamp)
+-   [DESCRIPTION](#description)
+-   [Exported](#exported)
+    -   [`adivboxplot`](#adivboxplot)
+    -   [`allgraphs`](#allgraphs)
+    -   [`morphheatmap`](#morphheatmap)
+    -   [`pcoaplot`](#pcoaplot)
+    -   [`rarefactioncurve`](#rarefactioncurve)
+    -   [`readindata`](#readindata)
+    -   [`trygraphwrapper`](#trygraphwrapper)
+-   [Internal](#internal)
+    -   [`amp_rarecurvefix`](#amp_rarecurvefix)
+    -   [`datavis16s-package`](#datavis16s-package)
+    -   [`filterlowabund`](#filterlowabund)
+    -   [`gridCode`](#gridcode)
+    -   [`highertax`](#highertax)
+    -   [`logoutput`](#logoutput)
+    -   [`plotlyGrid`](#plotlygrid)
+    -   [`print_ampvis2`](#print_ampvis2)
+    -   [`read_biom`](#read_biom)
+    -   [`save_fillhtml`](#save_fillhtml)
+    -   [`shortnames`](#shortnames)
+    -   [`subsetamp`](#subsetamp)
 
 <!-- toc -->
 
-April 01, 2019
+April 25, 2019
 
-# DESCRIPTION
+DESCRIPTION
+===========
 
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.2
-    Date: 2019-04-01 21:35:23 UTC
+    Date: 2019-04-25 18:57:39 UTC
     Authors@R (parsed):
         * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
     Description: betterbetterplots!
@@ -58,13 +59,17 @@ April 01, 2019
         shiny,
         stringr,
         vegan
+    Suggests:
+        testthat
     Encoding: UTF-8
     LazyData: true
     RoxygenNote: 6.1.1
 
-# Exported
+Exported
+========
 
-## `adivboxplot`
+`adivboxplot`
+-------------
 
 Alpha diversity boxplot
 
@@ -83,16 +88,52 @@ adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, colors = NU
 
 ### Arguments
 
-| Argument    | Description                                                                                                                                                  |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `datafile`  | full path to input OTU file                                                                                                                                  |
-| `outdir`    | full path to output directory                                                                                                                                |
-| `mapfile`   | full path to map file                                                                                                                                        |
-| `amp`       | ampvis2 object. may be specified instead of mapfile and datafile                                                                                             |
-| `sampdepth` | sampling depth. see details.                                                                                                                                 |
-| `colors`    | colors to use for plots                                                                                                                                      |
-| `cats`      | categories/columns in mapping file to use as groups. If NULL (default), will use all columns starting with TreatmentGroup to (but not including) Description |
-| `...`       | other parameters to pass to [readindata](#readindata)                                                                                                        |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>amp</code></td>
+<td>ampvis2 object. may be specified instead of mapfile and datafile</td>
+</tr>
+<tr class="odd">
+<td><code>sampdepth</code></td>
+<td>sampling depth. see details.</td>
+</tr>
+<tr class="even">
+<td><code>colors</code></td>
+<td>colors to use for plots</td>
+</tr>
+<tr class="odd">
+<td><code>cats</code></td>
+<td>categories/columns in mapping file to use as groups. If NULL (default), will use all columns starting with TreatmentGroup to (but not including) Description</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>other parameters to pass to <a href="#readindata">readindata</a></td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 
@@ -107,7 +148,8 @@ Save alpha diversity boxplots to outdir.
 
 [graphs.R](../R/graphs.R)
 
-## `allgraphs`
+`allgraphs`
+-----------
 
 Pipeline function
 
@@ -123,13 +165,40 @@ allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 
 ### Arguments
 
-| Argument    | Description                                                                             |
-| ----------- | --------------------------------------------------------------------------------------- |
-| `datafile`  | full path to input OTU file (biom or txt file see [readindata](#readindata) for format) |
-| `outdir`    | full path to output directory                                                           |
-| `mapfile`   | full path to map file                                                                   |
-| `sampdepth` | sampling depth. default: 10000                                                          |
-| `...`       | other parameters to pass to [readindata](#readindata)                                   |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or txt file see <a href="#readindata">readindata</a> for format)</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>sampdepth</code></td>
+<td>sampling depth. default: 10000</td>
+</tr>
+<tr class="odd">
+<td><code>...</code></td>
+<td>other parameters to pass to <a href="#readindata">readindata</a></td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -143,7 +212,8 @@ distance PCoA.
 
 [graphs.R](../R/graphs.R)
 
-## `morphheatmap`
+`morphheatmap`
+--------------
 
 Morpheus heatmap
 
@@ -163,18 +233,60 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = F
 
 ### Arguments
 
-| Argument       | Description                                                                                                                                        |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `datafile`     | full path to input OTU file (biom or see [readindata](#readindata) )                                                                               |
-| `outdir`       | full path to output directory                                                                                                                      |
-| `mapfile`      | full path to mapping file                                                                                                                          |
-| `amp`          | (Optional) ampvis2 object. may be specified instead of mapfile and datafile                                                                        |
-| `sampdepth`    | sampling depth                                                                                                                                     |
-| `rarefy`       | Logical. Rarefy the OTU table if sampdepth is specified.                                                                                           |
-| `filter_level` | minimum abundance to show in the heatmap                                                                                                           |
-| `taxlevel`     | vector of taxonomic levels to graph. must be subset of c(“Kingdom”, “Phylum”, “Class”, “Order”, “Family”, “Genus”, “Species”, “seq”). See Details. |
-| `colors`       | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                     |
-| `...`          | parameters to pass to [`readindata`](#readindata)                                                                                                  |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to mapping file</td>
+</tr>
+<tr class="even">
+<td><code>amp</code></td>
+<td>(Optional) ampvis2 object. may be specified instead of mapfile and datafile</td>
+</tr>
+<tr class="odd">
+<td><code>sampdepth</code></td>
+<td>sampling depth</td>
+</tr>
+<tr class="even">
+<td><code>rarefy</code></td>
+<td>Logical. Rarefy the OTU table if sampdepth is specified.</td>
+</tr>
+<tr class="odd">
+<td><code>filter_level</code></td>
+<td>minimum abundance to show in the heatmap</td>
+</tr>
+<tr class="even">
+<td><code>taxlevel</code></td>
+<td>vector of taxonomic levels to graph. must be subset of c(“Kingdom”, “Phylum”, “Class”, “Order”, “Family”, “Genus”, “Species”, “seq”). See Details.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 
@@ -198,7 +310,8 @@ morphheatmap(datafile = "OTU_table.txt", outdir = "outputs/graphs", mapfile = "m
 
 [graphs.R](../R/graphs.R)
 
-## `pcoaplot`
+`pcoaplot`
+----------
 
 PCoA plots
 
@@ -215,18 +328,60 @@ pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, distm = "binom
 
 ### Arguments
 
-| Argument         | Description                                                                                                                                                                       |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `datafile`       | full path to input OTU file (biom or see [readindata](#readindata) )                                                                                                              |
-| `outdir`         | full path to output directory                                                                                                                                                     |
-| `mapfile`        | full path to map file                                                                                                                                                             |
-| `amp`            | ampvis2 object. may be specified instead of mapfile and datafile                                                                                                                  |
-| `sampdepth`      | sampling depth                                                                                                                                                                    |
-| `distm`          | distance measure for PCoA. any that are supported by [amp\_ordinate](https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html) except for unifrac, wunifrac, and none. |
-| `filter_species` | Remove low abundant OTU’s across all samples below this threshold in percent. Setting this to 0 may drastically increase computation time.                                        |
-| `rarefy`         | Logical. Rarefy the OTU table if sampdepth is specified.                                                                                                                          |
-| `colors`         | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                                                    |
-| `...`            | parameters to pass to [`readindata`](#readindata)                                                                                                                                 |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>amp</code></td>
+<td>ampvis2 object. may be specified instead of mapfile and datafile</td>
+</tr>
+<tr class="odd">
+<td><code>sampdepth</code></td>
+<td>sampling depth</td>
+</tr>
+<tr class="even">
+<td><code>distm</code></td>
+<td>distance measure for PCoA. any that are supported by <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html">amp_ordinate</a> except for unifrac, wunifrac, and none.</td>
+</tr>
+<tr class="odd">
+<td><code>filter_species</code></td>
+<td>Remove low abundant OTU’s across all samples below this threshold in percent. Setting this to 0 may drastically increase computation time.</td>
+</tr>
+<tr class="even">
+<td><code>rarefy</code></td>
+<td>Logical. Rarefy the OTU table if sampdepth is specified.</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -236,7 +391,8 @@ Saves pcoa plots to outdir.
 
 [graphs.R](../R/graphs.R)
 
-## `rarefactioncurve`
+`rarefactioncurve`
+------------------
 
 Make rarefaction curve graph
 
@@ -253,16 +409,52 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL, cat = "Tr
 
 ### Arguments
 
-| Argument   | Description                                                                                         |
-| ---------- | --------------------------------------------------------------------------------------------------- |
-| `datafile` | full path to input OTU file (biom or see [readindata](#readindata) )                                |
-| `outdir`   | full path to output directory                                                                       |
-| `mapfile`  | full path mapping file                                                                              |
-| `amp`      | (Optional) ampvis2 object. may be specified instead of mapfile and datafile                         |
-| `colors`   | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                      |
-| `cat`      | Category/column in mapping file by which to color the curves in the graph. (default TreatmentGroup) |
-| `stepsize` | for rarefaction plotting.                                                                           |
-| `...`      | parameters to pass to [`readindata`](#readindata)                                                   |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or see <a href="#readindata">readindata</a> )</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>full path to output directory</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path mapping file</td>
+</tr>
+<tr class="even">
+<td><code>amp</code></td>
+<td>(Optional) ampvis2 object. may be specified instead of mapfile and datafile</td>
+</tr>
+<tr class="odd">
+<td><code>colors</code></td>
+<td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
+</tr>
+<tr class="even">
+<td><code>cat</code></td>
+<td>Category/column in mapping file by which to color the curves in the graph. (default TreatmentGroup)</td>
+</tr>
+<tr class="odd">
+<td><code>stepsize</code></td>
+<td>for rarefaction plotting.</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -272,7 +464,8 @@ Saves rarefaction curve plot to output directory.
 
 [graphs.R](../R/graphs.R)
 
-## `readindata`
+`readindata`
+------------
 
 Read in data
 
@@ -288,12 +481,36 @@ readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 
 ### Arguments
 
-| Argument   | Description                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------------- |
-| `datafile` | full path to input data file. must be either biom file or tab delimited text file. See details. |
-| `mapfile`  | full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns            |
-| `tsvfile`  | Logical. Is datafile a tab-delimited text file? See details.                                    |
-| `mincount` | minimum number of reads                                                                         |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input data file. must be either biom file or tab delimited text file. See details.</td>
+</tr>
+<tr class="even">
+<td><code>mapfile</code></td>
+<td>full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns</td>
+</tr>
+<tr class="odd">
+<td><code>tsvfile</code></td>
+<td>Logical. Is datafile a tab-delimited text file? See details.</td>
+</tr>
+<tr class="even">
+<td><code>mincount</code></td>
+<td>minimum number of reads</td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 
@@ -311,7 +528,8 @@ ampvis2 object
 
 [graphs.R](../R/graphs.R)
 
-## `trygraphwrapper`
+`trygraphwrapper`
+-----------------
 
 Wrapper for any graph function
 
@@ -329,16 +547,52 @@ trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt", inf
 
 ### Arguments
 
-| Argument      | Description                                                                                           |
-| ------------- | ----------------------------------------------------------------------------------------------------- |
-| `datafile`    | full path to input OTU file (biom or txt, see [readindata](#readindata) for format of txt file)       |
-| `outdir`      | output directory for graphs                                                                           |
-| `mapfile`     | full path to map file                                                                                 |
-| `FUN`         | character string. name of function you would like to run. can be actual function object if run from R |
-| `logfilename` | logfilename                                                                                           |
-| `info`        | print sessionInfo to logfile                                                                          |
-| `tsvfile`     | Is datafile a tab-delimited text file? Default FALSE                                                  |
-| `...`         | parameters needed to pass to FUN                                                                      |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datafile</code></td>
+<td>full path to input OTU file (biom or txt, see <a href="#readindata">readindata</a> for format of txt file)</td>
+</tr>
+<tr class="even">
+<td><code>outdir</code></td>
+<td>output directory for graphs</td>
+</tr>
+<tr class="odd">
+<td><code>mapfile</code></td>
+<td>full path to map file</td>
+</tr>
+<tr class="even">
+<td><code>FUN</code></td>
+<td>character string. name of function you would like to run. can be actual function object if run from R</td>
+</tr>
+<tr class="odd">
+<td><code>logfilename</code></td>
+<td>logfilename</td>
+</tr>
+<tr class="even">
+<td><code>info</code></td>
+<td>print sessionInfo to logfile</td>
+</tr>
+<tr class="odd">
+<td><code>tsvfile</code></td>
+<td>Is datafile a tab-delimited text file? Default FALSE</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>parameters needed to pass to FUN</td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -374,9 +628,11 @@ trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs", "/path
 
 [graphs.R](../R/graphs.R)
 
-# Internal
+Internal
+========
 
-## `amp_rarecurvefix`
+`amp_rarecurvefix`
+------------------
 
 Rarefaction curve
 
@@ -393,11 +649,32 @@ amp_rarecurvefix(data, stepsize = 1000, color_by = NULL)
 
 ### Arguments
 
-| Argument   | Description                                                                                  |
-| ---------- | -------------------------------------------------------------------------------------------- |
-| `data`     | (required) Data list as loaded with amp\_load.                                               |
-| `stepsize` | Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000) |
-| `color_by` | Color curves by a variable in the metadata.                                                  |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data</code></td>
+<td>(required) Data list as loaded with amp_load.</td>
+</tr>
+<tr class="even">
+<td><code>stepsize</code></td>
+<td>Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000)</td>
+</tr>
+<tr class="odd">
+<td><code>color_by</code></td>
+<td>Color curves by a variable in the metadata.</td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -407,7 +684,8 @@ A ggplot2 object.
 
 [utilities.R](../R/utilities.R)
 
-## `datavis16s-package`
+`datavis16s-package`
+--------------------
 
 dataviz16s: A package for Nephele 16S pipeline visualization
 
@@ -415,7 +693,8 @@ dataviz16s: A package for Nephele 16S pipeline visualization
 
 dataviz16s: A package for Nephele 16S pipeline visualization
 
-## `filterlowabund`
+`filterlowabund`
+----------------
 
 Filter low abundant taxa
 
@@ -431,12 +710,36 @@ filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
 
 ### Arguments
 
-| Argument  | Description                                                               |
-| --------- | ------------------------------------------------------------------------- |
-| `amp`     | ampvis2 object                                                            |
-| `level`   | level at which to filter                                                  |
-| `persamp` | percent of samples which must have taxa in common                         |
-| `abs`     | is level an absolute count? if false, will use level as relative percent. |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>amp</code></td>
+<td>ampvis2 object</td>
+</tr>
+<tr class="even">
+<td><code>level</code></td>
+<td>level at which to filter</td>
+</tr>
+<tr class="odd">
+<td><code>persamp</code></td>
+<td>percent of samples which must have taxa in common</td>
+</tr>
+<tr class="even">
+<td><code>abs</code></td>
+<td>is level an absolute count? if false, will use level as relative percent.</td>
+</tr>
+</tbody>
+</table>
 
 ### Value
 
@@ -446,7 +749,8 @@ filtered ampvis2 object
 
 [utilities.R](../R/utilities.R)
 
-## `gridCode`
+`gridCode`
+----------
 
 Format plotly grid code
 
@@ -463,21 +767,22 @@ gridCode(data)
 ### Arguments
 
 | Argument | Description                  |
-| -------- | ---------------------------- |
+|----------|------------------------------|
 | `data`   | data to populate plotly grid |
 
 ### Value
 
 list of 2 values:
 
-  - `html` html for plotly export link  
-  - `javascript` js function for exporting data
+-   `html` html for plotly export link  
+-   `javascript` js function for exporting data
 
 ### Source
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
-## `highertax`
+`highertax`
+-----------
 
 return tables at higher tax level
 
@@ -494,7 +799,7 @@ highertax(amp, taxlevel)
 ### Arguments
 
 | Argument   | Description                                   |
-| ---------- | --------------------------------------------- |
+|------------|-----------------------------------------------|
 | `amp`      | ampvis2 object                                |
 | `taxlevel` | taxonomic level at which to sum up the counts |
 
@@ -506,7 +811,8 @@ ampvis2 object with otu table and taxa summed up to the taxlevel
 
 [utilities.R](../R/utilities.R)
 
-## `logoutput`
+`logoutput`
+-----------
 
 write log output
 
@@ -523,7 +829,7 @@ logoutput(c, bline = 0, aline = 0, type = NULL)
 ### Arguments
 
 | Argument | Description                                           |
-| -------- | ----------------------------------------------------- |
+|----------|-------------------------------------------------------|
 | `c`      | String. Log message/command to print.                 |
 | `bline`  | Number of blank lines to precede output.              |
 | `aline`  | Number of blank lines to follow output.               |
@@ -533,7 +839,8 @@ logoutput(c, bline = 0, aline = 0, type = NULL)
 
 [utilities.R](../R/utilities.R)
 
-## `plotlyGrid`
+`plotlyGrid`
+------------
 
 Add Plotly data export to Plotly graph
 
@@ -556,16 +863,52 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib", style
 
 ### Arguments
 
-| Argument    | Description                                                                                                            |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `pplot`     | plotly or ggplot object                                                                                                |
-| `filename`  | output filename (fullpath)                                                                                             |
-| `data`      | data frame to export to plotly grid (optional for plotlyGrid)                                                          |
-| `title`     | title of html page                                                                                                     |
-| `outlib`    | (Optional) name of external lib directory for non-selfcontained html. Useful for multiple graphs sharing the same lib. |
-| `ht`        | html tagList                                                                                                           |
-| `jquery`    | should we load jquery                                                                                                  |
-| `styletags` | html object with style tags for the tagList.                                                                           |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pplot</code></td>
+<td>plotly or ggplot object</td>
+</tr>
+<tr class="even">
+<td><code>filename</code></td>
+<td>output filename (fullpath)</td>
+</tr>
+<tr class="odd">
+<td><code>data</code></td>
+<td>data frame to export to plotly grid (optional for plotlyGrid)</td>
+</tr>
+<tr class="even">
+<td><code>title</code></td>
+<td>title of html page</td>
+</tr>
+<tr class="odd">
+<td><code>outlib</code></td>
+<td>(Optional) name of external lib directory for non-selfcontained html. Useful for multiple graphs sharing the same lib.</td>
+</tr>
+<tr class="even">
+<td><code>ht</code></td>
+<td>html tagList</td>
+</tr>
+<tr class="odd">
+<td><code>jquery</code></td>
+<td>should we load jquery</td>
+</tr>
+<tr class="even">
+<td><code>styletags</code></td>
+<td>html object with style tags for the tagList.</td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 
@@ -581,7 +924,8 @@ in same directory as filename. Invisibly returns the plotly html widget.
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
-## `print_ampvis2`
+`print_ampvis2`
+---------------
 
 Print ampvis2 object summary
 
@@ -599,7 +943,7 @@ print_ampvis2(data)
 ### Arguments
 
 | Argument | Description    |
-| -------- | -------------- |
+|----------|----------------|
 | `data`   | ampvis2 object |
 
 ### Value
@@ -610,7 +954,8 @@ Prints summary stats about ampvis2 object
 
 [utilities.R](../R/utilities.R)
 
-## `read_biom`
+`read_biom`
+-----------
 
 biomformat read\_biom
 
@@ -628,14 +973,15 @@ read_biom(biom_file)
 ### Arguments
 
 | Argument    | Description |
-| ----------- | ----------- |
+|-------------|-------------|
 | `biom_file` |             |
 
 ### Value
 
 biom object
 
-## `save_fillhtml`
+`save_fillhtml`
+---------------
 
 Save an HTML object to a file
 
@@ -652,7 +998,7 @@ save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 ### Arguments
 
 | Argument     | Description                       |
-| ------------ | --------------------------------- |
+|--------------|-----------------------------------|
 | `html`       | HTML content to print             |
 | `file`       | File to write content to          |
 | `background` | Background color for web page     |
@@ -667,7 +1013,8 @@ save html to file
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
-## `shortnames`
+`shortnames`
+------------
 
 shortnames for taxonomy
 
@@ -684,7 +1031,7 @@ shortnames(taxtable)
 ### Arguments
 
 | Argument   | Description                                       |
-| ---------- | ------------------------------------------------- |
+|------------|---------------------------------------------------|
 | `taxtable` | taxonomy table object from ampvis2 object amp$tax |
 
 ### Value
@@ -696,7 +1043,8 @@ are sanitized and formatted to be a bit nicer.
 
 [utilities.R](../R/utilities.R)
 
-## `subsetamp`
+`subsetamp`
+-----------
 
 Subset and rarefy OTU table.
 
@@ -713,14 +1061,44 @@ subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T, outdir = NULL
 
 ### Arguments
 
-| Argument       | Description                                                                                                                            |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `amp`          | ampvis2 object                                                                                                                         |
-| `sampdepth`    | sampling depth. See details.                                                                                                           |
-| `rarefy`       | rarefy the OTU table in addition to subsetting                                                                                         |
-| `printsummary` | Logical. print ampvis2 summary of OTU table                                                                                            |
-| `outdir`       | Output directory. If not null, and samples are removed from amp, the sample names will be output to outdir/samples\_being\_ignored.txt |
-| `...`          | other parameters to pass to amp\_subset\_samples                                                                                       |
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>amp</code></td>
+<td>ampvis2 object</td>
+</tr>
+<tr class="even">
+<td><code>sampdepth</code></td>
+<td>sampling depth. See details.</td>
+</tr>
+<tr class="odd">
+<td><code>rarefy</code></td>
+<td>rarefy the OTU table in addition to subsetting</td>
+</tr>
+<tr class="even">
+<td><code>printsummary</code></td>
+<td>Logical. print ampvis2 summary of OTU table</td>
+</tr>
+<tr class="odd">
+<td><code>outdir</code></td>
+<td>Output directory. If not null, and samples are removed from amp, the sample names will be output to outdir/samples_being_ignored.txt</td>
+</tr>
+<tr class="even">
+<td><code>...</code></td>
+<td>other parameters to pass to amp_subset_samples</td>
+</tr>
+</tbody>
+</table>
 
 ### Details
 

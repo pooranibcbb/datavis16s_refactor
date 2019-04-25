@@ -1,9 +1,12 @@
 ---
-title: "datavis16s R package"
-output: 
-  github_document:
-    toc: true
+title: "dada2nephele R package README"
+output:
+   md_document:
+     variant: markdown_github-ascii_identifiers+link_attributes
+     toc: true
+     toc_depth: 2
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, eval=FALSE, tidy = TRUE, tidy.opts = list(width.cutoff=60))
 ```
