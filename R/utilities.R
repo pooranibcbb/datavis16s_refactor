@@ -141,12 +141,14 @@ highertax <- function(amp, taxlevel) {
 #' @param level  level at which to filter
 #' @param persamp  percent of samples which must have taxa in common
 #' @param abs  is level an absolute count? if false, will use level as relative percent.
+#' @param toptaxa number of seqvar to include sorted by max count across all samples;
+#' if NULL all will be included.
 #'
 #' @return filtered ampvis2 object
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
-filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
+filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE, toptaxa=NULL) {
 
   otu <- as.matrix(amp$abund)
   tax <- amp$tax
@@ -164,6 +166,14 @@ filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE) {
     otu <- otu[-w,]
     tax <- tax[-w,]
   }
+
+  if (!is.null(toptaxa)) {
+    mv <- apply(otu, 1, max)
+    mw <- order(mv, decreasing = T)[1:toptaxa]
+    otu <- otu[mw,]
+    tax <- tax[mw,]
+  }
+
   amp$abund <- as.data.frame(otu)
   amp$tax <- tax
   return(amp)
