@@ -9,7 +9,8 @@
 \usage{
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"),
-  colors = NULL, rowAnnotations = NULL, force = FALSE, ...)
+  colors = NULL, rowAnnotations = NULL, force = FALSE,
+  filesuffix = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
@@ -30,6 +31,8 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.}
 
 \item{colors}{(Optional) color vector - length equal to number of TreatmentGroups in mapfile}
+
+\item{filesuffix}{(Optional) suffix for output filename}
 
 \item{...}{parameters to pass to  \code{\link{readindata}}}
 }

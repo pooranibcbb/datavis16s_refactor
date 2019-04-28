@@ -24,12 +24,28 @@ The rarefaction curves are made with the `amp_rarecurve <https://madsalbertsen.g
 
    rarecurve <- amp_rarecurve(amp, color_by = "TreatmentGroup")
 
+Filtering and rarefying/subsampling OTU table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **``sampling depth``** is used to filter out samples with few counts. Samples with counts which fall below the ``sampling depth`` are removed from the OTU table using `amp_subset_samples <https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html>`__. The names of samples that are removed are output to *samples_being_ignored.txt*.
+
+Additionally, the ``sampling depth`` is used to rarefy the counts for the Bray-Curtis PCoA and the alpha diversity plots. The OTU table is rarefied using `rrarefy <https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy>`__ from the vegan R package. The table of the filtered, rarefied counts is saved as *rarefied_OTU_table.txt*.
+
+If you do not provide a ``sampling depth``, the default value is **10000**.
+
+.. code:: r
+
+   ampsub <- amp_subset_samples(amp, minreads = sampdepth)
+   otu <- rrarefy(t(ampsub$abund), sampdepth)
+   amprare <- ampsub
+   amprare$abund <- t(otu)
+
 Heatmap
 ~~~~~~~
 
 The interactive heatmap is implemented using the `morpheus R API <https://github.com/cmap/morpheus.R>`__ developed at the Broad Institute. `Documentation <https://software.broadinstitute.org/morpheus/documentation.html>`__ for how to use the heatmap can be found on the `morpheus website <https://software.broadinstitute.org/morpheus/>`__.
 
-The heatmap is made from the raw OTU table which is then normalized to represent the relative abundances using ``amp_subset_samples`` before the heatmap is made with morpheus (*seq_heatmap.html*).
+The heatmap, *seq_heatmap.html*, is made from the raw OTU table with the counts normalized to 100 to represent the relative abundances using `amp_subset_samples <https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html>`__ before the heatmap is made with morpheus. If there are too many OTUs or sequence variants, then the heatmap is made at the species level instead. A heatmap is also made from the rarefied counts, *seq_heatmap_rarefied.html*.
 
 .. code:: r
 
@@ -42,19 +58,17 @@ The heatmap is made from the raw OTU table which is then normalized to represent
 PCoA
 ~~~~
 
-Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using `amp_ordinate <https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html>`__. Samples which fall below the specified sampling depth are removed from the OTU table using `amp_subset_samples <https://madsalbertsen.github.io/ampvis2/reference/amp_subset_samples.html>`__ before the distance measures are computed. The names of samples that are removed are output to *samples_being_ignored.txt*.
+Principal coordinates analysis using binomial and Bray-Curtis distances is carried out using `amp_ordinate <https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html>`__. For more information on the formulae for the distance measures, see `vegdist <https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/vegdist>`__.
 
-The binomial distance is able to handle varying sample sizes. However, for the Bray-Curtis distance, the OTU table is rarefied to the sampling depth using `rrarefy <https://www.rdocumentation.org/packages/vegan/versions/2.4-2/topics/rarefy>`__ from the vegan R package. The table of the rarefied counts is saved as *rarefied_OTU_table.txt*. The coordinates from the plots are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*. At least 3 samples are needed for these plots.
+The binomial distance is able to handle varying sample sizes, so the raw counts from the OTU table are used. For the Bray-Curtis distance, the rarefied counts are used. The coordinates from the plots are written to *pcoa_binomial.txt* and *pcoa_bray.txt* and the plots to *pcoa_binomial.html* and *pcoa_bray.html*. At least 3 samples are needed for these plots.
 
 .. code:: r
 
-   amp <- amp_subset_samples(amp, minreads = sampdepth)
    pcoa_binomial <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", 
        distmeasure = "binomial", sample_color_by = "TreatmentGroup", 
        detailed_output = TRUE, transform = "none")
-   otu <- rrarefy(t(amp$abund), sampdepth)
-   amp$abund <- t(otu)
-   pcoa_bray <- amp_ordinate(amp, filter_species = 0.01, type = "PCOA", 
+
+   pcoa_bray <- amp_ordinate(amprare, filter_species = 0.01, type = "PCOA", 
        distmeasure = "bray", sample_color_by = "TreatmentGroup", 
        detailed_output = TRUE, transform = "none")
 
@@ -65,7 +79,7 @@ The Shannon diversity and Chao species richness are computed using `amp_alphadiv
 
 .. code:: r
 
-   alphadiv <- amp_alphadiv(amp, measure = "shannon", richness = TRUE, rarefy = sampdepth)
+   alphadiv <- amp_alphadiv(amprare, measure = "shannon", richness = TRUE, rarefy = sampdepth)
 
 Output Files
 ------------
@@ -74,7 +88,7 @@ Complete descriptions of the output files can be found in the `Plots section abo
 
 -  *rarecurve.html*: rarefaction curve plot
 -  *rarecurve.txt*: tabular data used to make the rarefaction curve plot
--  *seq_heatmap.html*: heatmap of OTU/sequence variant abundances
+-  *seq_heatmap*.html*: heatmap of OTU/sequence variant abundances
 -  *samples_being_ignored.txt*: list of samples removed from the analysis
 -  *pcoa_*.html*: PCoA plots
 -  *pcoa_*.txt*: tabular data used to make the PCoA plots
@@ -120,6 +134,16 @@ Sievert C, Parmer C, Hocking T, Chamberlain S, Ram K, Corvellec M and Despouy P 
    <p>
 
 McMurdie PJ and Paulson JN (2016). biomformat: An interface package for the BIOM file format. https://github.com/joey711/biomformat/.
+
+.. raw:: html
+
+   </p>
+
+.. raw:: html
+
+   <p>
+
+Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O’Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019). vegan: Community Ecology Package. R package version 2.5-4, <a href=“https://CRAN.R-project.org/package=vegan” target=“\_blank” rel="noopener noreferrer>https://CRAN.R-project.org/package=vegan.
 
 .. raw:: html
 

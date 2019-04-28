@@ -26,7 +26,7 @@ datavis16s
 
 <!-- toc -->
 
-April 25, 2019
+April 28, 2019
 
 DESCRIPTION
 ===========
@@ -34,7 +34,7 @@ DESCRIPTION
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.2
-    Date: 2019-04-25 18:57:39 UTC
+    Date: 2019-04-28 18:25:21 UTC
     Authors@R (parsed):
         * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
     Description: betterbetterplots!
@@ -83,7 +83,7 @@ of any sample. If this is low, then the plot will fail.
 
 ``` r
 adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, colors = NULL, 
-    cats = NULL, ...)
+    cats = NULL, filesuffix = NULL, ...)
 ```
 
 ### Arguments
@@ -129,6 +129,10 @@ adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, colors = NU
 <td>categories/columns in mapping file to use as groups. If NULL (default), will use all columns starting with TreatmentGroup to (but not including) Description</td>
 </tr>
 <tr class="even">
+<td><code>filesuffix</code></td>
+<td>(Optional) suffix for output filename</td>
+</tr>
+<tr class="odd">
 <td><code>...</code></td>
 <td>other parameters to pass to <a href="#readindata">readindata</a></td>
 </tr>
@@ -228,7 +232,7 @@ using relative abundances.
 ``` r
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = FALSE, 
     filter_level = NULL, taxlevel = c("seq"), colors = NULL, rowAnnotations = NULL, 
-    force = FALSE, ...)
+    force = FALSE, filesuffix = NULL, ...)
 ```
 
 ### Arguments
@@ -282,6 +286,10 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy = F
 <td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
 </tr>
 <tr class="even">
+<td><code>filesuffix</code></td>
+<td>(Optional) suffix for output filename</td>
+</tr>
+<tr class="odd">
 <td><code>...</code></td>
 <td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
 </tr>
@@ -300,10 +308,8 @@ Saves heatmaps to outdir.
 ### Examples
 
 ``` r
-## Not run:
 morphheatmap(datafile = "OTU_table.txt", outdir = "outputs/graphs", mapfile = "mapfile.txt", 
     sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile = TRUE)
-## End(Not run)
 ```
 
 ### Source
@@ -315,15 +321,11 @@ morphheatmap(datafile = "OTU_table.txt", outdir = "outputs/graphs", mapfile = "m
 
 PCoA plots
 
-### Description
-
-PCoA plots
-
 ### Usage
 
 ``` r
 pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, distm = "binomial", 
-    filter_species = 0.1, rarefy = FALSE, colors = NULL, ...)
+    filter_species = 0.1, rarefy = FALSE, colors = NULL, filesuffix = NULL, ...)
 ```
 
 ### Arguments
@@ -377,6 +379,10 @@ pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, distm = "binom
 <td>(Optional) color vector - length equal to number of TreatmentGroups in mapfile</td>
 </tr>
 <tr class="even">
+<td><code>filesuffix</code></td>
+<td>(Optional) suffix for output filename</td>
+</tr>
+<tr class="odd">
 <td><code>...</code></td>
 <td>parameters to pass to <a href="#readindata"><code>readindata</code></a></td>
 </tr>
@@ -393,10 +399,6 @@ Saves pcoa plots to outdir.
 
 `rarefactioncurve`
 ------------------
-
-Make rarefaction curve graph
-
-### Description
 
 Make rarefaction curve graph
 
@@ -466,10 +468,6 @@ Saves rarefaction curve plot to output directory.
 
 `readindata`
 ------------
-
-Read in data
-
-### Description
 
 Read in data
 
@@ -602,8 +600,6 @@ rpy2.rinterface.RRuntimeError.
 ### Examples
 
 ``` r
-## Not run:
-
 # example with no optional arguments for running allgraphs
 trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/", "/path/to/inputs/mapfile.txt", 
     "allgraphs")
@@ -621,7 +617,6 @@ trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/", "/path/to
 trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs", "/path/to/inputs/mapfile.txt", 
     "morphheatmap", sampdepth = 30000, filter_level = 0.01, taxlevel = c("Family", 
         "seq"))
-## End(Not run)
 ```
 
 ### Source
@@ -689,23 +684,15 @@ A ggplot2 object.
 
 dataviz16s: A package for Nephele 16S pipeline visualization
 
-### Description
-
-dataviz16s: A package for Nephele 16S pipeline visualization
-
 `filterlowabund`
 ----------------
-
-Filter low abundant taxa
-
-### Description
 
 Filter low abundant taxa
 
 ### Usage
 
 ``` r
-filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
+filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 ```
 
 ### Arguments
@@ -737,6 +724,10 @@ filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
 <tr class="even">
 <td><code>abs</code></td>
 <td>is level an absolute count? if false, will use level as relative percent.</td>
+</tr>
+<tr class="odd">
+<td><code>toptaxa</code></td>
+<td>number of seqvar to include sorted by max count across all samples; if NULL all will be included.</td>
 </tr>
 </tbody>
 </table>
@@ -783,10 +774,6 @@ list of 2 values:
 
 `highertax`
 -----------
-
-return tables at higher tax level
-
-### Description
 
 return tables at higher tax level
 
@@ -985,10 +972,6 @@ biom object
 
 Save an HTML object to a file
 
-### Description
-
-Save an HTML object to a file
-
 ### Usage
 
 ``` r
@@ -1015,10 +998,6 @@ save html to file
 
 `shortnames`
 ------------
-
-shortnames for taxonomy
-
-### Description
 
 shortnames for taxonomy
 

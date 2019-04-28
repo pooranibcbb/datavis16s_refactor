@@ -9,7 +9,7 @@
 \usage{
 pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,
-  colors = NULL, ...)
+  colors = NULL, filesuffix = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
@@ -31,6 +31,8 @@ Setting this to 0 may drastically increase computation time.}
 \item{rarefy}{Logical. Rarefy the OTU table if sampdepth is specified.}
 
 \item{colors}{(Optional) color vector - length equal to number of TreatmentGroups in mapfile}
+
+\item{filesuffix}{(Optional) suffix for output filename}
 
 \item{...}{parameters to pass to  \code{\link{readindata}}}
 }

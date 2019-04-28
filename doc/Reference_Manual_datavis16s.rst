@@ -11,7 +11,7 @@
 
    <!-- toc -->
 
-April 25, 2019
+April 28, 2019
 
 DESCRIPTION
 ===========
@@ -21,7 +21,7 @@ DESCRIPTION
    Package: datavis16s
    Title: Graphs for Nephele 16S Pipelines
    Version: 0.1.2
-   Date: 2019-04-25 18:57:39 UTC
+   Date: 2019-04-28 18:25:21 UTC
    Authors@R (parsed):
        * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
    Description: betterbetterplots!
@@ -73,32 +73,34 @@ Usage
 ::
 
    adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, 
-       colors = NULL, cats = NULL, ...)
+       colors = NULL, cats = NULL, filesuffix = NULL, ...)
 
 Arguments
 ~~~~~~~~~
 
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Argument    | Description                                                                                                                                                  |
-+=============+==============================================================================================================================================================+
-| ``datafile` | full path to input OTU file                                                                                                                                  |
-| `           |                                                                                                                                                              |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``outdir``  | full path to output directory                                                                                                                                |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``mapfile`` | full path to map file                                                                                                                                        |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``amp``     | ampvis2 object. may be specified instead of mapfile and datafile                                                                                             |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``sampdepth | sampling depth. see details.                                                                                                                                 |
-| ``          |                                                                                                                                                              |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``colors``  | colors to use for plots                                                                                                                                      |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``cats``    | categories/columns in mapping file to use as groups. If NULL (default), will use all columns starting with TreatmentGroup to (but not including) Description |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``...``     | other parameters to pass to `readindata <#readindata>`__                                                                                                     |
-+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Argument     | Description                                                                                                                                                  |
++==============+==============================================================================================================================================================+
+| ``datafile`` | full path to input OTU file                                                                                                                                  |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``outdir``   | full path to output directory                                                                                                                                |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``mapfile``  | full path to map file                                                                                                                                        |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``amp``      | ampvis2 object. may be specified instead of mapfile and datafile                                                                                             |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``sampdepth` | sampling depth. see details.                                                                                                                                 |
+| `            |                                                                                                                                                              |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``colors``   | colors to use for plots                                                                                                                                      |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``cats``     | categories/columns in mapping file to use as groups. If NULL (default), will use all columns starting with TreatmentGroup to (but not including) Description |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``filesuffix | (Optional) suffix for output filename                                                                                                                        |
+| ``           |                                                                                                                                                              |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``...``      | other parameters to pass to `readindata <#readindata>`__                                                                                                     |
++--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Details
 ~~~~~~~
@@ -194,7 +196,8 @@ Usage
 
    morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, 
        rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"), 
-       colors = NULL, rowAnnotations = NULL, force = FALSE, ...)
+       colors = NULL, rowAnnotations = NULL, force = FALSE, filesuffix = NULL, 
+       ...)
 
 .. _arguments-2:
 
@@ -223,6 +226,8 @@ Arguments
 +----------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``colors``     | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                     |
 +----------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``filesuffix`` | (Optional) suffix for output filename                                                                                                              |
++----------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``...``        | parameters to pass to `readindata <#readindata>`__                                                                                                 |
 +----------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 
@@ -245,11 +250,9 @@ Examples
 
 ::
 
-   ## Not run:
    morphheatmap(datafile = "OTU_table.txt", outdir = "outputs/graphs", 
        mapfile = "mapfile.txt", sampdepth = 25000, taxlevel = c("Family", 
            "seq"), tsvfile = TRUE)
-   ## End(Not run)
 
 .. _source-2:
 
@@ -263,13 +266,6 @@ Source
 
 PCoA plots
 
-.. _description-4:
-
-Description
-~~~~~~~~~~~
-
-PCoA plots
-
 .. _usage-3:
 
 Usage
@@ -279,7 +275,7 @@ Usage
 
    pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, 
        distm = "binomial", filter_species = 0.1, rarefy = FALSE, 
-       colors = NULL, ...)
+       colors = NULL, filesuffix = NULL, ...)
 
 .. _arguments-3:
 
@@ -309,6 +305,8 @@ Arguments
 +------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``colors``       | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                                                    |
 +------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``filesuffix``   | (Optional) suffix for output filename                                                                                                                                             |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``...``          | parameters to pass to `readindata <#readindata>`__                                                                                                                                |
 +------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
@@ -328,13 +326,6 @@ Source
 
 ``rarefactioncurve``
 --------------------
-
-Make rarefaction curve graph
-
-.. _description-5:
-
-Description
-~~~~~~~~~~~
 
 Make rarefaction curve graph
 
@@ -395,13 +386,6 @@ Source
 
 Read in data
 
-.. _description-6:
-
-Description
-~~~~~~~~~~~
-
-Read in data
-
 .. _usage-5:
 
 Usage
@@ -458,7 +442,7 @@ Source
 
 Wrapper for any graph function
 
-.. _description-7:
+.. _description-4:
 
 Description
 ~~~~~~~~~~~
@@ -515,8 +499,6 @@ Examples
 
 ::
 
-   ## Not run:
-
    # example with no optional arguments for running allgraphs
    trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/", 
        "/path/to/inputs/mapfile.txt", "allgraphs")
@@ -535,7 +517,6 @@ Examples
    trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs", 
        "/path/to/inputs/mapfile.txt", "morphheatmap", sampdepth = 30000, 
        filter_level = 0.01, taxlevel = c("Family", "seq"))
-   ## End(Not run)
 
 .. _source-6:
 
@@ -552,7 +533,7 @@ Internal
 
 Rarefaction curve
 
-.. _description-8:
+.. _description-5:
 
 Description
 ~~~~~~~~~~~
@@ -604,22 +585,8 @@ Source
 
 dataviz16s: A package for Nephele 16S pipeline visualization
 
-.. _description-9:
-
-Description
-~~~~~~~~~~~
-
-dataviz16s: A package for Nephele 16S pipeline visualization
-
 ``filterlowabund``
 ------------------
-
-Filter low abundant taxa
-
-.. _description-10:
-
-Description
-~~~~~~~~~~~
 
 Filter low abundant taxa
 
@@ -630,25 +597,28 @@ Usage
 
 ::
 
-   filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
+   filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 
 .. _arguments-8:
 
 Arguments
 ~~~~~~~~~
 
-+-----------+---------------------------------------------------------------------------+
-| Argument  | Description                                                               |
-+===========+===========================================================================+
-| ``amp``   | ampvis2 object                                                            |
-+-----------+---------------------------------------------------------------------------+
-| ``level`` | level at which to filter                                                  |
-+-----------+---------------------------------------------------------------------------+
-| ``persamp | percent of samples which must have taxa in common                         |
-| ``        |                                                                           |
-+-----------+---------------------------------------------------------------------------+
-| ``abs``   | is level an absolute count? if false, will use level as relative percent. |
-+-----------+---------------------------------------------------------------------------+
++-----------+---------------------------------------------------------------------------------------------------+
+| Argument  | Description                                                                                       |
++===========+===================================================================================================+
+| ``amp``   | ampvis2 object                                                                                    |
++-----------+---------------------------------------------------------------------------------------------------+
+| ``level`` | level at which to filter                                                                          |
++-----------+---------------------------------------------------------------------------------------------------+
+| ``persamp | percent of samples which must have taxa in common                                                 |
+| ``        |                                                                                                   |
++-----------+---------------------------------------------------------------------------------------------------+
+| ``abs``   | is level an absolute count? if false, will use level as relative percent.                         |
++-----------+---------------------------------------------------------------------------------------------------+
+| ``toptaxa | number of seqvar to include sorted by max count across all samples; if NULL all will be included. |
+| ``        |                                                                                                   |
++-----------+---------------------------------------------------------------------------------------------------+
 
 .. _value-8:
 
@@ -669,7 +639,7 @@ Source
 
 Format plotly grid code
 
-.. _description-11:
+.. _description-6:
 
 Description
 ~~~~~~~~~~~
@@ -718,13 +688,6 @@ Source
 
 return tables at higher tax level
 
-.. _description-12:
-
-Description
-~~~~~~~~~~~
-
-return tables at higher tax level
-
 .. _usage-10:
 
 Usage
@@ -767,7 +730,7 @@ Source
 
 write log output
 
-.. _description-13:
+.. _description-7:
 
 Description
 ~~~~~~~~~~~
@@ -814,7 +777,7 @@ Source
 
 Add Plotly data export to Plotly graph
 
-.. _description-14:
+.. _description-8:
 
 Description
 ~~~~~~~~~~~
@@ -889,7 +852,7 @@ Source
 
 Print ampvis2 object summary
 
-.. _description-15:
+.. _description-9:
 
 Description
 ~~~~~~~~~~~
@@ -935,7 +898,7 @@ Source
 
 biomformat read_biom
 
-.. _description-16:
+.. _description-10:
 
 Description
 ~~~~~~~~~~~
@@ -972,13 +935,6 @@ biom object
 
 ``save_fillhtml``
 -----------------
-
-Save an HTML object to a file
-
-.. _description-17:
-
-Description
-~~~~~~~~~~~
 
 Save an HTML object to a file
 
@@ -1032,13 +988,6 @@ Source
 
 shortnames for taxonomy
 
-.. _description-18:
-
-Description
-~~~~~~~~~~~
-
-shortnames for taxonomy
-
 .. _usage-16:
 
 Usage
@@ -1079,7 +1028,7 @@ Source
 
 Subset and rarefy OTU table.
 
-.. _description-19:
+.. _description-11:
 
 Description
 ~~~~~~~~~~~

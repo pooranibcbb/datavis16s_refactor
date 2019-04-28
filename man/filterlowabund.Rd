@@ -7,7 +7,8 @@
 [utilities.R](../R/utilities.R)
 }
 \usage{
-filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
+filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE,
+  toptaxa = NULL)
 }
 \arguments{
 \item{amp}{ampvis2 object}
@@ -17,6 +18,9 @@ filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE)
 \item{persamp}{percent of samples which must have taxa in common}
 
 \item{abs}{is level an absolute count? if false, will use level as relative percent.}
+
+\item{toptaxa}{number of seqvar to include sorted by max count across all samples;
+if NULL all will be included.}
 }
 \value{
 filtered ampvis2 object
