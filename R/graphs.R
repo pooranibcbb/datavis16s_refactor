@@ -250,6 +250,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 #' Setting this to 0 may drastically increase computation time.
 #' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.
 #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+#' @param filesuffix (Optional) suffix for output filename
 #' @param ... parameters to pass to  \code{\link{readindata}}
 #'
 #' @return Saves pcoa plots to outdir.
@@ -260,7 +261,7 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 #'
 #' @export
 #'
-pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, ...) {
+pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, filesuffix=NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -286,7 +287,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
   if (!is.null(colors)) pcoa$plot <- pcoa$plot + scale_color_manual(values = colors) + scale_fill_manual(values=colors) + ggtitle(paste("PCoA with", distm, "distance"))
 
   ## save to file
-  outfile <- file.path(outdir, paste0("pcoa_", distm, ".html"))
+  outfile <- file.path(outdir, paste0("pcoa_", distm, filesuffix, ".html"))
   plotlyGrid(pcoa$plot, outfile, data = pcoa$dsites)
   tabletsv <- gsub('.html$', '.txt', outfile)
   logoutput(paste0('Saving ', distm, ' PCoA table to ', tabletsv))
@@ -312,6 +313,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' @param taxlevel vector of taxonomic levels to graph.  must be subset of
 #' c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.
 #' @param colors  (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+#' @param filesuffix (Optional) suffix for output filename
 #' @param ...  parameters to pass to  \code{\link{readindata}}
 #'
 #' @return  Saves heatmaps to outdir.
@@ -332,7 +334,7 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' }
 #'
 #'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, force=FALSE, ...) {
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, force=FALSE, filesuffix=NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -418,7 +420,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 
     ## Save html file
     outdir <- tools::file_path_as_absolute(outdir)
-    outfile <- file.path(outdir, paste0(tl, "_heatmap.html"))
+    outfile <- file.path(outdir, paste0(tl, "_heatmap",filesuffix, ".html"))
     logoutput(paste("Saving plot to", outfile))
     heatmap$width = '100%'
     heatmap$height = '90%'
@@ -459,6 +461,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @param colors colors to use for plots
 #' @param cats categories/columns in mapping file to use as groups.  If NULL (default), will use
 #' all columns starting with TreatmentGroup to (but not including) Description
+#' @param filesuffix (Optional) suffix for output filename
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return Save alpha diversity boxplots to outdir.
@@ -472,7 +475,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @importFrom bpexploder bpexploder
 #' @importFrom htmltools HTML
 #'
-adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, ...) {
+adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, filesuffix=NULL, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -614,12 +617,11 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   logoutput(paste('Sampling depth:', sampdepth), 1)
   cs <- colSums(amp$abund)
   if (max(cs) < sampdepth) {
-    logoutput(paste("The counts for all samples is below the sampling depth of", sampdepth, ", so diversity and PCoA plots will not be made."), 1, type="WARNING")
-    retvalue <- as.integer(1)
+    logoutput(paste("The counts for all samples are below the sampling depth of", sampdepth, ", so diversity and PCoA plots will not be made."), 1, type="WARNING")
     return(retvalue)
   }
 
-  logoutput(paste0('Filter samples below ', sampdepth, ' counts for alpha diversity and PCoA plots'))
+  logoutput(paste0('Filter samples below ', sampdepth, ' counts.'))
   ampsub <- subsetamp(amp, sampdepth=sampdepth, outdir = outdir)
 
   if (nrow(ampsub$metadata) < 3) {
@@ -627,32 +629,43 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
     return(retvalue)
   }
 
+
   ## binomial PCoA
-  logoutput('PCoA plots', 1)
+  logoutput('PCoA plot with binomial distance', 1)
   cmnd <- paste0('pcoaplot(outdir = outdir, amp = ampsub, distm = "binomial", colors = allcols)')
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
+
+
   ## Rarefy table
-  logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads for Bray-Curtis PCoA and alpha diversity.'))
-  ampsub <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=FALSE, printsummary = F)
+  logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads.'), 1)
+  amprare <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=FALSE, printsummary = T)
   logoutput(paste('Saving rarefied OTU Table to ', file.path(outdir, 'rarefied_OTU_table.txt') ))
-  rareotutable <- cbind.data.frame(ampsub$abund, ampsub$tax)
+  rareotutable <- cbind.data.frame(amprare$abund, amprare$tax)
   rareotutable$OTU <- NULL
   write.table(rareotutable, file.path(outdir, 'rarefied_OTU_table.txt'), quote = FALSE, sep = '\t', col.names = NA, na = "")
 
-  ## bray-curtis PCoA
-  logoutput(paste('Normalizing rarefied OTU table to 100 for Bray-Curtis distance.'))
-  ampbc <- subsetamp(ampsub, sampdepth = sampdepth, normalise=TRUE, printsummary = F)
 
-  cmnd <- 'pcoaplot(outdir = outdir, amp = ampbc, distm = "bray", colors = allcols)'
+  logoutput("Making heatmap from rarefied counts.")
+  cmnd <- 'morphheatmap(outdir = outdir, amp = amprare, colors=allcols, filter_level = 5, filesuffix = "_rarefied")'
+  logoutput(cmnd)
+  if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
+
+
+
+  ## bray-curtis PCoA
+  logoutput(paste('Normalizing rarefied OTU table to 100 for Bray-Curtis distance.'), 1)
+  ampbc <- subsetamp(amprare, sampdepth = sampdepth, normalise=TRUE, printsummary = F)
+
+  cmnd <- 'pcoaplot(outdir = outdir, amp = ampbc, distm = "bray", colors = allcols, filesuffix="_rarefied")'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
 
   ## Alpha diversity
   logoutput('Alpha diversity boxplot', 1)
-  cmnd <- 'adivboxplot(outdir = outdir, amp = ampsub, sampdepth = sampdepth, colors = allcols)'
+  cmnd <- 'adivboxplot(outdir = outdir, amp = amprare, sampdepth = sampdepth, colors = allcols)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
