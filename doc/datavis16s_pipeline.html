@@ -33,7 +33,6 @@ code > span.op { color: #006666; font-weight: bold; } /* Operator^ */
 <p>If you do not provide a <code>sampling depth</code>, the default value is <strong>10000</strong>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">ampsub &lt;-<span class="st"> </span><span class="kw">amp_subset_samples</span>(amp, <span class="dt">minreads =</span> sampdepth)
 otu &lt;-<span class="st"> </span><span class="kw">rrarefy</span>(<span class="kw">t</span>(ampsub<span class="op">$</span>abund), sampdepth)
-amprare &lt;-<span class="st"> </span>ampsub
 amprare<span class="op">$</span>abund &lt;-<span class="st"> </span><span class="kw">t</span>(otu)</code></pre>
 <h3 id="heatmap">Heatmap</h3>
 <p>The interactive heatmap is implemented using the <a href="https://github.com/cmap/morpheus.R" target="_blank" rel="noopener noreferrer">morpheus R API</a> developed at the Broad Institute. <a href="https://software.broadinstitute.org/morpheus/documentation.html" target="_blank" rel="noopener noreferrer">Documentation</a> for how to use the heatmap can be found on the <a href="https://software.broadinstitute.org/morpheus/" target="_blank" rel="noopener noreferrer">morpheus website</a>.</p>
@@ -55,7 +54,8 @@ pcoa_bray &lt;-<span class="st"> </span><span class="kw">amp_ordinate</span>(amp
     <span class="dt">detailed_output =</span> <span class="ot">TRUE</span>, <span class="dt">transform =</span> <span class="st">&quot;none&quot;</span>)</code></pre>
 <h3 id="alpha-diversity">Alpha diversity</h3>
 <p>The Shannon diversity and Chao species richness are computed using <a href="https://madsalbertsen.github.io/ampvis2/reference/amp_alphadiv.html" target="_blank" rel="noopener noreferrer">amp_alphadiv</a>. The rarefied counts are used for this computation. The diversity values are saved in <em>alphadiv.txt</em>, and boxplots are output to <em>alphadiv.html</em>. At least 3 samples are needed to produce these plots.</p>
-<pre class="sourceCode r"><code class="sourceCode r">alphadiv &lt;-<span class="st"> </span><span class="kw">amp_alphadiv</span>(amprare, <span class="dt">measure =</span> <span class="st">&quot;shannon&quot;</span>, <span class="dt">richness =</span> <span class="ot">TRUE</span>, <span class="dt">rarefy =</span> sampdepth)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">alphadiv &lt;-<span class="st"> </span><span class="kw">amp_alphadiv</span>(amprare, <span class="dt">measure =</span> <span class="st">&quot;shannon&quot;</span>, <span class="dt">richness =</span> <span class="ot">TRUE</span>, 
+    <span class="dt">rarefy =</span> sampdepth)</code></pre>
 <h2 id="output-files">Output Files</h2>
 <p>Complete descriptions of the output files can be found in the <a href="#plots">Plots section above</a>. To learn how to edit the plots, see the <a href="{{ url_for('show_tutorials') }}">visualization tutorial</a>.</p>
 <ul>
@@ -83,6 +83,6 @@ Sievert C, Parmer C, Hocking T, Chamberlain S, Ram K, Corvellec M and Despouy P 
 McMurdie PJ and Paulson JN (2016). <em>biomformat: An interface package for the BIOM file format</em>. <a href="https://github.com/joey711/biomformat/" target="_blank" rel="noopener noreferrer">https://github.com/joey711/biomformat/</a>.
 </p>
 <p>
-Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O'Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019). <em>vegan: Community Ecology Package</em>. R package version 2.5-4, &lt;a href="<a href="https://CRAN.R-project.org/package=vegan" class="uri">https://CRAN.R-project.org/package=vegan</a>" target="_blank" rel="noopener noreferrer&gt;https://CRAN.R-project.org/package=vegan</a>.
+Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O'Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019). <em>vegan: Community Ecology Package</em>. R package version 2.5-4, <a href="https://CRAN.R-project.org/package=vegan" target="_blank" rel="noopener noreferrer">https://CRAN.R-project.org/package=vegan</a>.
 </p>
 {% endblock %}

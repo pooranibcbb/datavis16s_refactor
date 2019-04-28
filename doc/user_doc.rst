@@ -1,6 +1,6 @@
 
-16S Visualization Pipeline
-==========================
+User docs
+=========
 
 -  `ampvis2 and Plotly <#ampvis2-and-plotly>`__
 -  `Plots <#plots>`__
@@ -37,7 +37,6 @@ If you do not provide a ``sampling depth``, the default value is **10000**.
 
    ampsub <- amp_subset_samples(amp, minreads = sampdepth)
    otu <- rrarefy(t(ampsub$abund), sampdepth)
-   amprare <- ampsub
    amprare$abund <- t(otu)
 
 Heatmap
@@ -79,7 +78,8 @@ The Shannon diversity and Chao species richness are computed using `amp_alphadiv
 
 .. code:: r
 
-   alphadiv <- amp_alphadiv(amprare, measure = "shannon", richness = TRUE, rarefy = sampdepth)
+   alphadiv <- amp_alphadiv(amprare, measure = "shannon", richness = TRUE, 
+       rarefy = sampdepth)
 
 Output Files
 ------------
@@ -143,7 +143,7 @@ McMurdie PJ and Paulson JN (2016). biomformat: An interface package for the BIOM
 
    <p>
 
-Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O’Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019). vegan: Community Ecology Package. R package version 2.5-4, <a href=“https://CRAN.R-project.org/package=vegan” target=“\_blank” rel="noopener noreferrer>https://CRAN.R-project.org/package=vegan.
+Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O’Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019). vegan: Community Ecology Package. R package version 2.5-4, https://CRAN.R-project.org/package=vegan.
 
 .. raw:: html
 
