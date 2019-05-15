@@ -641,10 +641,11 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   ## Rarefy table
   logoutput(paste('Rarefying OTU Table to ', sampdepth, 'reads.'), 1)
   amprare <- subsetamp(ampsub, sampdepth = sampdepth, rarefy = TRUE, normalise=FALSE, printsummary = T)
-  logoutput(paste('Saving rarefied OTU Table to ', file.path(outdir, 'rarefied_OTU_table.txt') ))
+  rareotutablefile <-  file.path(outdir, paste0('rarefied_OTU_table_', sampdepth, '.txt'))
+  logoutput(paste('Saving rarefied OTU Table to ',   rareotutablefile ))
   rareotutable <- cbind.data.frame(amprare$abund, amprare$tax)
   rareotutable$OTU <- NULL
-  write.table(rareotutable, file.path(outdir, 'rarefied_OTU_table.txt'), quote = FALSE, sep = '\t', col.names = NA, na = "")
+  write.table(rareotutable, rareotutablefile , quote = FALSE, sep = '\t', col.names = NA, na = "")
 
 
   logoutput("Making heatmap from rarefied counts.")
