@@ -339,3 +339,22 @@ read_biom <- function (biom_file)
   return(biomformat::biom(x))
 }
 
+#' Log base 10 + 1 scale
+#'
+#' @description Transformation which computes \code{log10(x+1)} scale
+#'
+#' @name log10scale
+#'
+#' @param breaks default breaks for transformation.  could be \code{ybreaks}
+#'
+#' @return \code{log10p} returns a scales tranformation object
+#'
+#' @details \code{log10p} is for use with ggplot2 \code{trans} argument in scale function.
+#'
+log10p_trans <- function() {
+  br <- function(x) {
+    x <- x+1
+    return(round(scales::log_breaks()(x)))
+  }
+  scales::trans_new("log10p", function(x) log10(x+1) , function(x) (10^(x) - 1), domain = c(0, Inf), format=scales::format_format(digits=4), breaks = br)
+}
