@@ -503,7 +503,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 
   divplots <- function(adiv, col, colors) {
     if (col == "TreatmentGroup") {
-      lc <- colors
+      lc <- colors[1:length(unique(adiv$TreatmentGroup))]
     } else {
       lc <- NULL
     }
