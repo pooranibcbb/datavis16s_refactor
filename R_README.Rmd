@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, eval=FALSE, tidy = TRUE, tidy.opts = list(wid
 
 R package for graphs for Nephele 16S pipelines.
 
-### Usage
+## Usage
 - **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
 - **Nephele User docs:** [sphinx](doc/user_doc.rst) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
 -   There are 4 main functions for making graphs: `adivboxplot`,
@@ -62,7 +62,7 @@ R package for graphs for Nephele 16S pipelines.
 instead of the biom file. See [`readindata`][doc/Reference_Manual_datavis16s.md#readindata] for
 more details.
 
-#### Outputs
+### Outputs
 - `trygraphwrapper` creates a subdirectory "graphs" in output
 directory, and passes that as the output directory to the individual
 functions. The individual graph functions just use the specified output
@@ -73,7 +73,7 @@ doc](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s
 for more info.
 
 
-### Dependencies
+## Dependencies
 
 -   For the Nephele AMI, debian package libxml2-dev is needed.
 -   Requires [rpy2](https://rpy2.bitbucket.io) to use with python.
@@ -89,7 +89,7 @@ for more info.
     source("scripts/build.R")
     ```
 
-### Installation
+## Installation
 
 -   You can install this package, datavis16s, with devtools within R
     from a locally cloned repository (may need to change directory):
