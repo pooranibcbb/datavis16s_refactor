@@ -53,13 +53,14 @@ R package for graphs for Nephele 16S pipelines.
 
 -   Requires [rpy2](https://rpy2.bitbucket.io) to use with python.
 
--   To install all R dependencies, run the commands in [dependencies.R](scripts/dependencies.R). You may need to change the path to the datavis16s directory.
+-   To install all R dependencies, run the commands in [dependencies.R](scripts/datavis16s_dependencies.R). You may need to change the path to the datavis16s directory.
 
 -   To build the package along with the user and package documentation, run the commands in [build.R](scripts/build.R). This will produce the standard man files for within-R help, as well as the [package manual](doc/Reference_Manual_datavis16s.md) and the [user docs](doc/user_doc.rst)
 
     ``` r
     source("scripts/build.R")
     ```
+- See [Tools and References](doc/user_doc.md#tools-and-references) in the user doc for dependency citations.
 
 ## Installation
 

@@ -4,7 +4,7 @@ panflute-path: '/Users/subramanianp4/git/nephele2/resources/Rdocs'
 panflute-filters: [addlinkattr]
 output:
   html_document:
-    md_extensions: +raw_html-smart
+    md_extensions: +raw_html-smart+fenced_code_attributes+fenced_divs
     smart: false  
     mathjax: null
     section_divs: false
@@ -15,7 +15,7 @@ output:
     toc: true
     toc_depth: 2
   md_document:
-    variant: markdown_github-ascii_identifiers+link_attributes
+    variant: markdown_github+link_attributes
     toc: true
     toc_depth: 2
 ---
@@ -25,9 +25,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE)
 ```
 
+The 16S visualization pipeline runs automatically at the end of Nephele's 16S amplicon pipelines and produces some basic plots for rarefaction, alpha and beta diversity and heatmaps of taxonomic composition.  For additional visualizations and more fine-grained diversity analysis, please see our separate <a class="" href="{{ url_for('show_pipes_guide', _anchor='da_pipes') }}">downstream analysis (*DA*) pipeline</a>.
+
+::::: {.mt-5 .mb-5}
 ## ampvis2 and Plotly
 Nephele uses the [ampvis2 R package](https://madsalbertsen.github.io/ampvis2/) v2.3.2 for statistical computation.  We also make use of the [Plotly R interface](https://plot.ly/r/) for the [plotly.js](https://plot.ly) charting library.  The plots can be minimally edited interactively.  However, they also have a link to export the data to the [Plotly Chart Studio](https://plot.ly/online-chart-maker/) which allows for [making a variety of charts](https://help.plot.ly/tutorials/).  We have a tutorial for <a href="{{ url_for('show_tutorials') }}">making simple edits to the plots here</a>.
+:::::
 
+::::: {.mt-5 .mb-5}
 ## Plots
 ### Rarefaction Curve
 The rarefaction curves are made with the [amp_rarecurve](https://madsalbertsen.github.io/ampvis2/reference/amp_rarecurve.html) function.  The table is written to *rarecurve.txt* and the plot to *rarecurve.html*.
@@ -75,7 +80,9 @@ The Shannon diversity and Chao species richness are computed using [amp_alphadiv
 ```{r}
 alphadiv <- amp_alphadiv(amprare, measure="shannon", richness = TRUE, rarefy = sampdepth)
 ```
+:::::
 
+::::: {.mt-5 .mb-5}
 ## Output Files
 Complete descriptions of the output files can be found in the [Plots section above](#plots).  To learn how to edit the plots, see the <a href="{{ url_for('show_tutorials') }}">visualization tutorial</a>.
 
@@ -88,12 +95,16 @@ Complete descriptions of the output files can be found in the [Plots section abo
 - *rarefied_OTU_table.txt*: rarefied OTU table used for Bray-Curtis PCoA and alpha diversity plots
 - *alphadiv.html*: alpha diversity boxplots
 - *alphadiv.txt*: tabular data used to make the alpha diversity plots
+:::::
 
-
+::::: {.mt-5 .mb-5}
 ## Tools and References
-<p>M A, SM K, AS Z, RH K and PH N (2015). "Back to Basics - The Influence of DNA Extraction and Primer Choice on Phylogenetic Analysis of Activated Sludge Communities." <em>PLoS ONE</em>, <b>10</b>(7), pp. e0132783. <a href="http://dx.plos.org/10.1371/journal.pone.0132783" target="_blank" rel="noopener noreferrer">http://dx.plos.org/10.1371/journal.pone.0132783</a>.</p>
-<p>Gould J (2018). <em>morpheus: Interactive heat maps using 'morpheus.js' and 'htmlwidgets'</em>. R package version 0.1.1.1, <a href="https://github.com/cmap/morpheus.R" target="_blank" rel="noopener noreferrer">https://github.com/cmap/morpheus.R</a>.</p>
-<p>Sievert C, Parmer C, Hocking T, Chamberlain S, Ram K, Corvellec M and Despouy P (2017). <em>plotly: Create Interactive Web Graphics via 'plotly.js'</em>. R package version 4.7.1, <a href="https://CRAN.R-project.org/package=plotly" target="_blank" rel="noopener noreferrer">https://CRAN.R-project.org/package=plotly</a>.</p>
+<p>Andersen KS, Kirkegaard RH, Karst SM, Albertsen M (2018). "ampvis2: an R package to analyse and visualise 16S rRNA amplicon data."  <em>bioRxiv</em>. doi:<a href="http://dx.plos.org/10.1371/journal.pone.0132783">10.1371/journal.pone.0132783</a>.</p>
+<p>Gould J (2019). <em>morpheus: Interactive heat maps using 'morpheus.js' and 'htmlwidgets'</em>. R package version 0.1.1.1, <a href="https://github.com/cmap/morpheus.R">https://github.com/cmap/morpheus.R</a>.</p>
 <p>McMurdie PJ and Paulson JN (2016). <em>biomformat: An interface package for the BIOM file format</em>. <a href="https://github.com/joey711/biomformat/" target="_blank" rel="noopener noreferrer">https://github.com/joey711/biomformat/</a>.</p>
 <p>Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O'Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019).  <em>vegan: Community Ecology Package</em>.
 R package version 2.5-4, <a href="https://CRAN.R-project.org/package=vegan" target="_blank" rel="noopener noreferrer">https://CRAN.R-project.org/package=vegan</a>.</p>
+<p>Sievert C (2018). <em>plotly for R</em>. <a href="https://plotly-r.com">https://plotly-r.com</a>.</p>
+<p>White H (2018). <em>bpexploder: Because Everybody Likes an Exploding Boxplot Now and Then</em>.
+R package version 0.1, <a href="https://github.com/homerhanumat/bpexploder">https://github.com/homerhanumat/bpexploder</a>.</p>
+:::::

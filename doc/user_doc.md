@@ -1,10 +1,7 @@
 User docs
 ================
 
--   [ampvis2 and Plotly](#ampvis2-and-plotly)
--   [Plots](#plots)
--   [Output Files](#output-files)
--   [Tools and References](#tools-and-references)
+The 16S visualization pipeline runs automatically at the end of Nephele’s 16S amplicon pipelines and produces some basic plots for rarefaction, alpha and beta diversity and heatmaps of taxonomic composition. For additional visualizations and more fine-grained diversity analysis, please see our separate <a class="" href="{{ url_for('show_pipes_guide', _anchor='da_pipes') }}">downstream analysis (*DA*) pipeline</a>.
 
 ## ampvis2 and Plotly
 
@@ -89,17 +86,20 @@ Complete descriptions of the output files can be found in the [Plots section abo
 ## Tools and References
 
 <p>
-M A, SM K, AS Z, RH K and PH N (2015). “Back to Basics - The Influence of DNA Extraction and Primer Choice on Phylogenetic Analysis of Activated Sludge Communities.” <em>PLoS ONE</em>, <b>10</b>(7), pp. e0132783. <a href="http://dx.plos.org/10.1371/journal.pone.0132783" target="_blank" rel="noopener noreferrer">http://dx.plos.org/10.1371/journal.pone.0132783</a>.
+Andersen KS, Kirkegaard RH, Karst SM, Albertsen M (2018). “ampvis2: an R package to analyse and visualise 16S rRNA amplicon data.” <em>bioRxiv</em>. doi:<a href="http://dx.plos.org/10.1371/journal.pone.0132783">10.1371/journal.pone.0132783</a>.
 </p>
 <p>
-Gould J (2018). <em>morpheus: Interactive heat maps using ‘morpheus.js’ and ‘htmlwidgets’</em>. R package version 0.1.1.1, <a href="https://github.com/cmap/morpheus.R" target="_blank" rel="noopener noreferrer">https://github.com/cmap/morpheus.R</a>.
-</p>
-<p>
-Sievert C, Parmer C, Hocking T, Chamberlain S, Ram K, Corvellec M and Despouy P (2017). <em>plotly: Create Interactive Web Graphics via ‘plotly.js’</em>. R package version 4.7.1, <a href="https://CRAN.R-project.org/package=plotly" target="_blank" rel="noopener noreferrer">https://CRAN.R-project.org/package=plotly</a>.
+Gould J (2019). <em>morpheus: Interactive heat maps using ‘morpheus.js’ and ‘htmlwidgets’</em>. R package version 0.1.1.1, <a href="https://github.com/cmap/morpheus.R">https://github.com/cmap/morpheus.R</a>.
 </p>
 <p>
 McMurdie PJ and Paulson JN (2016). <em>biomformat: An interface package for the BIOM file format</em>. <a href="https://github.com/joey711/biomformat/" target="_blank" rel="noopener noreferrer">https://github.com/joey711/biomformat/</a>.
 </p>
 <p>
 Oksanen J, Blanchet FG, Friendly M, Kindt R, Legendre P, McGlinn D, Minchin PR, O’Hara RB, Simpson GL, Solymos P, Stevens MHH, Szoecs E, Wagner H (2019). <em>vegan: Community Ecology Package</em>. R package version 2.5-4, <a href="https://CRAN.R-project.org/package=vegan" target="_blank" rel="noopener noreferrer">https://CRAN.R-project.org/package=vegan</a>.
+</p>
+<p>
+Sievert C (2018). <em>plotly for R</em>. <a href="https://plotly-r.com">https://plotly-r.com</a>.
+</p>
+<p>
+White H (2018). <em>bpexploder: Because Everybody Likes an Exploding Boxplot Now and Then</em>. R package version 0.1, <a href="https://github.com/homerhanumat/bpexploder">https://github.com/homerhanumat/bpexploder</a>.
 </p>
