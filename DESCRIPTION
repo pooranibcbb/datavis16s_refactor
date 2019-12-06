@@ -8,11 +8,11 @@ Authors@R:
            role = c("aut", "cre"),
            email = "poorani.subramanian@nih.gov")
 Description: betterbetterplots!
-License: none
+License: file LICENSE
 URL: 
     https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
 Depends: 
-    R (>= 3.4.1)
+    R (>= 3.4.0)
 Imports: 
     ampvis2,
     biomformat,
@@ -26,6 +26,7 @@ Imports:
     plotly,
     RColorBrewer,
     rmarkdown,
+    scales,
     shiny,
     stringr,
     vegan
@@ -33,4 +34,4 @@ Suggests:
     testthat
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0

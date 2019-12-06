@@ -188,39 +188,3 @@ save_fillhtml <- function (html, file, background = "white", libdir = "lib", bod
   writeLines(html, file, useBytes = TRUE)
 }
 
-
-#' #' @title Add Plotly data export to generic htmlwidget
-#' #'
-#' #' @description \code{nonplotlyGrid} takes in an htmlwidget.
-#' #'
-#' #' @param hw htmlwidget
-#' #' @param jquery should we load jquery
-#' #'
-#' #' @importFrom htmlwidgets prependContent saveWidget
-#' #'
-#' #' @rdname plotlyGrid
-#' #'
-#' nonplotlyGrid <- function(hw, filename, data, jquery = FALSE, title=NULL, outlib="lib") {
-#'
-#'   list2env(gridCode(data), envir=environment())
-#'
-#'   if (jquery){
-#'     hw <- prependContent(hw, jq)
-#'     selfcontained = FALSE
-#'   } else {
-#'     selfcontained = TRUE
-#'   }
-#'   hw <- prependContent(hw, html)
-#'   hw <- prependContent(hw,javascript)
-#'
-#'   if (is.null(title)) {
-#'     title <- tools::file_path_sans_ext(basename(filename))
-#'   }
-#'
-#'   outfile <- file.path(tools::file_path_as_absolute(dirname(filename)), basename(filename))
-#'   outlib <- file.path(dirname(outfile), basename(outlib))
-#'
-#'
-#'   logoutput(paste("Saving plot to", outfile))
-#'   saveWidget(hw, file= outfile, selfcontained = selfcontained, title = title, libdir=outlib)
-#' }

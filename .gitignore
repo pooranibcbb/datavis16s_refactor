@@ -3,3 +3,4 @@
 .RData
 testdata/
 check/
+scripts/test.R

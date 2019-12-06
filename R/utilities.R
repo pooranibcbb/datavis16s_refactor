@@ -290,7 +290,7 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
 
 #' biomformat read_biom
 #'
-#' @param biom_file
+#' @param biom_file input biom file name
 #'
 #' @return biom object
 #'
@@ -344,8 +344,6 @@ read_biom <- function (biom_file)
 #' @description Transformation which computes \code{log10(x+1)} scale
 #'
 #' @name log10scale
-#'
-#' @param breaks default breaks for transformation.  could be \code{ybreaks}
 #'
 #' @return \code{log10p} returns a scales tranformation object
 #'

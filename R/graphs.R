@@ -313,6 +313,9 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' @param taxlevel vector of taxonomic levels to graph.  must be subset of
 #' c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.
 #' @param colors  (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+#' @param rowAnnotations (Optional) Row annotations to be used in addition to taxonomy.
+#' @param force Force "seq" level heatmap to be made even if number of seqs is greater than 2000. '
+#' See Details.
 #' @param filesuffix (Optional) suffix for output filename
 #' @param ...  parameters to pass to  \code{\link{readindata}}
 #'
@@ -320,7 +323,8 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 #' @export
 #'
 #' @details For the \code{taxlevel} parameter, each level is made into a separate heatmap.  "seq" makes
-#'  the heatmap with no collapsing of taxonomic levels.
+#'  the heatmap with no collapsing of taxonomic levels if there are fewer than 2000 ASVs/OTUs.  Otherwise,
+#'  Species level is made instead.
 #'
 #' @importFrom morpheus morpheus
 #' @importFrom grDevices colorRampPalette
