@@ -7,10 +7,21 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"),
-  colors = NULL, rowAnnotations = NULL, force = FALSE,
-  filesuffix = NULL, ...)
+morphheatmap(
+  datafile,
+  outdir,
+  mapfile,
+  amp = NULL,
+  sampdepth = NULL,
+  rarefy = FALSE,
+  filter_level = NULL,
+  taxlevel = c("seq"),
+  colors = NULL,
+  rowAnnotations = NULL,
+  force = FALSE,
+  filesuffix = NULL,
+  ...
+)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
@@ -32,6 +43,11 @@ c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  
 
 \item{colors}{(Optional) color vector - length equal to number of TreatmentGroups in mapfile}
 
+\item{rowAnnotations}{(Optional) Row annotations to be used in addition to taxonomy.}
+
+\item{force}{Force "seq" level heatmap to be made even if number of seqs is greater than 2000. '
+See Details.}
+
 \item{filesuffix}{(Optional) suffix for output filename}
 
 \item{...}{parameters to pass to  \code{\link{readindata}}}
@@ -45,7 +61,8 @@ using relative abundances.
 }
 \details{
 For the \code{taxlevel} parameter, each level is made into a separate heatmap.  "seq" makes
- the heatmap with no collapsing of taxonomic levels.
+ the heatmap with no collapsing of taxonomic levels if there are fewer than 2000 ASVs/OTUs.  Otherwise,
+ Species level is made instead.
 }
 \examples{
 \dontrun{

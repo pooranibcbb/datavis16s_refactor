@@ -5,19 +5,19 @@ library(Rd2md)
 Sys.setenv(PATH=paste(Sys.getenv("PATH"), "/Users/subramanianp4/Library/Python/3.7/bin", sep=":"))
 
 # Build package ----------------------------------------------------------------------------------
-# document(roclets=c('rd', 'collate', 'namespace'))
-# devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
-#
-# ## Imported packages - can check DESCRIPTION
-# ns <- scan("NAMESPACE", sep="\n", what = character())
-# importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
-#
-#
-# ## update description
-# desc::desc_set(Date=format(Sys.time(), format = "%F %T UTC", tz="GMT"), normalize=TRUE)
-# deptable <- desc::desc_get_deps()
-# # deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
-# desc::desc_set_deps(deptable, normalize = TRUE)
+document(roclets=c('rd', 'collate', 'namespace'))
+devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
+
+## Imported packages - can check DESCRIPTION
+ns <- scan("NAMESPACE", sep="\n", what = character())
+importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
+
+
+## update description
+desc::desc_set(Date=format(Sys.time(), format="%F"), normalize=TRUE)
+deptable <- desc::desc_get_deps()
+# deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
+desc::desc_set_deps(deptable, normalize = TRUE)
 
 
 # Documentation --------------------------------
@@ -43,7 +43,7 @@ title: 'R Package datavis16s'
 author: 'Poorani Subramanian'
 output:
   md_document:
-    variant: markdown_github-ascii_identifiers+link_attributes+pipe_tables
+    variant: markdown_github+link_attributes+pipe_tables
     toc_depth: 3
     toc: true
 ---
@@ -66,25 +66,20 @@ file.remove(Rmdfile)
 
 # User docs ---------------------------------------------------------------
 
-userRmd <- "doc/user_doc.Rmd"
-mdfile <- "doc/user_doc.md"
-oops <- myoutputoptions
-oops$pandoc_args <- c(oops$pandoc_args, "-M", "title=User docs")
-render(userRmd, output_format = "md_document", output_options = oops)
+# userRmd <- "doc/user_doc.Rmd"
+# mdfile <- "doc/user_doc.md"
+# oops <- myoutputoptions
+# oops$pandoc_args <- c(oops$pandoc_args, "-M", "title=User docs")
+# render(userRmd, output_format = "md_document", output_options = oops)
 
 
 # render("doc/user_doc.Rmd", output_format = "html_document", output_file = "datavis16s_pipeline.html", output_options=list(pandoc_args = c("--ascii", "-F", "panflute"))
 # htmlfile <- readLines("doc/datavis16s_pipeline.html")
 # htmlfile <- sapply(htmlfile, clean_pandoc2_highlight_tags)
 # writeLines(htmlfile, "doc/datavis16s_pipeline.html")
-remove.file("doc/user_doc.md.bak")
+# remove.file("doc/user_doc.md.bak")
 
 
-
-# README ------------------------------------------------------------------
-
-rmarkdown::render("R_README.Rmd", output_options=myoutputoptions, output_file = "README.md")
-remove.file("README.md.bak")
 
 
 

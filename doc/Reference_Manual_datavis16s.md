@@ -17,6 +17,7 @@ Poorani Subramanian
     -   [`filterlowabund`](#filterlowabund)
     -   [`gridCode`](#gridcode)
     -   [`highertax`](#highertax)
+    -   [`log10scale`](#log10scale)
     -   [`logoutput`](#logoutput)
     -   [`plotlyGrid`](#plotlygrid)
     -   [`print_ampvis2`](#print_ampvis2)
@@ -27,22 +28,22 @@ Poorani Subramanian
 
 <!-- toc -->
 
-October 13, 2019
+December 06, 2019
 
 ## DESCRIPTION
 
     Package: datavis16s
     Title: Graphs for Nephele 16S Pipelines
     Version: 0.1.2
-    Date: 2019-04-28 18:25:21 UTC
+    Date: 2019-12-06
     Authors@R (parsed):
         * Poorani Subramanian <poorani.subramanian@nih.gov> [aut, cre]
     Description: betterbetterplots!
-    License: none
+    License: file LICENSE
     URL:
         https://github.niaid.nih.gov/bcbb/nephele2/tree/master/pipelines/datavis16s
     Depends:
-        R (>= 3.4.1)
+        R (>= 3.4.0)
     Imports:
         ampvis2,
         biomformat,
@@ -56,6 +57,7 @@ October 13, 2019
         plotly,
         RColorBrewer,
         rmarkdown,
+        scales,
         shiny,
         stringr,
         vegan
@@ -63,7 +65,7 @@ October 13, 2019
         testthat
     Encoding: UTF-8
     LazyData: true
-    RoxygenNote: 6.1.1
+    RoxygenNote: 7.0.0
 
 ## Exported
 
@@ -78,8 +80,17 @@ Plots exploding boxplot of shannon diversity and Chao species richness. If sampl
 #### Usage
 
 ``` r
-adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  colors = NULL, cats = NULL, filesuffix = NULL, ...)
+adivboxplot(
+  datafile,
+  outdir,
+  mapfile,
+  amp = NULL,
+  sampdepth = NULL,
+  colors = NULL,
+  cats = NULL,
+  filesuffix = NULL,
+  ...
+)
 ```
 
 #### Arguments
@@ -153,31 +164,44 @@ Creates heatmaps using Morpheus R API <https://software.broadinstitute.org/morph
 #### Usage
 
 ``` r
-morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"),
-  colors = NULL, rowAnnotations = NULL, force = FALSE,
-  filesuffix = NULL, ...)
+morphheatmap(
+  datafile,
+  outdir,
+  mapfile,
+  amp = NULL,
+  sampdepth = NULL,
+  rarefy = FALSE,
+  filter_level = NULL,
+  taxlevel = c("seq"),
+  colors = NULL,
+  rowAnnotations = NULL,
+  force = FALSE,
+  filesuffix = NULL,
+  ...
+)
 ```
 
 #### Arguments
 
-| Argument       | Description                                                                                                                                        |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `datafile`     | full path to input OTU file (biom or see [readindata](#readindata) )                                                                               |
-| `outdir`       | full path to output directory                                                                                                                      |
-| `mapfile`      | full path to mapping file                                                                                                                          |
-| `amp`          | (Optional) ampvis2 object. may be specified instead of mapfile and datafile                                                                        |
-| `sampdepth`    | sampling depth                                                                                                                                     |
-| `rarefy`       | Logical. Rarefy the OTU table if sampdepth is specified.                                                                                           |
-| `filter_level` | minimum abundance to show in the heatmap                                                                                                           |
-| `taxlevel`     | vector of taxonomic levels to graph. must be subset of c(“Kingdom”, “Phylum”, “Class”, “Order”, “Family”, “Genus”, “Species”, “seq”). See Details. |
-| `colors`       | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                     |
-| `filesuffix`   | (Optional) suffix for output filename                                                                                                              |
-| `...`          | parameters to pass to [`readindata`](#readindata)                                                                                                  |
+| Argument         | Description                                                                                                                                        |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `datafile`       | full path to input OTU file (biom or see [readindata](#readindata) )                                                                               |
+| `outdir`         | full path to output directory                                                                                                                      |
+| `mapfile`        | full path to mapping file                                                                                                                          |
+| `amp`            | (Optional) ampvis2 object. may be specified instead of mapfile and datafile                                                                        |
+| `sampdepth`      | sampling depth                                                                                                                                     |
+| `rarefy`         | Logical. Rarefy the OTU table if sampdepth is specified.                                                                                           |
+| `filter_level`   | minimum abundance to show in the heatmap                                                                                                           |
+| `taxlevel`       | vector of taxonomic levels to graph. must be subset of c(“Kingdom”, “Phylum”, “Class”, “Order”, “Family”, “Genus”, “Species”, “seq”). See Details. |
+| `colors`         | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                     |
+| `rowAnnotations` | (Optional) Row annotations to be used in addition to taxonomy.                                                                                     |
+| `force`          | Force “seq” level heatmap to be made even if number of seqs is greater than 2000. ’ See Details.                                                   |
+| `filesuffix`     | (Optional) suffix for output filename                                                                                                              |
+| `...`            | parameters to pass to [`readindata`](#readindata)                                                                                                  |
 
 #### Details
 
-For the `taxlevel` parameter, each level is made into a separate heatmap. “seq” makes the heatmap with no collapsing of taxonomic levels.
+For the `taxlevel` parameter, each level is made into a separate heatmap. “seq” makes the heatmap with no collapsing of taxonomic levels if there are fewer than 2000 ASVs/OTUs. Otherwise, Species level is made instead.
 
 #### Value
 
@@ -201,9 +225,19 @@ PCoA plots
 #### Usage
 
 ``` r
-pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  distm = "binomial", filter_species = 0.1, rarefy = FALSE,
-  colors = NULL, filesuffix = NULL, ...)
+pcoaplot(
+  datafile,
+  outdir,
+  mapfile,
+  amp = NULL,
+  sampdepth = NULL,
+  distm = "binomial",
+  filter_species = 0.1,
+  rarefy = FALSE,
+  colors = NULL,
+  filesuffix = NULL,
+  ...
+)
 ```
 
 #### Arguments
@@ -237,8 +271,16 @@ Make rarefaction curve graph
 #### Usage
 
 ``` r
-rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
-  cat = "TreatmentGroup", stepsize = 1000, ...)
+rarefactioncurve(
+  datafile,
+  outdir,
+  mapfile,
+  amp = NULL,
+  colors = NULL,
+  cat = "TreatmentGroup",
+  stepsize = 1000,
+  ...
+)
 ```
 
 #### Arguments
@@ -304,8 +346,16 @@ This is a wrapper for any of the graph functions meant to be called using rpy2 i
 #### Usage
 
 ``` r
-trygraphwrapper(datafile, outdir, mapfile, FUN,
-  logfilename = "logfile.txt", info = TRUE, tsvfile = FALSE, ...)
+trygraphwrapper(
+  datafile,
+  outdir,
+  mapfile,
+  FUN,
+  logfilename = "logfile.txt",
+  info = TRUE,
+  tsvfile = FALSE,
+  ...
+)
 ```
 
 #### Arguments
@@ -394,8 +444,7 @@ Filter low abundant taxa
 #### Usage
 
 ``` r
-filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE,
-  toptaxa = NULL)
+filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 ```
 
 #### Arguments
@@ -472,6 +521,28 @@ ampvis2 object with otu table and taxa summed up to the taxlevel
 
 [utilities.R](../R/utilities.R)
 
+### `log10scale`
+
+Log base 10 + 1 scale
+
+#### Description
+
+Transformation which computes `log10(x+1)` scale
+
+#### Usage
+
+``` r
+log10p_trans()
+```
+
+#### Details
+
+`log10p` is for use with ggplot2 `trans` argument in scale function.
+
+#### Value
+
+`log10p` returns a scales tranformation object
+
 ### `logoutput`
 
 write log output
@@ -514,10 +585,16 @@ All functions create an output html plot with link which sends the data to a gri
 #### Usage
 
 ``` r
-plotlyGrid(pplot, filename, data = NULL, title = NULL,
-  outlib = "lib")
-htmlGrid(ht, filename, data, jquery = FALSE, title = NULL,
-  outlib = "lib", styletags = NULL)
+plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
+htmlGrid(
+  ht,
+  filename,
+  data,
+  jquery = FALSE,
+  title = NULL,
+  outlib = "lib",
+  styletags = NULL
+)
 ```
 
 #### Arguments
@@ -589,9 +666,9 @@ read_biom(biom_file)
 
 #### Arguments
 
-| Argument    | Description |
-|-------------|-------------|
-| `biom_file` |             |
+| Argument    | Description          |
+|-------------|----------------------|
+| `biom_file` | input biom file name |
 
 #### Value
 
@@ -604,8 +681,7 @@ Save an HTML object to a file
 #### Usage
 
 ``` r
-save_fillhtml(html, file, background = "white", libdir = "lib",
-  bodystyle = "")
+save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 ```
 
 #### Arguments
@@ -661,8 +737,14 @@ Subset and/or rarefy OTU table.
 #### Usage
 
 ``` r
-subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T,
-  outdir = NULL, ...)
+subsetamp(
+  amp,
+  sampdepth = NULL,
+  rarefy = FALSE,
+  printsummary = T,
+  outdir = NULL,
+  ...
+)
 ```
 
 #### Arguments

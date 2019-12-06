@@ -1,7 +1,7 @@
 Package: datavis16s
 Title: Graphs for Nephele 16S Pipelines
 Version: 0.1.2
-Date: 2019-04-28 18:25:21 UTC
+Date: 2019-12-06
 Authors@R: 
     person(given = "Poorani",
            family = "Subramanian",

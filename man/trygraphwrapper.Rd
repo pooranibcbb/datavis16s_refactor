@@ -7,8 +7,16 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-trygraphwrapper(datafile, outdir, mapfile, FUN,
-  logfilename = "logfile.txt", info = TRUE, tsvfile = FALSE, ...)
+trygraphwrapper(
+  datafile,
+  outdir,
+  mapfile,
+  FUN,
+  logfilename = "logfile.txt",
+  info = TRUE,
+  tsvfile = FALSE,
+  ...
+)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or txt, see \link{readindata} for format of txt file)}

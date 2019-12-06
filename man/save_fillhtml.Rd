@@ -7,8 +7,7 @@
 [plotlyGrid.R](../R/plotlyGrid.R)
 }
 \usage{
-save_fillhtml(html, file, background = "white", libdir = "lib",
-  bodystyle = "")
+save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 }
 \arguments{
 \item{html}{HTML content to print}

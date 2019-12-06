@@ -7,8 +7,7 @@
 [utilities.R](../R/utilities.R)
 }
 \usage{
-filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE,
-  toptaxa = NULL)
+filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 }
 \arguments{
 \item{amp}{ampvis2 object}

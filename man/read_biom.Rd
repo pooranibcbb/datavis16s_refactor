@@ -7,7 +7,7 @@
 read_biom(biom_file)
 }
 \arguments{
-\item{biom_file}{}
+\item{biom_file}{input biom file name}
 }
 \value{
 biom object
