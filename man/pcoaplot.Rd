@@ -7,19 +7,9 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-pcoaplot(
-  datafile,
-  outdir,
-  mapfile,
-  amp = NULL,
-  sampdepth = NULL,
-  distm = "binomial",
-  filter_species = 0.1,
-  rarefy = FALSE,
-  colors = NULL,
-  filesuffix = NULL,
-  ...
-)
+pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
+  distm = "binomial", filter_species = 0.1, rarefy = FALSE,
+  colors = NULL, filesuffix = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}

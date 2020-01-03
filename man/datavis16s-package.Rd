@@ -3,7 +3,7 @@
 \docType{package}
 \name{datavis16s}
 \alias{datavis16s}
-\title{dataviz16s: A package for Nephele 16S pipeline visualization}
+\title{datavis16s: A package for Nephele 16S pipeline visualization}
 \description{
-dataviz16s: A package for Nephele 16S pipeline visualization
+datavis16s: A package for Nephele 16S pipeline visualization
 }

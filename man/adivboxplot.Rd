@@ -7,17 +7,8 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-adivboxplot(
-  datafile,
-  outdir,
-  mapfile,
-  amp = NULL,
-  sampdepth = NULL,
-  colors = NULL,
-  cats = NULL,
-  filesuffix = NULL,
-  ...
-)
+adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
+  colors = NULL, cats = NULL, filesuffix = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file}

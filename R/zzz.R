@@ -1,4 +1,4 @@
-#' dataviz16s: A package for Nephele 16S pipeline visualization
+#' datavis16s: A package for Nephele 16S pipeline visualization
 #'
 #'
 #' @docType package

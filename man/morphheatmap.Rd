@@ -7,21 +7,10 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-morphheatmap(
-  datafile,
-  outdir,
-  mapfile,
-  amp = NULL,
-  sampdepth = NULL,
-  rarefy = FALSE,
-  filter_level = NULL,
-  taxlevel = c("seq"),
-  colors = NULL,
-  rowAnnotations = NULL,
-  force = FALSE,
-  filesuffix = NULL,
-  ...
-)
+morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
+  rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"),
+  colors = NULL, rowAnnotations = NULL, force = FALSE,
+  filesuffix = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}

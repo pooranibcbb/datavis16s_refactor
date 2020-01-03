@@ -7,16 +7,8 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-rarefactioncurve(
-  datafile,
-  outdir,
-  mapfile,
-  amp = NULL,
-  colors = NULL,
-  cat = "TreatmentGroup",
-  stepsize = 1000,
-  ...
-)
+rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
+  cat = "TreatmentGroup", stepsize = 1000, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}

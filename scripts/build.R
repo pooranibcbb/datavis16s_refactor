@@ -3,11 +3,11 @@ library(rmarkdown)
 library(Rd2md)
 
 Sys.setenv(PATH=paste(Sys.getenv("PATH"), "/Users/subramanianp4/Library/Python/3.7/bin", sep=":"))
-#
-# # Build package ----------------------------------------------------------------------------------
-# document(roclets=c('rd', 'collate', 'namespace'))
-# devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
-#
+
+# Build package ----------------------------------------------------------------------------------
+document(roclets=c('rd', 'collate', 'namespace'))
+devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
+
 # ## Imported packages - can check DESCRIPTION
 # ns <- scan("NAMESPACE", sep="\n", what = character())
 # importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
@@ -51,35 +51,34 @@ clean_pandoc2_highlight_tags = function(x) {
 }
 
 
-#
-# ## library function specification ============
-#
-# yaml <- "---
-# title: 'R Package datavis16s'
-# author: 'Poorani Subramanian'
-# output:
-#   md_document:
-#     variant: markdown_github+link_attributes+pipe_tables
-#     toc_depth: 3
-#     toc: true
-# ---
-#
-# ```{r setup, include=FALSE}
-# knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
-# ```
-#
-# "
-#
-# mdfile <- "doc/Reference_Manual_datavis16s.md"
-# Rmdfile <- gsub(".md", ".Rmd", mdfile)
-# ## CRAN Rd2md
-# # ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
-# ## My Rd2md https://github.com/pooranis/Rd2md
-# ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml, title.level = 2, run.examples = FALSE, sepexported = TRUE)
-# file.rename(mdfile, Rmdfile)
-# render(Rmdfile, output_options = myoutputoptions)
-# file.remove(Rmdfile)
-#
+
+## library function specification ============
+
+yaml <- "---
+title: 'R Package datavis16s'
+author: 'Poorani Subramanian'
+output:
+  md_document:
+    variant: markdown_github+link_attributes+pipe_tables
+    toc_depth: 3
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
+```
+
+"
+
+mdfile <- "Reference_Manual_datavis16s.md"
+Rmdfile <- gsub(".md", ".Rmd", mdfile)
+## CRAN Rd2md
+# ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
+## My Rd2md https://github.com/pooranis/Rd2md
+ReferenceManual(outdir = file.path(getwd(), "doc"), man_file = Rmdfile,  title.level = 2, run.examples = FALSE, sepexported = TRUE)
+render_manual_github(file.path("doc", Rmdfile), outdir = file.path(getwd(), "doc"), toc=T, toc_depth = 3, knitr_opts_chunk = list(echo=T, eval=F, tidy.opts = list(width.cutoff=80)))
+file.remove(file.path("doc", Rmdfile))
+
 # # User docs ---------------------------------------------------------------
 #
 # userRmd <- "doc/user_doc.Rmd"
@@ -88,13 +87,13 @@ clean_pandoc2_highlight_tags = function(x) {
 # oops$pandoc_args <- c(oops$pandoc_args, "-M", "title=User docs")
 # render(userRmd, output_format = "md_document", output_options = oops)
 
-htmlfilename <- "doc/datavis16s_pipeline.html"
-render("doc/user_doc.Rmd", output_format = "html_document", output_file = basename(htmlfilename), output_options=list(pandoc_args = c("--ascii", "-F", "panflute")))
-htmlfile <- readLines(htmlfilename)
-htmlfile <- sapply(htmlfile, clean_pandoc2_highlight_tags)
-writeLines(htmlfile, htmlfilename)
-jsb <- system2(command='which', args='js-beautify', stdout=T)
-if (is.null(attr(jsb, "status"))) system2(jsb, args=c('--type', 'html', '-n', '-r', '-f', htmlfilename))
+# htmlfilename <- "doc/datavis16s_pipeline.html"
+# render("doc/user_doc.Rmd", output_format = "html_document", output_file = basename(htmlfilename), output_options=list(pandoc_args = c("--ascii", "-F", "panflute")))
+# htmlfile <- readLines(htmlfilename)
+# htmlfile <- sapply(htmlfile, clean_pandoc2_highlight_tags)
+# writeLines(htmlfile, htmlfilename)
+# jsb <- system2(command='which', args='js-beautify', stdout=T)
+# if (is.null(attr(jsb, "status"))) system2(jsb, args=c('--type', 'html', '-n', '-r', '-f', htmlfilename))
 
 
 
