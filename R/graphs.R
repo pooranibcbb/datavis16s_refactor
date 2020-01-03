@@ -39,13 +39,13 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdi
 
   ## excluded samples
   if (length(excluded <- setdiff(samples, amp$metadata$SampleID)) > 0) {
-    writeLines(c("Samples excluded:", excluded))
-
     ## output excluded samples to file as well
     if (!is.null(outdir)) {
       excludedpath <- file.path(outdir, "samples_being_ignored.txt")
       logoutput(paste("Saving excluded sample ids to", excludedpath))
       write(excluded, file=excludedpath, ncolumns=1)
+    } else {
+      writeLines(c("Samples excluded:", excluded))
     }
   }
 
@@ -379,7 +379,6 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
   desc <-  which(colnames(amp$metadata) == "Description") - 1
   columns <- lapply(tg:desc, function(x) { list(field=colnames(amp$metadata)[x], highlightMatchingValues=TRUE, display=list('color'))  } )
   columns <- append(list(list(field='id', display=list('text'))), columns)
-  try(names(colors) <- unique(amp$metadata$TreatmentGroup), silent = TRUE)
   rows <- list(list(field='id', display=list('text')))
 
   ## Heatmap colors
@@ -508,6 +507,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   divplots <- function(adiv, col, colors) {
     if (col == "TreatmentGroup") {
       lc <- colors[1:length(unique(adiv$TreatmentGroup))]
+      lc <- colors[unique(adiv$TreatmentGroup)]
     } else {
       lc <- NULL
     }
@@ -595,6 +595,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   coln <- length(allcols)
   if (numtg <= coln){
     allcols <- allcols[1:numtg]
+    names(colors) <- unique(amp$metadata$TreatmentGroup)
   } else {
     allcols <- NULL
   }
