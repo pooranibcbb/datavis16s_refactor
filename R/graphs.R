@@ -595,7 +595,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
   coln <- length(allcols)
   if (numtg <= coln){
     allcols <- allcols[1:numtg]
-    names(colors) <- unique(amp$metadata$TreatmentGroup)
+    names(allcols) <- unique(amp$metadata$TreatmentGroup)
   } else {
     allcols <- NULL
   }
