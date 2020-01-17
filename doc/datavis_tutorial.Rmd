@@ -7,7 +7,7 @@ output:
     smart: false
     highlight: null
     theme: null
-    template: /Users/subramanianp4/git/nephele2/pipelines/datavis16s/doc/tutorial_template.html
+    template: ./tutorial_template.html
     toc: true
   # github_document:
   #   toc: true

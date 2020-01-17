@@ -2,7 +2,7 @@ library(devtools)
 library(rmarkdown)
 library(Rd2md)
 
-Sys.setenv(PATH=paste(Sys.getenv("PATH"), "/Users/subramanianp4/Library/Python/3.7/bin", sep=":"))
+Sys.setenv(PATH=paste(Sys.getenv("PATH"), normalizePath("~/Library/Python/3.7/bin"), sep=":"))
 
 # Build package ----------------------------------------------------------------------------------
 document(roclets=c('rd', 'collate', 'namespace'))

@@ -1,6 +1,6 @@
 ---
 title: "16S Visualization Pipeline"
-panflute-path: '/Users/subramanianp4/git/nephele2/resources/Rdocs'
+panflute-path: '../../resources/Rdocs'
 panflute-filters: [addlinkattr]
 output:
   html_document:
@@ -10,7 +10,7 @@ output:
     section_divs: false
     highlight: tango
     theme: null
-    template: /Users/subramanianp4/git/nephele2/resources/Rdocs/user_guide_template.html
+    template: ../../resources/Rdocs/user_guide_template.html
     self_contained: false 
     toc: true
     toc_depth: 2
