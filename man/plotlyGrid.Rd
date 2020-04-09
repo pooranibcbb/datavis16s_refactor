@@ -10,8 +10,8 @@
 \usage{
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
 
-htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib",
-  styletags = NULL)
+htmlGrid(ht, filename, data, jquery = FALSE, title = NULL,
+  outlib = "lib", styletags = NULL)
 }
 \arguments{
 \item{pplot}{plotly or ggplot object}

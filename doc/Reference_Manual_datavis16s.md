@@ -1,6 +1,6 @@
 Package 'datavis16s'
 ================
-January 03, 2020
+April 09, 2020
 
 
 ```
@@ -38,60 +38,58 @@ Suggests:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(old_usage=TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 ```
 
+
 ##  R topics documented:
-
-  - [`datavis16s-package`](#datavis16s-package)
+  - [datavis16s-package](#datavis16s-package)
   - [Exported](#exported)
-      - [`adivboxplot`](#adivboxplot)
-      - [`allgraphs`](#allgraphs)
-      - [`morphheatmap`](#morphheatmap)
-      - [`pcoaplot`](#pcoaplot)
-      - [`rarefactioncurve`](#rarefactioncurve)
-      - [`readindata`](#readindata)
-      - [`trygraphwrapper`](#trygraphwrapper)
+      - [adivboxplot](#adivboxplot)
+      - [allgraphs](#allgraphs)
+      - [morphheatmap](#morphheatmap)
+      - [pcoaplot](#pcoaplot)
+      - [rarefactioncurve](#rarefactioncurve)
+      - [readindata](#readindata)
+      - [trygraphwrapper](#trygraphwrapper)
   - [Internal](#internal)
-      - [`amp_rarecurvefix`](#amp_rarecurvefix)
-      - [`filterlowabund`](#filterlowabund)
-      - [`gridCode`](#gridcode)
-      - [`highertax`](#highertax)
-      - [`log10scale`](#log10scale)
-      - [`logoutput`](#logoutput)
-      - [`plotlyGrid`](#plotlygrid)
-      - [`print_ampvis2`](#print_ampvis2)
-      - [`read_biom`](#read_biom)
-      - [`save_fillhtml`](#save_fillhtml)
-      - [`shortnames`](#shortnames)
-      - [`subsetamp`](#subsetamp)
+      - [amp\_rarecurvefix](#amp_rarecurvefix)
+      - [filterlowabund](#filterlowabund)
+      - [gridCode](#gridcode)
+      - [highertax](#highertax)
+      - [log10scale](#log10scale)
+      - [logoutput](#logoutput)
+      - [plotlyGrid](#plotlygrid)
+      - [print\_ampvis2](#print_ampvis2)
+      - [read\_biom](#read_biom)
+      - [save\_fillhtml](#save_fillhtml)
+      - [shortnames](#shortnames)
+      - [subsetamp](#subsetamp)
 
-<!-- toc -->
-
-## `datavis16s-package`
+## datavis16s-package
 
 datavis16s: A package for Nephele 16S pipeline visualization
 
 ## Exported
 
-### `adivboxplot`
+### adivboxplot
 
 Alpha diversity boxplot
 
-#### Description
+**Description**
 
 Plots exploding boxplot of shannon diversity and Chao species richness.
 If sampling depth is NULL, rarefies OTU table to the minimum readcount
 of any sample. If this is low, then the plot will fail.
 
-#### Usage
+**Usage**
 
 ``` r
 adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   colors = NULL, cats = NULL, filesuffix = NULL, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument     | Description                                                                                                                                                  |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -105,34 +103,34 @@ adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 | `filesuffix` | (Optional) suffix for output filename                                                                                                                        |
 | `...`        | other parameters to pass to [readindata](#readindata)                                                                                                        |
 
-#### Details
+**Details**
 
 If `sampdepth` is NULL, the sampling depth is set to the size of the
 smallest sample.
 
-#### Value
+**Value**
 
 Save alpha diversity boxplots to outdir.
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
-### `allgraphs`
+### allgraphs
 
 Pipeline function
 
-#### Description
+**Description**
 
 Make all 4 types of graphs
 
-#### Usage
+**Usage**
 
 ``` r
 allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument    | Description                                                                             |
 | ----------- | --------------------------------------------------------------------------------------- |
@@ -142,7 +140,7 @@ allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 | `sampdepth` | sampling depth. default: 10000                                                          |
 | `...`       | other parameters to pass to [readindata](#readindata)                                   |
 
-#### Value
+**Value**
 
 graphs are saved to outdir. See [user doc](../doc/user_doc.md).
 
@@ -150,21 +148,21 @@ This value is used to remove samples before for alpha diversity and PCoA
 plots. Also, to rarefy OTU table for the alpha diversity and Bray-Curtis
 distance PCoA.
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
-### `morphheatmap`
+### morphheatmap
 
 Morpheus heatmap
 
-#### Description
+**Description**
 
 Creates heatmaps using Morpheus R API
 <https://software.broadinstitute.org/morpheus/> . The heatmaps are made
 using relative abundances.
 
-#### Usage
+**Usage**
 
 ``` r
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
@@ -173,7 +171,7 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   filesuffix = NULL, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument         | Description                                                                                                                                        |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -191,18 +189,18 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 | `filesuffix`     | (Optional) suffix for output filename                                                                                                              |
 | `...`            | parameters to pass to [`readindata`](#readindata)                                                                                                  |
 
-#### Details
+**Details**
 
 For the `taxlevel` parameter, each level is made into a separate
 heatmap. "seq" makes the heatmap with no collapsing of taxonomic levels
 if there are fewer than 2000 ASVs/OTUs. Otherwise, Species level is made
 instead.
 
-#### Value
+**Value**
 
 Saves heatmaps to outdir.
 
-#### Examples
+**Examples**
 
 ``` r
 ## Not run:
@@ -211,15 +209,15 @@ sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
 ## End(Not run)
 ```
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
-### `pcoaplot`
+### pcoaplot
 
 PCoA plots
 
-#### Usage
+**Usage**
 
 ``` r
 pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
@@ -227,7 +225,7 @@ pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   colors = NULL, filesuffix = NULL, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument         | Description                                                                                                                                                                       |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -243,26 +241,26 @@ pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 | `filesuffix`     | (Optional) suffix for output filename                                                                                                                                             |
 | `...`            | parameters to pass to [`readindata`](#readindata)                                                                                                                                 |
 
-#### Value
+**Value**
 
 Saves pcoa plots to outdir.
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
-### `rarefactioncurve`
+### rarefactioncurve
 
 Make rarefaction curve graph
 
-#### Usage
+**Usage**
 
 ``` r
 rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
   cat = "TreatmentGroup", stepsize = 1000, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument   | Description                                                                                         |
 | ---------- | --------------------------------------------------------------------------------------------------- |
@@ -275,25 +273,25 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
 | `stepsize` | for rarefaction plotting.                                                                           |
 | `...`      | parameters to pass to [`readindata`](#readindata)                                                   |
 
-#### Value
+**Value**
 
 Saves rarefaction curve plot to output directory.
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
-### `readindata`
+### readindata
 
 Read in data
 
-#### Usage
+**Usage**
 
 ``` r
 readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument   | Description                                                                                     |
 | ---------- | ----------------------------------------------------------------------------------------------- |
@@ -302,7 +300,7 @@ readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 | `tsvfile`  | Logical. Is datafile a tab-delimited text file? See details.                                    |
 | `mincount` | minimum number of reads                                                                         |
 
-#### Details
+**Details**
 
 datafile may be either biom file or text file. If text file, it should
 have ampvis2 OTU table format
@@ -310,31 +308,31 @@ have ampvis2 OTU table format
 If the number of reads is less than mincount, the function will give an
 error, as we cannot make graphs with so few counts.
 
-#### Value
+**Value**
 
 ampvis2 object
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
-### `trygraphwrapper`
+### trygraphwrapper
 
 Wrapper for any graph function
 
-#### Description
+**Description**
 
 This is a wrapper for any of the graph functions meant to be called
 using rpy2 in python.
 
-#### Usage
+**Usage**
 
 ``` r
 trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
   info = TRUE, tsvfile = FALSE, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument      | Description                                                                                           |
 | ------------- | ----------------------------------------------------------------------------------------------------- |
@@ -347,12 +345,12 @@ trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
 | `tsvfile`     | Is datafile a tab-delimited text file? Default FALSE                                                  |
 | `...`         | parameters needed to pass to FUN                                                                      |
 
-#### Value
+**Value**
 
 Returns 0 if FUN succeeds and stops on error. In rpy2, it will throw
 rpy2.rinterface.RRuntimeError.
 
-#### Examples
+**Examples**
 
 ``` r
 ## Not run:
@@ -376,28 +374,28 @@ taxlevel=c("Family", "seq"))
 ## End(Not run)
 ```
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)
 
 ## Internal
 
-### `amp_rarecurvefix`
+### amp\_rarecurvefix
 
 Rarefaction curve
 
-#### Description
+**Description**
 
 This function replaces the ampvis2 function amp\_rarecurve to fix
 subsampling labeling bug in vegan
 
-#### Usage
+**Usage**
 
 ``` r
 amp_rarecurvefix(data, stepsize = 1000, color_by = NULL)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument   | Description                                                                                  |
 | ---------- | -------------------------------------------------------------------------------------------- |
@@ -405,25 +403,25 @@ amp_rarecurvefix(data, stepsize = 1000, color_by = NULL)
 | `stepsize` | Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000) |
 | `color_by` | Color curves by a variable in the metadata.                                                  |
 
-#### Value
+**Value**
 
 A ggplot2 object.
 
-#### Source
+**Source**
 
 [utilities.R](../R/utilities.R)
 
-### `filterlowabund`
+### filterlowabund
 
 Filter low abundant taxa
 
-#### Usage
+**Usage**
 
 ``` r
 filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument  | Description                                                                                       |
 | --------- | ------------------------------------------------------------------------------------------------- |
@@ -433,107 +431,107 @@ filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 | `abs`     | is level an absolute count? if false, will use level as relative percent.                         |
 | `toptaxa` | number of seqvar to include sorted by max count across all samples; if NULL all will be included. |
 
-#### Value
+**Value**
 
 filtered ampvis2 object
 
-#### Source
+**Source**
 
 [utilities.R](../R/utilities.R)
 
-### `gridCode`
+### gridCode
 
 Format plotly grid code
 
-#### Description
+**Description**
 
 Format data according to here: <https://plot.ly/export/>
 
-#### Usage
+**Usage**
 
 ``` r
 gridCode(data)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument | Description                  |
 | -------- | ---------------------------- |
 | `data`   | data to populate plotly grid |
 
-#### Value
+**Value**
 
 list of 2 values:
 
   - `html` html for plotly export link  
   - `javascript` js function for exporting data
 
-#### Source
+**Source**
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
-### `highertax`
+### highertax
 
 return tables at higher tax level
 
-#### Usage
+**Usage**
 
 ``` r
 highertax(amp, taxlevel)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument   | Description                                   |
 | ---------- | --------------------------------------------- |
 | `amp`      | ampvis2 object                                |
 | `taxlevel` | taxonomic level at which to sum up the counts |
 
-#### Value
+**Value**
 
 ampvis2 object with otu table and taxa summed up to the taxlevel
 
-#### Source
+**Source**
 
 [utilities.R](../R/utilities.R)
 
-### `log10scale`
+### log10scale
 
 Log base 10 + 1 scale
 
-#### Description
+**Description**
 
 Transformation which computes `log10(x+1)` scale
 
-#### Usage
+**Usage**
 
 ``` r
 log10p_trans()
 ```
 
-#### Details
+**Details**
 
 `log10p` is for use with ggplot2 `trans` argument in scale function.
 
-#### Value
+**Value**
 
 `log10p` returns a scales tranformation object
 
-### `logoutput`
+### logoutput
 
 write log output
 
-#### Description
+**Description**
 
 Prints time along with log message.
 
-#### Usage
+**Usage**
 
 ``` r
 logoutput(c, bline = 0, aline = 0, type = NULL)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument | Description                                           |
 | -------- | ----------------------------------------------------- |
@@ -542,15 +540,15 @@ logoutput(c, bline = 0, aline = 0, type = NULL)
 | `aline`  | Number of blank lines to follow output.               |
 | `type`   | String. Must be one of "WARNING", or "ERROR" or NULL. |
 
-#### Source
+**Source**
 
 [utilities.R](../R/utilities.R)
 
-### `plotlyGrid`
+### plotlyGrid
 
 Add Plotly data export to Plotly graph
 
-#### Description
+**Description**
 
 All functions create an output html plot with link which sends the data
 to a grid in the plotly chart studio.
@@ -560,15 +558,15 @@ html plotly plot.
 
 `htmlGrid` takes in an html tag object.
 
-#### Usage
+**Usage**
 
 ``` r
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
-htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib",
-  styletags = NULL)
+htmlGrid(ht, filename, data, jquery = FALSE, title = NULL,
+  outlib = "lib", styletags = NULL)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument    | Description                                                                                                            |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -581,85 +579,85 @@ htmlGrid(ht, filename, data, jquery = FALSE, title = NULL, outlib = "lib",
 | `jquery`    | should we load jquery                                                                                                  |
 | `styletags` | html object with style tags for the tagList.                                                                           |
 
-#### Details
+**Details**
 
 If jquery is needed, we use jquery-1.11.3 from the rmarkdown library. We
 also use shiny's bootstrap-3.3.7 css to style the text elements.
 
-#### Value
+**Value**
 
 html plot is saved to filename. external libraries are saved to outlib
 in same directory as filename. Invisibly returns the plotly html widget.
 
-#### Source
+**Source**
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
-### `print_ampvis2`
+### print\_ampvis2
 
 Print ampvis2 object summary
 
-#### Description
+**Description**
 
 This is a copy of the internal ampvis2 function print.ampvis2. CRAN does
 not allow ':::' internal calling of function in package.
 
-#### Usage
+**Usage**
 
 ``` r
 print_ampvis2(data)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument | Description    |
 | -------- | -------------- |
 | `data`   | ampvis2 object |
 
-#### Value
+**Value**
 
 Prints summary stats about ampvis2 object
 
-#### Source
+**Source**
 
 [utilities.R](../R/utilities.R)
 
-### `read_biom`
+### read\_biom
 
 biomformat read\_biom
 
-#### Description
+**Description**
 
 This function replaces the biomformat function read\_biom to deal with
 reading in crappy hdf5 biom file.
 
-#### Usage
+**Usage**
 
 ``` r
 read_biom(biom_file)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument    | Description          |
 | ----------- | -------------------- |
 | `biom_file` | input biom file name |
 
-#### Value
+**Value**
 
 biom object
 
-### `save_fillhtml`
+### save\_fillhtml
 
 Save an HTML object to a file
 
-#### Usage
+**Usage**
 
 ``` r
 save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument     | Description                       |
 | ------------ | --------------------------------- |
@@ -669,55 +667,55 @@ save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 | `libdir`     | Directory to copy dependencies to |
 | `bodystyle`  | html style string                 |
 
-#### Value
+**Value**
 
 save html to file
 
-#### Source
+**Source**
 
 [plotlyGrid.R](../R/plotlyGrid.R)
 
-### `shortnames`
+### shortnames
 
 shortnames for taxonomy
 
-#### Usage
+**Usage**
 
 ``` r
 shortnames(taxtable)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument   | Description                                       |
 | ---------- | ------------------------------------------------- |
 | `taxtable` | taxonomy table object from ampvis2 object amp$tax |
 
-#### Value
+**Value**
 
 data.frame taxonomy table object like ampvis2 amp$tax. taxonomy names
 are sanitized and formatted to be a bit nicer.
 
-#### Source
+**Source**
 
 [utilities.R](../R/utilities.R)
 
-### `subsetamp`
+### subsetamp
 
 Subset and rarefy OTU table.
 
-#### Description
+**Description**
 
 Subset and/or rarefy OTU table.
 
-#### Usage
+**Usage**
 
 ``` r
 subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T,
   outdir = NULL, ...)
 ```
 
-#### Arguments
+**Arguments**
 
 | Argument       | Description                                                                                                                            |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -728,16 +726,16 @@ subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T,
 | `outdir`       | Output directory. If not null, and samples are removed from amp, the sample names will be output to outdir/samples\_being\_ignored.txt |
 | `...`          | other parameters to pass to amp\_subset\_samples                                                                                       |
 
-#### Details
+**Details**
 
 `sampdepth` will be used to filter out samples with fewer than this
 number of reads. If rarefy is TRUE, then it will also be used as the
 depth at which to subsample using vegan function rrarefy.
 
-#### Value
+**Value**
 
 ampvis2 object
 
-#### Source
+**Source**
 
 [graphs.R](../R/graphs.R)

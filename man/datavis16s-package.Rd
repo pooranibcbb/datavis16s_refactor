@@ -4,6 +4,3 @@
 \name{datavis16s}
 \alias{datavis16s}
 \title{datavis16s: A package for Nephele 16S pipeline visualization}
-\description{
-datavis16s: A package for Nephele 16S pipeline visualization
-}

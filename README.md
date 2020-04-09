@@ -9,7 +9,7 @@ R package for graphs for Nephele 16S pipelines.
 
 ## Usage
 
--   **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md)
+-   **Function reference:** [datavis16s R package manual](doc/Reference_Manual_datavis16s.md) (:ref:`pipelines.datavis16s.readme:R package manual`)
 -   **Nephele User docs:** [sphinx](doc/user_doc.md) and [html for Nephele2 website](https://github.niaid.nih.gov/bcbb/nephele2/blob/master/pipelines/datavis16s/doc/datavis16s_pipeline.html)
 -   There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4. See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
 -   **Python with rpy2**
@@ -34,6 +34,7 @@ R package for graphs for Nephele 16S pipelines.
     ```
 
 -   **R**
+    
     -   You can use `readindata` to create an ampvis2 object, and pass that instead of the mapping file and biom file.
 -   **Sampling depth**
     -   The sampling depth argument, `sampdepth`, is optional for all functions.

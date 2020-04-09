@@ -75,10 +75,11 @@ Rmdfile <- gsub(".md", ".Rmd", mdfile)
 ## CRAN Rd2md
 # ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
 ## My Rd2md https://github.com/pooranis/Rd2md
-ReferenceManual(outdir = file.path(getwd(), "doc"), man_file = Rmdfile,  title.level = 2, run.examples = FALSE, sepexported = TRUE)
+ReferenceManual(outdir = file.path(getwd(), "doc"), man_file = Rmdfile,  title.level = 2, run.examples = FALSE, sepexported = TRUE, toc.matter = NULL, code.headings = F, topic.section.heading = F)
 render_manual_github(file.path("doc", Rmdfile), outdir = file.path(getwd(), "doc"), toc=T, toc_depth = 3, knitr_opts_chunk = list(echo=T, eval=F, tidy.opts = list(width.cutoff=80)))
 file.remove(file.path("doc", Rmdfile))
 
+stop()
 # # User docs ---------------------------------------------------------------
 #
 # userRmd <- "doc/user_doc.Rmd"
