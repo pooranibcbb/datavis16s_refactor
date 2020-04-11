@@ -54,29 +54,13 @@ clean_pandoc2_highlight_tags = function(x) {
 
 ## library function specification ============
 
-yaml <- "---
-title: 'R Package datavis16s'
-author: 'Poorani Subramanian'
-output:
-  md_document:
-    variant: markdown_github+link_attributes+pipe_tables
-    toc_depth: 3
-    toc: true
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE, tidy=TRUE, tidy.opts = list(width.cutoff=80))
-```
-
-"
-
 mdfile <- "Reference_Manual_datavis16s.md"
 Rmdfile <- gsub(".md", ".Rmd", mdfile)
 ## CRAN Rd2md
 # ReferenceManual(outdir = file.path(getwd(), "doc"), front.matter = yaml)
 ## My Rd2md https://github.com/pooranis/Rd2md
 ReferenceManual(outdir = file.path(getwd(), "doc"), man_file = Rmdfile,  title.level = 2, run.examples = FALSE, sepexported = TRUE, toc.matter = NULL, code.headings = F, topic.section.heading = F)
-render_manual_github(file.path("doc", Rmdfile), outdir = file.path(getwd(), "doc"), toc=T, toc_depth = 3, knitr_opts_chunk = list(echo=T, eval=F, tidy.opts = list(width.cutoff=80)))
+render_manual_github(file.path("doc", Rmdfile), outdir = file.path(getwd(), "doc"), toc=T, toc_depth = 3, knitr_opts_chunk = list(echo=T, eval=F, tidy.opts = list(width.cutoff=80)), nocodelinks=T)
 file.remove(file.path("doc", Rmdfile))
 
 stop()

@@ -1,6 +1,6 @@
 Package 'datavis16s'
 ================
-April 09, 2020
+April 11, 2020
 
 
 ```
@@ -187,7 +187,7 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 | `rowAnnotations` | (Optional) Row annotations to be used in addition to taxonomy.                                                                                     |
 | `force`          | Force "seq" level heatmap to be made even if number of seqs is greater than 2000. ' See Details.                                                   |
 | `filesuffix`     | (Optional) suffix for output filename                                                                                                              |
-| `...`            | parameters to pass to [`readindata`](#readindata)                                                                                                  |
+| `...`            | parameters to pass to [readindata](#readindata)                                                                                                    |
 
 **Details**
 
@@ -239,7 +239,7 @@ pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 | `rarefy`         | Logical. Rarefy the OTU table if sampdepth is specified.                                                                                                                          |
 | `colors`         | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                                                                                                    |
 | `filesuffix`     | (Optional) suffix for output filename                                                                                                                                             |
-| `...`            | parameters to pass to [`readindata`](#readindata)                                                                                                                                 |
+| `...`            | parameters to pass to [readindata](#readindata)                                                                                                                                   |
 
 **Value**
 
@@ -271,7 +271,7 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
 | `colors`   | (Optional) color vector - length equal to number of TreatmentGroups in mapfile                      |
 | `cat`      | Category/column in mapping file by which to color the curves in the graph. (default TreatmentGroup) |
 | `stepsize` | for rarefaction plotting.                                                                           |
-| `...`      | parameters to pass to [`readindata`](#readindata)                                                   |
+| `...`      | parameters to pass to [readindata](#readindata)                                                     |
 
 **Value**
 
