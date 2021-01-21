@@ -141,7 +141,7 @@ gridCode <- function(data) {
                            "$(\'#plotly-data-export\').click(function(){",
                            "  var hiddenForm = $(\'<div id=\"hiddenform\" \'+",
                            "                       \'style=\"display:none;\">\'+",
-                           "                       \'<form action=\"https://plot.ly/datagrid\" \'+",
+                           "                       \'<form action=\"https://chart-studio.plotly.com/datagrid\" \'+",
                            "                       \'method=\"post\" target=\"_blank\">\'+",
                            "                       \'<input type=\"text\" \'+",
                            "                       \'name=\"data\" /></form></div>\')",
