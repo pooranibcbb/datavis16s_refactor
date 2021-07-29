@@ -2,12 +2,14 @@ library(devtools)
 library(rmarkdown)
 library(Rd2md)
 
-Sys.setenv(PATH=paste(Sys.getenv("PATH"), normalizePath("~/Library/Python/3.7/bin"), sep=":"))
+Sys.setenv(PATH=paste(Sys.getenv("PATH"), file.path(system2("python3", c("-m", "site","--user-base"), stdout=T), "bin"), sep=":"))
 
 # Build package ----------------------------------------------------------------------------------
 document(roclets=c('rd', 'collate', 'namespace'))
 devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
 
+
+stop()
 # ## Imported packages - can check DESCRIPTION
 # ns <- scan("NAMESPACE", sep="\n", what = character())
 # importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
