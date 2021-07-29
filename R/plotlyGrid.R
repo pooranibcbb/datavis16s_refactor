@@ -85,7 +85,6 @@ htmlGrid <- function(ht, filename, data, jquery = FALSE, title=NULL, outlib="lib
 
   mc <- shiny::bootstrapLib()
   mc <- htmltools::htmlDependency("bootstrap-css", version=mc$version, src=mc$src, stylesheet = mc$stylesheet, all_files = F)
-#  mc <- htmltools::htmlDependency("bootstrap-css", "3.3.7", c(file=file.path(find.package("shiny"), "www/shared/bootstrap/css")), stylesheet = "bootstrap.min.css", all_files = F)
   tl <- htmltools::attachDependencies(tl, mc, append=TRUE)
   if (!is.null(title)) {
     tl <- tags$div(class="container-fluid", style="max-width:1200px", tags$h2(title), tags$p(html), tl)
@@ -176,6 +175,7 @@ save_fillhtml <- function (html, file, background = "white", libdir = "lib", bod
   on.exit(setwd(oldwd), add = TRUE)
   rendered <- htmltools::renderTags(html)
   deps <- lapply(rendered$dependencies, function(dep) {
+    dep$all_files <- FALSE
     dep <- htmltools::copyDependencyToDir(dep, libdir, FALSE)
     dep <- htmltools::makeDependencyRelative(dep, dir, FALSE)
     dep
