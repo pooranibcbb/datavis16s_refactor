@@ -9,19 +9,19 @@ document(roclets=c('rd', 'collate', 'namespace'))
 devtools::install(args = c("--preclean", "--no-multiarch", "--with-keep.source"), dependencies = F, upgrade=F)
 
 
-stop()
-# ## Imported packages - can check DESCRIPTION
-# ns <- scan("NAMESPACE", sep="\n", what = character())
-# importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
-#
-#
-# ## update description
-# desc::desc_set(Date=format(Sys.time(), format="%F"), normalize=TRUE)
-# deptable <- desc::desc_get_deps()
-# # deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
-# desc::desc_set_deps(deptable, normalize = TRUE)
-#
-#
+
+## Imported packages - can check DESCRIPTION
+ns <- scan("NAMESPACE", sep="\n", what = character())
+importedpackages <- unique(stringr::str_match(ns, "import.*\\((.*?)[\\,\\)]")[,2])
+
+
+## update description
+desc::desc_set(Date=format(Sys.time(), format="%F"), normalize=TRUE)
+deptable <- desc::desc_get_deps()
+# deptable$version <- apply(deptable, 1, function(x) { if (x[2] == "R") return(x[3]); paste("==", packageVersion(x[2])) })
+desc::desc_set_deps(deptable, normalize = TRUE)
+
+
 # Documentation --------------------------------
 
 myoutputoptions <- list(pandoc_args=c("--template", file.path(find.package("rmarkdown"), "rmarkdown/templates/github_document/resources/default.md"), "--atx-headers", "--columns=10000"))
