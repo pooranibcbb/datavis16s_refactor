@@ -477,7 +477,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @source [graphs.R](../R/graphs.R)
 #'
 #' @importFrom plotly subplot ggplotly
-#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggplot2 scale_color_manual element_text
 #'
 adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, filesuffix=NULL, ...) {
 
@@ -512,11 +512,11 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
       lc <- NULL
     }
 
-    gshan <- ggplot2::ggplot(adiv, ggplot2::aes_string(x=col, y="Shannon", color = col, text = "SampleID")) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none") + ggtitle("species alpha diversity")
+    gshan <- ggplot2::ggplot(adiv, ggplot2::aes_string(x=col, y="Shannon", color = col, text = "SampleID")) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none", axis.text.x = element_text(angle=60)) + ggtitle("species alpha diversity")
     if (!is.null(lc)) gshan <- gshan + scale_color_manual(values=lc)
     shannon <- ggplotly(gshan, tooltip = c("text", "x", "y"))
 
-    gchao1 <- ggplot2::ggplot(adiv, ggplot2::aes_string(x=col, y="Chao1", color = col, text = "SampleID")) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none")
+    gchao1 <- ggplot2::ggplot(adiv, ggplot2::aes_string(x=col, y="Chao1", color = col, text = "SampleID")) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none", axis.text.x = element_text(angle=60))
     if (!is.null(lc)) gchao1 <- gchao1 + scale_color_manual(values=lc)
     chao1 <- ggplotly(gchao1, tooltip = c("text", "x", "y"))
 
@@ -540,6 +540,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   })
 
   divwidget <- plotly::subplot(plotlyplots, nrows = length(plotlyplots)/2, titleX=TRUE, titleY = TRUE, margin = 0.06)
+  if (length(cats) > 2) divwidget$height <- paste0(400*(length(cats)), "px")
 
   ## save html file
   plotlyGrid(divwidget, file.path(outdir, "alphadiv.html"), data = alphadiv)
