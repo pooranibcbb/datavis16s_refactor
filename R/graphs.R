@@ -722,10 +722,19 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
   options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2), digits.secs = 3)
 
-  ## open log file
-  logfile <- file(logfilename, open = "at")
-  sink(file = logfile, type="output")
-  sink(file = logfile, type= "message")
+  if(is.vector(logfilename)){
+    # vector of file paths provided
+    sink(file = logfilename[1], append = TRUE)
+    if(length(logfilename) > 1){
+      # multiple files provided
+      for(l in logfilename[-1]){
+        sink(file = l, append = TRUE, split = TRUE)  
+      }
+    }
+  } else {
+    # a single file path provided
+    sink(file = logfilename, append = TRUE)  
+  }
 
   on.exit(closeAllConnections())
   ## create output directory
