@@ -1,7 +1,6 @@
-Package 'datavis16s'
-================
-August 03, 2021
+# Package 'datavis16s'
 
+August 03, 2021
 
 ```
 Package: datavis16s
@@ -38,30 +37,30 @@ Roxygen: list(old_usage=TRUE)
 RoxygenNote: 7.1.1
 ```
 
+## R topics documented:
 
-##  R topics documented:
--   [datavis16s-package](#datavis16s-package)
--   [Exported](#exported)
-    -   [adivboxplot](#adivboxplot)
-    -   [allgraphs](#allgraphs)
-    -   [morphheatmap](#morphheatmap)
-    -   [pcoaplot](#pcoaplot)
-    -   [rarefactioncurve](#rarefactioncurve)
-    -   [readindata](#readindata)
-    -   [trygraphwrapper](#trygraphwrapper)
--   [Internal](#internal)
-    -   [amp_rarecurvefix](#amp_rarecurvefix)
-    -   [filterlowabund](#filterlowabund)
-    -   [gridCode](#gridcode)
-    -   [highertax](#highertax)
-    -   [log10scale](#log10scale)
-    -   [logoutput](#logoutput)
-    -   [plotlyGrid](#plotlygrid)
-    -   [print_ampvis2](#print_ampvis2)
-    -   [read_biom](#read_biom)
-    -   [save_fillhtml](#save_fillhtml)
-    -   [shortnames](#shortnames)
-    -   [subsetamp](#subsetamp)
+- [datavis16s-package](#datavis16s-package)
+- [Exported](#exported)
+  - [adivboxplot](#adivboxplot)
+  - [allgraphs](#allgraphs)
+  - [morphheatmap](#morphheatmap)
+  - [pcoaplot](#pcoaplot)
+  - [rarefactioncurve](#rarefactioncurve)
+  - [readindata](#readindata)
+  - [trygraphwrapper](#trygraphwrapper)
+- [Internal](#internal)
+  - [amp_rarecurvefix](#amp_rarecurvefix)
+  - [filterlowabund](#filterlowabund)
+  - [gridCode](#gridcode)
+  - [highertax](#highertax)
+  - [log10scale](#log10scale)
+  - [logoutput](#logoutput)
+  - [plotlyGrid](#plotlygrid)
+  - [print_ampvis2](#print_ampvis2)
+  - [read_biom](#read_biom)
+  - [save_fillhtml](#save_fillhtml)
+  - [shortnames](#shortnames)
+  - [subsetamp](#subsetamp)
 
 ## datavis16s-package
 
@@ -81,7 +80,7 @@ any sample. If this is low, then the plot will fail.
 
 **Usage**
 
-``` r
+```r
 adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   colors = NULL, cats = NULL, filesuffix = NULL, ...)
 ```
@@ -89,7 +88,7 @@ adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 **Arguments**
 
 | Argument     | Description                                                                                                                                                  |
-|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `datafile`   | full path to input OTU file                                                                                                                                  |
 | `outdir`     | full path to output directory                                                                                                                                |
 | `mapfile`    | full path to map file                                                                                                                                        |
@@ -123,14 +122,14 @@ Make all 4 types of graphs
 
 **Usage**
 
-``` r
+```r
 allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 ```
 
 **Arguments**
 
 | Argument    | Description                                                                             |
-|-------------|-----------------------------------------------------------------------------------------|
+| ----------- | --------------------------------------------------------------------------------------- |
 | `datafile`  | full path to input OTU file (biom or txt file see [readindata](#readindata) for format) |
 | `outdir`    | full path to output directory                                                           |
 | `mapfile`   | full path to map file                                                                   |
@@ -161,7 +160,7 @@ using relative abundances.
 
 **Usage**
 
-``` r
+```r
 morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   rarefy = FALSE, filter_level = NULL, taxlevel = c("seq"),
   colors = NULL, rowAnnotations = NULL, force = FALSE,
@@ -171,7 +170,7 @@ morphheatmap(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 **Arguments**
 
 | Argument         | Description                                                                                                                                        |
-|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `datafile`       | full path to input OTU file (biom or see [readindata](#readindata) )                                                                               |
 | `outdir`         | full path to output directory                                                                                                                      |
 | `mapfile`        | full path to mapping file                                                                                                                          |
@@ -199,10 +198,10 @@ Saves heatmaps to outdir.
 
 **Examples**
 
-``` r
+```r
 ## Not run:
  morphheatmap(datafile="OTU_table.txt", outdir="outputs/graphs", mapfile="mapfile.txt",
-sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE) 
+sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
 ## End(Not run)
 ```
 
@@ -216,7 +215,7 @@ PCoA plots
 
 **Usage**
 
-``` r
+```r
 pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
   distm = "binomial", filter_species = 0.1, rarefy = FALSE,
   colors = NULL, filesuffix = NULL, ...)
@@ -225,7 +224,7 @@ pcoaplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 **Arguments**
 
 | Argument         | Description                                                                                                                                                                      |
-|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `datafile`       | full path to input OTU file (biom or see [readindata](#readindata) )                                                                                                             |
 | `outdir`         | full path to output directory                                                                                                                                                    |
 | `mapfile`        | full path to map file                                                                                                                                                            |
@@ -252,7 +251,7 @@ Make rarefaction curve graph
 
 **Usage**
 
-``` r
+```r
 rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
   cat = "TreatmentGroup", stepsize = 1000, ...)
 ```
@@ -260,7 +259,7 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
 **Arguments**
 
 | Argument   | Description                                                                                         |
-|------------|-----------------------------------------------------------------------------------------------------|
+| ---------- | --------------------------------------------------------------------------------------------------- |
 | `datafile` | full path to input OTU file (biom or see [readindata](#readindata) )                                |
 | `outdir`   | full path to output directory                                                                       |
 | `mapfile`  | full path mapping file                                                                              |
@@ -284,14 +283,14 @@ Read in data
 
 **Usage**
 
-``` r
+```r
 readindata(datafile, mapfile, tsvfile = FALSE, mincount = 10)
 ```
 
 **Arguments**
 
 | Argument   | Description                                                                                     |
-|------------|-------------------------------------------------------------------------------------------------|
+| ---------- | ----------------------------------------------------------------------------------------------- |
 | `datafile` | full path to input data file. must be either biom file or tab delimited text file. See details. |
 | `mapfile`  | full path to mapfile. must contain SampleID, TreatmentGroup, and Description columns            |
 | `tsvfile`  | Logical. Is datafile a tab-delimited text file? See details.                                    |
@@ -324,15 +323,15 @@ using rpy2 in python.
 
 **Usage**
 
-``` r
-trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
+```r
+trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "/var/log/job.log",
   info = TRUE, tsvfile = FALSE, ...)
 ```
 
 **Arguments**
 
 | Argument      | Description                                                                                           |
-|---------------|-------------------------------------------------------------------------------------------------------|
+| ------------- | ----------------------------------------------------------------------------------------------------- |
 | `datafile`    | full path to input OTU file (biom or txt, see [readindata](#readindata) for format of txt file)       |
 | `outdir`      | output directory for graphs                                                                           |
 | `mapfile`     | full path to map file                                                                                 |
@@ -349,7 +348,7 @@ rpy2.rinterface.RRuntimeError.
 
 **Examples**
 
-``` r
+```r
 ## Not run:
  # example with no optional arguments for running allgraphs
 trygraphwrapper("/path/to/outputs/out.biom", "/path/to/outputs/",
@@ -367,7 +366,7 @@ trygraphwrapper("/path/to/outputs/OTU_table.txt", "/path/to/outputs/",
 # example of making heatmap with optional arguments
 trygraphwrapper("/path/to/outputs/taxa_species.biom", "/path/to/outputs",
 "/path/to/inputs/mapfile.txt", 'morphheatmap', sampdepth = 30000, filter_level=0.01,
-taxlevel=c("Family", "seq")) 
+taxlevel=c("Family", "seq"))
 ## End(Not run)
 ```
 
@@ -388,14 +387,14 @@ subsampling labeling bug in vegan
 
 **Usage**
 
-``` r
+```r
 amp_rarecurvefix(data, stepsize = 1000, color_by = NULL)
 ```
 
 **Arguments**
 
 | Argument   | Description                                                                                  |
-|------------|----------------------------------------------------------------------------------------------|
+| ---------- | -------------------------------------------------------------------------------------------- |
 | `data`     | (required) Data list as loaded with amp_load.                                                |
 | `stepsize` | Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000) |
 | `color_by` | Color curves by a variable in the metadata.                                                  |
@@ -414,14 +413,14 @@ Filter low abundant taxa
 
 **Usage**
 
-``` r
+```r
 filterlowabund(amp, level = 0.01, persamp = 0, abs = FALSE, toptaxa = NULL)
 ```
 
 **Arguments**
 
 | Argument  | Description                                                                                       |
-|-----------|---------------------------------------------------------------------------------------------------|
+| --------- | ------------------------------------------------------------------------------------------------- |
 | `amp`     | ampvis2 object                                                                                    |
 | `level`   | level at which to filter                                                                          |
 | `persamp` | percent of samples which must have taxa in common                                                 |
@@ -446,22 +445,22 @@ Format data according to here: <https://plot.ly/export/>
 
 **Usage**
 
-``` r
+```r
 gridCode(data)
 ```
 
 **Arguments**
 
 | Argument | Description                  |
-|----------|------------------------------|
+| -------- | ---------------------------- |
 | `data`   | data to populate plotly grid |
 
 **Value**
 
 list of 2 values:
 
--   `html` html for plotly export link  
--   `javascript` js function for exporting data
+- `html` html for plotly export link
+- `javascript` js function for exporting data
 
 **Source**
 
@@ -473,14 +472,14 @@ return tables at higher tax level
 
 **Usage**
 
-``` r
+```r
 highertax(amp, taxlevel)
 ```
 
 **Arguments**
 
 | Argument   | Description                                   |
-|------------|-----------------------------------------------|
+| ---------- | --------------------------------------------- |
 | `amp`      | ampvis2 object                                |
 | `taxlevel` | taxonomic level at which to sum up the counts |
 
@@ -502,7 +501,7 @@ Transformation which computes `log10(x+1)` scale
 
 **Usage**
 
-``` r
+```r
 log10p_trans()
 ```
 
@@ -524,14 +523,14 @@ Prints time along with log message.
 
 **Usage**
 
-``` r
+```r
 logoutput(c, bline = 0, aline = 0, type = NULL)
 ```
 
 **Arguments**
 
 | Argument | Description                                           |
-|----------|-------------------------------------------------------|
+| -------- | ----------------------------------------------------- |
 | `c`      | String. Log message/command to print.                 |
 | `bline`  | Number of blank lines to precede output.              |
 | `aline`  | Number of blank lines to follow output.               |
@@ -555,14 +554,14 @@ html plotly plot.
 
 **Usage**
 
-``` r
+```r
 plotlyGrid(pplot, filename, data = NULL, title = NULL, outlib = "lib")
 ```
 
 **Arguments**
 
 | Argument   | Description                                                                                                            |
-|------------|------------------------------------------------------------------------------------------------------------------------|
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `pplot`    | plotly or ggplot object                                                                                                |
 | `filename` | output filename (fullpath)                                                                                             |
 | `data`     | data frame to export to plotly grid (optional for plotlyGrid)                                                          |
@@ -589,14 +588,14 @@ not allow ':::' internal calling of function in package.
 
 **Usage**
 
-``` r
+```r
 print_ampvis2(data)
 ```
 
 **Arguments**
 
 | Argument | Description    |
-|----------|----------------|
+| -------- | -------------- |
 | `data`   | ampvis2 object |
 
 **Value**
@@ -618,14 +617,14 @@ reading in crappy hdf5 biom file.
 
 **Usage**
 
-``` r
+```r
 read_biom(biom_file)
 ```
 
 **Arguments**
 
 | Argument    | Description          |
-|-------------|----------------------|
+| ----------- | -------------------- |
 | `biom_file` | input biom file name |
 
 **Value**
@@ -638,14 +637,14 @@ Save an HTML object to a file
 
 **Usage**
 
-``` r
+```r
 save_fillhtml(html, file, background = "white", libdir = "lib", bodystyle = "")
 ```
 
 **Arguments**
 
 | Argument     | Description                       |
-|--------------|-----------------------------------|
+| ------------ | --------------------------------- |
 | `html`       | HTML content to print             |
 | `file`       | File to write content to          |
 | `background` | Background color for web page     |
@@ -666,14 +665,14 @@ shortnames for taxonomy
 
 **Usage**
 
-``` r
+```r
 shortnames(taxtable)
 ```
 
 **Arguments**
 
 | Argument   | Description                                       |
-|------------|---------------------------------------------------|
+| ---------- | ------------------------------------------------- |
 | `taxtable` | taxonomy table object from ampvis2 object amp$tax |
 
 **Value**
@@ -695,7 +694,7 @@ Subset and/or rarefy OTU table.
 
 **Usage**
 
-``` r
+```r
 subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T,
   outdir = NULL, ...)
 ```
@@ -703,7 +702,7 @@ subsetamp(amp, sampdepth = NULL, rarefy = FALSE, printsummary = T,
 **Arguments**
 
 | Argument       | Description                                                                                                                          |
-|----------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `amp`          | ampvis2 object                                                                                                                       |
 | `sampdepth`    | sampling depth. See details.                                                                                                         |
 | `rarefy`       | rarefy the OTU table in addition to subsetting                                                                                       |
