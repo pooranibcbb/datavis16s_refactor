@@ -4,3 +4,4 @@
 testdata/
 check/
 scripts/test.R
+.DS_Store

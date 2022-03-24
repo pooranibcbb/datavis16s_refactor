@@ -10,3 +10,4 @@ __init__.py
 ^\.gitignore$
 .Rprofile
 README\.md
+.DS_Store
