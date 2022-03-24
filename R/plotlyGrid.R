@@ -128,13 +128,18 @@ save_fillhtml <- function (html, file, background = "white", libdir = "lib", bod
   dir <- dirname(file)
   oldwd <- setwd(dir)
   on.exit(setwd(oldwd), add = TRUE)
+  
   rendered <- htmltools::renderTags(html)
-  deps <- lapply(rendered$dependencies, function(dep) {
-    dep$all_files <- FALSE
+  jsdeps <- which(sapply(rendered$dependencies, function(x) is.null(x$stylesheet)))
+  ndeps <- length(rendered$dependencies)
+  deps <- lapply(1:ndeps, function(x) {
+    dep <- rendered$dependencies[[x]]
+    if (x %in% jsdeps) dep$all_files <- FALSE
     dep <- htmltools::copyDependencyToDir(dep, libdir, FALSE)
     dep <- htmltools::makeDependencyRelative(dep, dir, FALSE)
-    dep
+    return(dep)
   })
+  
   html <- c("<!DOCTYPE html>", "<html>", "<head>", "<meta charset=\"utf-8\"/>",
             htmltools::renderDependencies(deps, c("href", "file")), rendered$head,
             "</head>", sprintf("<body style=\"background-color:%s;%s\">",
