@@ -182,6 +182,8 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #' @param cat Category/column in mapping file by which to color the curves in the graph.
 #' (default TreatmentGroup)
 #' @param stepsize for rarefaction plotting.
+#' @param pipeline if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
+#' widget.
 #' @param ... parameters to pass to \code{\link{readindata}}
 #'
 #' @return Saves rarefaction curve plot to output directory.
@@ -192,7 +194,7 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 #'
 #' @source [graphs.R](../R/graphs.R)
 #'
-rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, cat = "TreatmentGroup", stepsize=1000, ...) {
+rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, cat = "TreatmentGroup", stepsize=1000, pipeline=FALSE, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -228,11 +230,12 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 
 
   ## save to html and txt file
-  plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
+  pg <- plotlyGrid(rarecurve, file.path(outdir, "rarecurve.html"), data = df_new)
   logoutput(paste0('Saving rarefaction curve table to ', file.path(outdir, 'rarecurve.txt') ))
   write.table(df_new, file.path(outdir, 'rarecurve.txt'), quote = FALSE, sep = '\t', row.names = FALSE, na = "")
 
-  return(as.integer(0))
+  if (pipeline) return(as.integer(0))
+  return(pg)
 
 }
 
@@ -430,7 +433,6 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
     heatmap$height = '90%'
     tt <- tags$div(heatmap, style = "position: absolute; top: 10px; right: 40px; bottom: 40px; left: 40px;")
     save_fillhtml(tt, file = outfile, bodystyle = 'height:100%; width:100%;overflow:hidden;')
-
   }
 
   ## make heatmap at different taxonomic levels
@@ -466,6 +468,8 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @param cats categories/columns in mapping file to use as groups.  If NULL (default), will use
 #' all columns starting with TreatmentGroup to (but not including) Description
 #' @param filesuffix (Optional) suffix for output filename
+#' @param pipeline if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
+#' widget.
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return Save alpha diversity boxplots to outdir.
@@ -479,7 +483,7 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 #' @importFrom plotly subplot ggplotly
 #' @importFrom ggplot2 scale_color_manual element_text
 #'
-adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, filesuffix=NULL, ...) {
+adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, filesuffix=NULL, pipeline=FALSE, ...) {
 
   ## read in data
   if (is.null(amp)) {
@@ -543,8 +547,9 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
   if (length(cats) > 2) divwidget$height <- paste0(400*(length(cats)), "px")
 
   ## save html file
-  plotlyGrid(divwidget, file.path(outdir, "alphadiv.html"), data = alphadiv)
-  return(as.integer(0))
+  pg <- plotlyGrid(divwidget, file.path(outdir, "alphadiv.html"), data = alphadiv)
+  if (pipeline) return(as.integer(0))
+  return(pg)
 
 }
 
@@ -556,6 +561,7 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #' @param outdir  full path to output directory
 #' @param mapfile  full path to map file
 #' @param sampdepth  sampling depth.  default: 10000
+#' @param amp ampvis2 object (output of \link{readindata} used instead of reading in from datafile, mapfile.
 #' @param ... other parameters to pass to \link{readindata}
 #'
 #' @return graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
@@ -569,13 +575,13 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 #'
 #' @export
 #'
-allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
+allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, amp = NULL, ...) {
 
   ## Set initial return value to 0.
   retvalue <- as.integer(0)
 
   ## Read in abundance data and mapfile
-  amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
+  if (is.null(amp)) amp <- readindata(datafile=datafile, mapfile=mapfile, ...)
 
   ## Choose colors
   amp$metadata <-  amp$metadata[order(amp$metadata$TreatmentGroup),]
@@ -591,7 +597,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## Rarefaction curve
   logoutput('Rarefaction curve', 1)
-  cmnd <- 'rarefactioncurve(outdir = outdir, amp = amp, colors = allcols)'
+  cmnd <- 'rarefactioncurve(outdir = outdir, amp = amp, colors = allcols, pipeline=TRUE)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
@@ -660,7 +666,7 @@ allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, ...) {
 
   ## Alpha diversity
   logoutput('Alpha diversity boxplot', 1)
-  cmnd <- 'adivboxplot(outdir = outdir, amp = amprare, sampdepth = sampdepth, colors = allcols)'
+  cmnd <- 'adivboxplot(outdir = outdir, amp = amprare, sampdepth = sampdepth, colors = allcols, pipeline=TRUE)'
   logoutput(cmnd)
   if (inherits(try(eval(parse(text=cmnd))), "try-error")) retvalue <- as.integer(1)
 
