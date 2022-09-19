@@ -95,7 +95,6 @@ shortnames <- function(taxtable) {
     temp_table[, j] <- tj
     rm(tj)
   }
-  return(temp_table)
   # tlist <- lapply(taxalist, snamecol)
   # newname_taxtable <- do.call(cbind.data.frame, tlist)
   newname_taxtable <- cbind.data.frame(taxtable[,"Kingdom"], temp_table[,taxalist], taxtable[,"OTU"])
