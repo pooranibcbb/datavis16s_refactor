@@ -34,13 +34,14 @@ logoutput <- function(c, bline = 0, aline = 0, type=NULL) {
 #' @source [utilities.R](../R/utilities.R)
 #'
 shortnames <- function(taxtable) {
+  slevel <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
   ## greengenes
   taxtable <- apply(taxtable, 2, function(x) { v <- grep("_unclassified$|^Unassigned$", x); x[v] <- NA; x })
   taxtable <- apply(taxtable, 2, function(x) { gsub("^[kpcofgs]__", "", x) })
 
   ## SILVA97
   taxtable <- apply(taxtable, 2, function(x) { gsub("^D_\\d+__", "", x) })
-  uncnames <-  c("Other", "uncultured", "uncultured bacterium", "Ambiguous_taxa", "uncultured organism", "uncultured rumen bacterium")
+  uncnames <-  c("Other", "uncultured", "uncultured bacterium", "Ambiguous_taxa", "uncultured organism", "uncultured rumen bacterium", "Incertae Sedis")
 
   taxtable[which(taxtable %in% c("", "none"), arr.ind = TRUE)] <- NA
 
@@ -57,40 +58,47 @@ shortnames <- function(taxtable) {
   }
 
 
+  
+  
+
   ## Generate newnames
-  snamecol <- function(taxa) {
+  snamecol <- function(taxa, inputtable) {
     sname <- function(x) {
       ## SILVA
-      y <- suppressWarnings(min(which(x %in% uncnames)))
-      if (y != "Inf"){
-        return(paste(x[y-1], colnames(taxtable)[y-1], x[y]))
+      y <- length(x)
+      
+      if (x[y] %in% uncnames) {
+        return(paste(x[y-1], x[y], colnames(taxtable)[y]))
       }
-
-      y <- suppressWarnings(min(which(is.na(x))))
-      if (y == "Inf") {
-        return(paste(x[length(x)]))
+      
+      
+      if (is.na(x[y])) {
+        if ( y == 2 ) {
+          return(paste(x[1]))
+        }
+        if (any(endsWith(x[y-1], slevel))) return(x[y-1])
+        return(paste(x[y-1], colnames(shorttable)[y-1]))
       }
-
-      if ( y == 2 ) {
-        return(paste(x[1]))
-      }
-
-
-      return(paste(x[y-1], colnames(shorttable)[y-1]))
-
+      return(paste(x[y]))
     }
 
-    tt <- which(colnames(taxtable) == taxa)
-    shorttable <- taxtable[,1:tt]
+    tt <- which(colnames(inputtable) == taxa)
+    shorttable <- inputtable[,1:tt]
     sn <- apply(shorttable, 1, sname )
     return(sn)
   }
 
-
-  taxalist <- intersect(c("Phylum", "Class", "Order", "Family", "Genus", "Species"), colnames(taxtable))
-  tlist <- lapply(taxalist, snamecol)
-  newname_taxtable <- do.call(cbind.data.frame, tlist)
-  newname_taxtable <- cbind.data.frame(taxtable[,"Kingdom"], newname_taxtable, taxtable[,"OTU"])
+  taxalist <- intersect(slevel[2:7], colnames(taxtable))
+  temp_table <- taxtable
+  for (j in taxalist) {
+    tj <- snamecol(j, temp_table)
+    temp_table[, j] <- tj
+    rm(tj)
+  }
+  return(temp_table)
+  # tlist <- lapply(taxalist, snamecol)
+  # newname_taxtable <- do.call(cbind.data.frame, tlist)
+  newname_taxtable <- cbind.data.frame(taxtable[,"Kingdom"], temp_table[,taxalist], taxtable[,"OTU"])
   colnames(  newname_taxtable ) <- colnames(taxtable)
   return(newname_taxtable)
 
