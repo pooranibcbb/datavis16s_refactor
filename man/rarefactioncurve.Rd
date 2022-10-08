@@ -8,7 +8,7 @@
 }
 \usage{
 rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
-  cat = "TreatmentGroup", stepsize = 1000, ...)
+  cat = "TreatmentGroup", stepsize = 1000, pipeline = FALSE, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or see \link{readindata})}
@@ -25,6 +25,9 @@ rarefactioncurve(datafile, outdir, mapfile, amp = NULL, colors = NULL,
 (default TreatmentGroup)}
 
 \item{stepsize}{for rarefaction plotting.}
+
+\item{pipeline}{if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
+widget.}
 
 \item{...}{parameters to pass to \code{\link{readindata}}}
 }

@@ -32,7 +32,8 @@ logoutput <- function(c, bline = 0, aline = 0, type=NULL) {
 #' are sanitized and formatted to be a bit nicer.
 #'
 #' @source [utilities.R](../R/utilities.R)
-#'
+#' 
+#' @export
 shortnames <- function(taxtable) {
   slevel <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
   ## greengenes
@@ -107,6 +108,7 @@ shortnames <- function(taxtable) {
 #'
 #' @param amp  ampvis2 object
 #' @param taxlevel  taxonomic level at which to sum up the counts
+#' @param keepunclass logical. \code{FALSE} is default and fills in empty \code{taxlevel} with lowest taxonomic ID. \code{TRUE} will label as 'unclassified'
 #'
 #' @return  ampvis2 object with otu table and taxa summed up to the taxlevel
 #'
@@ -114,13 +116,20 @@ shortnames <- function(taxtable) {
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
-highertax <- function(amp, taxlevel) {
+highertax <- function(amp, taxlevel, keepunclass=F) {
 
   otu <- as.matrix(amp$abund)
   tax <- amp$tax
 
   tc <- which(colnames(tax) == taxlevel)
   sn <- shortnames(tax)
+  if (keepunclass) {
+    v <- which((is.na(tax[,tc]) | !nzchar(tax[,tc])))
+    sn[v,tc] <- 'unclassified'
+    sn <- as.data.frame(sn)
+    sn <- sn[,1:tc]
+  }
+
   tax <- tax[,1:tc]
   tax[,tc] <- sn[,tc]
 
@@ -129,14 +138,22 @@ highertax <- function(amp, taxlevel) {
   totu <- cbind.data.frame(otu, tax)
   dt <- data.table(totu)
   dt <- dt[, lapply(.SD, sum) , by = c(taxcols)]
+
   otu <- data.frame(dt[,otucols, with=FALSE], check.names = FALSE)
   tax <- data.frame(dt[,taxcols, with=FALSE])
   dupes <- tax[duplicated(tax[,tc]),tc]
   dupes <- which(tax[,tc] %in% dupes)
-  tax[dupes,tc] <- paste(tax[dupes,tc-1], tax[dupes,tc])
+  # row.names must be unique
+  if (keepunclass) {
+    rn <- tax[,tc]
+    rn[dupes] <- paste0(tax[dupes,tc], 1:length(dupes))
+  } else {
+    tax[dupes,tc] <- trimws(paste(tax[dupes,tc-1], tax[dupes,tc]))
+    rn <- tax[,tc]
+  }
 
-  row.names(otu) <- tax[,tc]
-  row.names(tax) <- tax[,tc]
+  row.names(otu) <- rn
+  row.names(tax) <- rn
   amp$abund <- as.data.frame(otu)
   amp$tax <- tax
   return(amp)
@@ -155,6 +172,7 @@ highertax <- function(amp, taxlevel) {
 #'
 #' @source [utilities.R](../R/utilities.R)
 #'
+#' @export
 filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE, toptaxa=NULL) {
 
   otu <- as.matrix(amp$abund)
@@ -344,6 +362,36 @@ read_biom <- function (biom_file)
   }
 
   return(biomformat::biom(x))
+}
+
+#' Convert ampvis2 object to biom
+#' 
+#' @description Converts ampvis2 object to biom and optionally writes file.  Uses 
+#' \link[biomformat]{make_biom} and modifies object to make it validate with 
+#' \url{https://biom-format.org/}.
+#' 
+#' @inheritParams biomformat::make_biom
+#'
+#' @param amp ampvis2 object like from output of \code{\link[ampvis2:amp_load]{ampvis2::amp_load}}
+#' @param file (Optional). File name to write (BIOM V1 json).
+#'
+#' @return invisibly returns \link[biomformat]{biom} object
+#' @export
+#'
+ampvis2biom <- function(amp, file=NULL, id=NULL, matrix_element_type=c('int', 'float')) {
+  
+  biom <- biomformat::make_biom(data = amp$abund, 
+                                observation_metadata = amp$tax,
+                                sample_metadata = amp$metadata,
+                                id = id, 
+                                matrix_element_type = matrix_element_type[1])
+  biom$date <- strftime(Sys.time(), format="%Y-%m-%dT%H:%M:%S")
+  ## biom metadata rows / columns need to be dictionary to validate
+  ## and we use qiime convention of obs metadata key being "taxonomy"
+  biom$rows <- lapply(biom$rows, function(x) { mm <- x$metadata; x$metadata <- NULL; x$metadata$taxonomy <- mm; x })
+  biom$columns <- lapply(biom$columns, function(x) { x$metadata <- as.list(x$metadata); return(x) })
+  if (!is.null(file)) biomformat::write_biom(biom, file)
+  invisible(biom)
 }
 
 #' Log base 10 + 1 scale

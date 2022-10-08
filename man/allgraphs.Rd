@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
+allgraphs(datafile, outdir, mapfile, sampdepth = 10000, amp = NULL, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file (biom or txt file see \link{readindata} for format)}
@@ -17,6 +17,8 @@ allgraphs(datafile, outdir, mapfile, sampdepth = 10000, ...)
 \item{mapfile}{full path to map file}
 
 \item{sampdepth}{sampling depth.  default: 10000}
+
+\item{amp}{ampvis2 object (output of \link{readindata} used instead of reading in from datafile, mapfile.}
 
 \item{...}{other parameters to pass to \link{readindata}}
 }

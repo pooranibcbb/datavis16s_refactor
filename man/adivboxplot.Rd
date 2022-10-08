@@ -8,7 +8,7 @@
 }
 \usage{
 adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
-  colors = NULL, cats = NULL, filesuffix = NULL, ...)
+  colors = NULL, cats = NULL, filesuffix = NULL, pipeline = FALSE, ...)
 }
 \arguments{
 \item{datafile}{full path to input OTU file}
@@ -27,6 +27,9 @@ adivboxplot(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL,
 all columns starting with TreatmentGroup to (but not including) Description}
 
 \item{filesuffix}{(Optional) suffix for output filename}
+
+\item{pipeline}{if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
+widget.}
 
 \item{...}{other parameters to pass to \link{readindata}}
 }

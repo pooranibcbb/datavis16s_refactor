@@ -7,7 +7,7 @@
 [graphs.R](../R/graphs.R)
 }
 \usage{
-trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "/var/log/job.log",
+trygraphwrapper(datafile, outdir, mapfile, FUN, logfilename = "logfile.txt",
   info = TRUE, tsvfile = FALSE, ...)
 }
 \arguments{

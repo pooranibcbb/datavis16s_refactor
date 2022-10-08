@@ -7,12 +7,14 @@
 [utilities.R](../R/utilities.R)
 }
 \usage{
-highertax(amp, taxlevel)
+highertax(amp, taxlevel, keepunclass = F)
 }
 \arguments{
 \item{amp}{ampvis2 object}
 
 \item{taxlevel}{taxonomic level at which to sum up the counts}
+
+\item{keepunclass}{logical. \code{FALSE} is default and fills in empty \code{taxlevel} with lowest taxonomic ID. \code{TRUE} will label as 'unclassified'}
 }
 \value{
 ampvis2 object with otu table and taxa summed up to the taxlevel

@@ -2,10 +2,13 @@
 
 export(adivboxplot)
 export(allgraphs)
+export(ampvis2biom)
+export(filterlowabund)
 export(morphheatmap)
 export(pcoaplot)
 export(rarefactioncurve)
 export(readindata)
+export(shortnames)
 export(trygraphwrapper)
 import(ampvis2)
 importFrom(data.table,.SD)
