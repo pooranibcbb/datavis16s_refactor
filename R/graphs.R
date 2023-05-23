@@ -824,6 +824,6 @@ fargs <- args[((length(args) / 2) + 2):length(args)]
 fargs[c('sampdepth', 'mincount')] <- lapply(fargs[c('sampdepth', 'mincount')], function(x) as.numeric(x))
 fargs$FUN <- 'allgraphs'
 do.call(trygraphwrapper, args = fargs)
-print('hello')
+
 # fargs$logfilename <- NULL
 # do.call(allgraphs, args = fargs)
