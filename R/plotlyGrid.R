@@ -1,29 +1,31 @@
-#' @title Add Plotly data export to Plotly graph
-#'
-#' @description All functions create an output html plot  with link which sends the data to a grid in the plotly chart
-#'  studio.
-#'
-#'  \code{plotlyGrid} takes in a ggplot or plotly object and creates an output html plotly plot.
-#'
-#' @param pplot plotly or ggplot object
-#' @param filename output filename (fullpath)
-#' @param data data frame to export to plotly grid (optional for plotlyGrid)
-#' @param title title of html page
-#' @param outlib (Optional) name of external lib directory for non-selfcontained html.
-#' Useful for multiple graphs sharing the same lib.
-#'
-#' @importFrom htmlwidgets prependContent appendContent saveWidget
-#' @importFrom plotly plotly_data plotly_build ggplotly
-#'
-#' @return html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
-#' Invisibly returns the plotly html widget.
-#'
-#' @source [plotlyGrid.R](../R/plotlyGrid.R)
-#' @rdname plotlyGrid
-#' @name plotlyGrid
-#'
-plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 
+plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
+  #' @title Add Plotly data export to Plotly graph
+  #'
+  #' @description All functions create an output html plot  with link which sends the data to a grid in the plotly chart
+  #'  studio.
+  #'
+  #'  \code{plotlyGrid} takes in a ggplot or plotly object and creates an output html plotly plot.
+  #'
+  #' @param pplot plotly or ggplot object
+  #' @param filename output filename (fullpath)
+  #' @param data data frame to export to plotly grid (optional for plotlyGrid)
+  #' @param title title of html page
+  #' @param outlib (Optional) name of external lib directory for non-selfcontained html.
+  #' Useful for multiple graphs sharing the same lib.
+  #'
+  #' @importFrom htmlwidgets prependContent appendContent saveWidget
+  #' @importFrom plotly plotly_data plotly_build ggplotly
+  #'
+  #' @return html plot is saved to filename. external libraries are saved to outlib in same directory as filename.
+  #' Invisibly returns the plotly html widget.
+  #'
+  #' @source [plotlyGrid.R](../R/plotlyGrid.R)
+  #' @rdname plotlyGrid
+  #' @name plotlyGrid
+  #'
+  import::here(htmlwidgets, prependContent, appendContent, saveWidget)
+  import::here(plotly, plotly_data, plotly_build, ggplotly)
   if ("ggplot" %in% class(pplot)) {
 
     withCallingHandlers({
@@ -58,24 +60,25 @@ plotlyGrid <- function(pplot, filename, data=NULL, title=NULL, outlib="lib") {
 }
 
 
-#' @title Format plotly grid code
-#'
-#' @description Format data according to here: \url{https://plot.ly/export/}
-#'
-#' @param data data to populate plotly grid
-#'
-#' @return list of 2 values:
-#' \describe{
-#'   \item{html}{html for plotly export link}
-#'   \item{javascript}{js function for exporting data}
-#' }
-#'
-#' @importFrom htmltools HTML
-#'
-#' @source [plotlyGrid.R](../R/plotlyGrid.R)
-#'
-gridCode <- function(data) {
 
+gridCode <- function(data) {
+  #' @title Format plotly grid code
+  #'
+  #' @description Format data according to here: \url{https://plot.ly/export/}
+  #'
+  #' @param data data to populate plotly grid
+  #'
+  #' @return list of 2 values:
+  #' \describe{
+  #'   \item{html}{html for plotly export link}
+  #'   \item{javascript}{js function for exporting data}
+  #' }
+  #'
+  #' @importFrom htmltools HTML
+  #'
+  #' @source [plotlyGrid.R](../R/plotlyGrid.R)
+  import::here(htmltools, HTML)
+  
   ll <- as.list(data)
 
   nn <- names(ll)
@@ -111,20 +114,21 @@ gridCode <- function(data) {
 }
 
 
-#' Save an HTML object to a file
-#'
-#' @param html HTML content to print
-#' @param file File to write content to
-#' @param background Background color for web page
-#' @param libdir Directory to copy dependencies to
-#' @param bodystyle html style string
-#'
-#' @return save html to file
-#'
-#' @source [plotlyGrid.R](../R/plotlyGrid.R)
-#'
+
 save_fillhtml <- function (html, file, background = "white", libdir = "lib", bodystyle="")
 {
+  #' Save an HTML object to a file
+  #'
+  #' @param html HTML content to print
+  #' @param file File to write content to
+  #' @param background Background color for web page
+  #' @param libdir Directory to copy dependencies to
+  #' @param bodystyle html style string
+  #'
+  #' @return save html to file
+  #'
+  #' @source [plotlyGrid.R](../R/plotlyGrid.R)
+  #'
   dir <- dirname(file)
   oldwd <- setwd(dir)
   on.exit(setwd(oldwd), add = TRUE)

@@ -1,24 +1,29 @@
-#' Subset and rarefy OTU table.
-#'
-#' @description Subset and/or rarefy OTU table.
-#' @source [graphs.R](../R/graphs.R)
-#' @param amp  ampvis2 object
-#' @param sampdepth  sampling depth.  See details.
-#' @param rarefy  rarefy the OTU table in addition to subsetting
-#' @param printsummary Logical. print ampvis2 summary of OTU table
-#' @param outdir Output directory.  If not null, and samples are removed from amp, the sample names will be output
-#' to outdir/samples_being_ignored.txt
-#' @param ... other parameters to pass to amp_subset_samples
-#'
-#' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
-#' rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function
-#' rrarefy.
-#'
-#' @return ampvis2 object
-#'
-#' @importFrom vegan rrarefy
-#'
+#!/usr/bin/env Rscript
+
 subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdir=NULL, ...) {
+  #' Subset and rarefy OTU table.
+  #'
+  #' @description Subset and/or rarefy OTU table.
+  #' @source [graphs.R](../R/graphs.R)
+  #' @param amp  ampvis2 object
+  #' @param sampdepth  sampling depth.  See details.
+  #' @param rarefy  rarefy the OTU table in addition to subsetting
+  #' @param printsummary Logical. print ampvis2 summary of OTU table
+  #' @param outdir Output directory.  If not null, and samples are removed from amp, the sample names will be output
+  #' to outdir/samples_being_ignored.txt
+  #' @param ... other parameters to pass to amp_subset_samples
+  #'
+  #' @details \code{sampdepth} will be used to filter out samples with fewer than this number of reads.  If
+  #' rarefy is TRUE, then it will also be used as the depth at which to subsample using vegan function
+  #' rrarefy.
+  #'
+  #' @return ampvis2 object
+  #'
+  #' @importFrom vegan rrarefy
+  #'
+  
+  import::here(vegan, rrarefy)
+  import::here(ampvis2, amp_subset_samples)
   ## rarefy
   if (rarefy & !is.null(sampdepth)) {
     cmnd <- "set.seed(500)"
@@ -61,27 +66,27 @@ subsetamp <- function(amp, sampdepth = NULL, rarefy=FALSE, printsummary=T, outdi
 
 
 
-#' Read in data
-#'
-#' @param datafile  full path to input data file.  must be either biom file or tab delimited text file.
-#' See details.
-#' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
-#' @param tsvfile  Logical.  Is datafile a tab-delimited text file? See details.
-#' @param mincount  minimum number of reads
-#' @return ampvis2 object
-#'
-#' @details datafile may be either biom file or text file.  If text file, it should have ampvis2 OTU table
-#' format \url{https://madsalbertsen.github.io/ampvis2/reference/amp_load.html#the-otu-table}. If the
-#' number of reads is less than mincount, the function will give an error, as we cannot make graphs
-#' with so few counts.
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-#' @importFrom utils read.delim
-#'
-#' @export
-#'
+
 readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
+  #' Read in data
+  #'
+  #' @param datafile  full path to input data file.  must be either biom file or tab delimited text file.
+  #' See details.
+  #' @param mapfile  full path to mapfile.  must contain SampleID, TreatmentGroup, and Description columns
+  #' @param tsvfile  Logical.  Is datafile a tab-delimited text file? See details.
+  #' @param mincount  minimum number of reads
+  #' @return ampvis2 object
+  #'
+  #' @details datafile may be either biom file or text file.  If text file, it should have ampvis2 OTU table
+  #' format \url{https://madsalbertsen.github.io/ampvis2/reference/amp_load.html#the-otu-table}. If the
+  #' number of reads is less than mincount, the function will give an error, as we cannot make graphs
+  #' with so few counts.
+  #'
+  #' @source [graphs.R](../R/graphs.R)
+  #'
+  #' @importFrom utils read.delim
+  #'
+  import::here(ampvis2, amp_load)
   #  locale <- Sys.getlocale()
   Sys.setlocale('LC_ALL','C')
   ## mapfile
@@ -172,30 +177,33 @@ readindata <- function(datafile, mapfile, tsvfile=FALSE, mincount=10) {
 }
 
 
-#' Make rarefaction curve graph
-#'
-#' @param datafile full path to input OTU file (biom or see \link{readindata})
-#' @param outdir full path to output directory
-#' @param mapfile  full path mapping file
-#' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
-#' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
-#' @param cat Category/column in mapping file by which to color the curves in the graph.
-#' (default TreatmentGroup)
-#' @param stepsize for rarefaction plotting.
-#' @param pipeline if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
-#' widget.
-#' @param ... parameters to pass to \code{\link{readindata}}
-#'
-#' @return Saves rarefaction curve plot to output directory.
-#' @export
-#'
-#' @importFrom plotly ggplotly plotly_data
-#' @importFrom ggplot2 scale_color_manual
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, cat = "TreatmentGroup", stepsize=1000, pipeline=FALSE, ...) {
 
+rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL, cat = "TreatmentGroup", stepsize=1000, pipeline=FALSE, ...) {
+  #' Make rarefaction curve graph
+  #'
+  #' @param datafile full path to input OTU file (biom or see \link{readindata})
+  #' @param outdir full path to output directory
+  #' @param mapfile  full path mapping file
+  #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
+  #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+  #' @param cat Category/column in mapping file by which to color the curves in the graph.
+  #' (default TreatmentGroup)
+  #' @param stepsize for rarefaction plotting.
+  #' @param pipeline if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
+  #' widget.
+  #' @param ... parameters to pass to \code{\link{readindata}}
+  #'
+  #' @return Saves rarefaction curve plot to output directory.
+  #' @export
+  #'
+  #' @importFrom plotly ggplotly plotly_data
+  #' @importFrom ggplot2 scale_color_manual
+  #'
+  #' @source [graphs.R](../R/graphs.R)
+  #'
+  
+  import::here(plotly, ggplotly, plotly_data)
+  import::here(ggplot2, scale_color_manual, ggtitle)
   ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
@@ -240,32 +248,34 @@ rarefactioncurve <- function(datafile, outdir, mapfile, amp = NULL, colors=NULL,
 }
 
 
-#' PCoA plots
-#'
-#' @param datafile full path to input OTU file (biom or see \link{readindata})
-#' @param outdir  full path to output directory
-#' @param mapfile  full path to map file
-#' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
-#' @param sampdepth  sampling depth
-#' @param distm  distance measure for PCoA.  any that are supported by
-#' \href{https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html}{amp_ordinate} except for unifrac, wunifrac, and none.
-#' @param filter_species Remove low abundant OTU's across all samples below this threshold in percent.
-#' Setting this to 0 may drastically increase computation time.
-#' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.
-#' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
-#' @param filesuffix (Optional) suffix for output filename
-#' @param ... parameters to pass to  \code{\link{readindata}}
-#'
-#' @return Saves pcoa plots to outdir.
-#'
-#' @importFrom ggplot2 scale_color_manual scale_fill_manual ggtitle
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-#' @export
-#'
-pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, filesuffix=NULL, ...) {
 
+pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, distm="binomial", filter_species=0.1, rarefy=FALSE, colors=NULL, filesuffix=NULL, ...) {
+  #' PCoA plots
+  #'
+  #' @param datafile full path to input OTU file (biom or see \link{readindata})
+  #' @param outdir  full path to output directory
+  #' @param mapfile  full path to map file
+  #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
+  #' @param sampdepth  sampling depth
+  #' @param distm  distance measure for PCoA.  any that are supported by
+  #' \href{https://madsalbertsen.github.io/ampvis2/reference/amp_ordinate.html}{amp_ordinate} except for unifrac, wunifrac, and none.
+  #' @param filter_species Remove low abundant OTU's across all samples below this threshold in percent.
+  #' Setting this to 0 may drastically increase computation time.
+  #' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.
+  #' @param colors (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+  #' @param filesuffix (Optional) suffix for output filename
+  #' @param ... parameters to pass to  \code{\link{readindata}}
+  #'
+  #' @return Saves pcoa plots to outdir.
+  #'
+  #' @importFrom ggplot2 scale_color_manual scale_fill_manual ggtitle
+  #'
+  #' @source [graphs.R](../R/graphs.R)
+  #'
+  #' @export
+  #'
+  import::here(ggplot2, scale_color_manual, scale_fill_manual, ggtitle)
+  import::here(ampvis2, amp_ordinate)
   ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
@@ -301,49 +311,52 @@ pcoaplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, dist
 }
 
 
-#' Morpheus heatmap
-#'
-#' @description Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.  The heatmaps are made
-#' using relative abundances.
-#'
-#' @param datafile  full path to input OTU file (biom or see \link{readindata})
-#' @param outdir  full path to output directory
-#' @param mapfile full path to mapping file
-#' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
-#' @param sampdepth sampling depth
-#' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.
-#' @param filter_level minimum abundance to show in the heatmap
-#' @param taxlevel vector of taxonomic levels to graph.  must be subset of
-#' c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.
-#' @param colors  (Optional) color vector - length equal to number of TreatmentGroups in mapfile
-#' @param rowAnnotations (Optional) Row annotations to be used in addition to taxonomy.
-#' @param force Force "seq" level heatmap to be made even if number of seqs is greater than 2000. '
-#' See Details.
-#' @param filesuffix (Optional) suffix for output filename
-#' @param ...  parameters to pass to  \code{\link{readindata}}
-#'
-#' @return  Saves heatmaps to outdir.
-#' @export
-#'
-#' @details For the \code{taxlevel} parameter, each level is made into a separate heatmap.  "seq" makes
-#'  the heatmap with no collapsing of taxonomic levels if there are fewer than 2000 ASVs/OTUs.  Otherwise,
-#'  Species level is made instead.
-#'
-#' @importFrom morpheus morpheus
-#' @importFrom grDevices colorRampPalette
-#' @importFrom htmltools tags
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-#' @examples
-#' \dontrun{
-#'  morphheatmap(datafile="OTU_table.txt", outdir="outputs/graphs", mapfile="mapfile.txt",
-#'  sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
-#' }
-#'
-#'
-morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, force=FALSE, filesuffix=NULL, ...) {
 
+morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL, rarefy=FALSE, filter_level = NULL, taxlevel=c("seq"), colors = NULL, rowAnnotations=NULL, force=FALSE, filesuffix=NULL, ...) {
+  #' Morpheus heatmap
+  #'
+  #' @description Creates heatmaps using Morpheus R API \url{https://software.broadinstitute.org/morpheus/}.  The heatmaps are made
+  #' using relative abundances.
+  #'
+  #' @param datafile  full path to input OTU file (biom or see \link{readindata})
+  #' @param outdir  full path to output directory
+  #' @param mapfile full path to mapping file
+  #' @param amp  (Optional) ampvis2 object. may be specified instead of mapfile and datafile
+  #' @param sampdepth sampling depth
+  #' @param rarefy Logical. Rarefy the OTU table if sampdepth is specified.
+  #' @param filter_level minimum abundance to show in the heatmap
+  #' @param taxlevel vector of taxonomic levels to graph.  must be subset of
+  #' c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "seq").  See Details.
+  #' @param colors  (Optional) color vector - length equal to number of TreatmentGroups in mapfile
+  #' @param rowAnnotations (Optional) Row annotations to be used in addition to taxonomy.
+  #' @param force Force "seq" level heatmap to be made even if number of seqs is greater than 2000. '
+  #' See Details.
+  #' @param filesuffix (Optional) suffix for output filename
+  #' @param ...  parameters to pass to  \code{\link{readindata}}
+  #'
+  #' @return  Saves heatmaps to outdir.
+  #' @export
+  #'
+  #' @details For the \code{taxlevel} parameter, each level is made into a separate heatmap.  "seq" makes
+  #'  the heatmap with no collapsing of taxonomic levels if there are fewer than 2000 ASVs/OTUs.  Otherwise,
+  #'  Species level is made instead.
+  #'
+  #' @importFrom morpheus morpheus
+  #' @importFrom grDevices colorRampPalette
+  #' @importFrom htmltools tags
+  #'
+  #' @source [graphs.R](../R/graphs.R)
+  #'
+  #' @examples
+  #' \dontrun{
+  #'  morphheatmap(datafile="OTU_table.txt", outdir="outputs/graphs", mapfile="mapfile.txt",
+  #'  sampdepth = 25000, taxlevel = c("Family", "seq"), tsvfile=TRUE)
+  #' }
+  #'
+  #'
+  import::here(morpheus, morpheus)
+  import::here(htmltools, tags)
+  
   ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
@@ -454,37 +467,40 @@ morphheatmap <- function(datafile, outdir, mapfile, amp = NULL, sampdepth = NULL
 }
 
 
-#' Alpha diversity boxplot
-#'
-#' Plots plotly boxplot of shannon diversity and Chao species richness.  If sampling depth is NULL,
-#' rarefies OTU table to the minimum readcount of any sample.  If this is low, then the plot will fail.
-#'
-#' @param datafile full path to input OTU file
-#' @param outdir  full path to output directory
-#' @param mapfile  full path to map file
-#' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
-#' @param sampdepth  sampling depth.  see details.
-#' @param colors colors to use for plots
-#' @param cats categories/columns in mapping file to use as groups.  If NULL (default), will use
-#' all columns starting with TreatmentGroup to (but not including) Description
-#' @param filesuffix (Optional) suffix for output filename
-#' @param pipeline if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
-#' widget.
-#' @param ... other parameters to pass to \link{readindata}
-#'
-#' @return Save alpha diversity boxplots to outdir.
-#' @export
-#'
-#' @details If \code{sampdepth} is NULL, the sampling depth is set to the size of the smallest
-#' sample.
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-#' @importFrom plotly subplot ggplotly
-#' @importFrom ggplot2 scale_color_manual element_text
-#'
-adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, filesuffix=NULL, pipeline=FALSE, ...) {
 
+adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, colors = NULL, cats = NULL, filesuffix=NULL, pipeline=FALSE, ...) {
+  #' Alpha diversity boxplot
+  #'
+  #' Plots plotly boxplot of shannon diversity and Chao species richness.  If sampling depth is NULL,
+  #' rarefies OTU table to the minimum readcount of any sample.  If this is low, then the plot will fail.
+  #'
+  #' @param datafile full path to input OTU file
+  #' @param outdir  full path to output directory
+  #' @param mapfile  full path to map file
+  #' @param amp  ampvis2 object. may be specified instead of mapfile and datafile
+  #' @param sampdepth  sampling depth.  see details.
+  #' @param colors colors to use for plots
+  #' @param cats categories/columns in mapping file to use as groups.  If NULL (default), will use
+  #' all columns starting with TreatmentGroup to (but not including) Description
+  #' @param filesuffix (Optional) suffix for output filename
+  #' @param pipeline if TRUE, return 0 on success.  For use in pipelines. Otherwise will return
+  #' widget.
+  #' @param ... other parameters to pass to \link{readindata}
+  #'
+  #' @return Save alpha diversity boxplots to outdir.
+  #' @export
+  #'
+  #' @details If \code{sampdepth} is NULL, the sampling depth is set to the size of the smallest
+  #' sample.
+  #'
+  #' @source [graphs.R](../R/graphs.R)
+  #'
+  #' @importFrom plotly subplot ggplotly
+  #' @importFrom ggplot2 scale_color_manual element_text
+  #'
+  import::here(plotly, subplot, ggplotly)
+  import::here(ggplot2, scale_color_manual, element_text, ggtitle)
+  import::here(ampvis2, amp_alphadiv)
   ## read in data
   if (is.null(amp)) {
     cmnd <- 'amp <- readindata(datafile=datafile, mapfile=mapfile, ...)'
@@ -516,11 +532,11 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
       lc <- NULL
     }
 
-    gshan <- ggplot2::ggplot(adiv, ggplot2::aes_string(x=col, y="Shannon", color = col, text = "SampleID")) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none", axis.text.x = element_text(angle=60)) + ggtitle("species alpha diversity")
+    gshan <- ggplot2::ggplot(adiv, ggplot2::aes(x=.data[[col]], y=Shannon, color = .data[[col]], text = SampleID )) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none", axis.text.x = element_text(angle=60)) + ggtitle("species alpha diversity")
     if (!is.null(lc)) gshan <- gshan + scale_color_manual(values=lc)
     shannon <- ggplotly(gshan, tooltip = c("text", "x", "y"))
 
-    gchao1 <- ggplot2::ggplot(adiv, ggplot2::aes_string(x=col, y="Chao1", color = col, text = "SampleID")) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none", axis.text.x = element_text(angle=60))
+    gchao1 <- ggplot2::ggplot(adiv, ggplot2::aes(x=.data[[col]], y=Chao1, color = .data[[col]], text = SampleID )) + ggplot2::geom_boxplot(outlier.shape = NA) + ggplot2::geom_jitter(width = 0.2, height = 0, size=1) + ggplot2::theme_bw() + ggplot2::theme(legend.position = "none", axis.text.x = element_text(angle=60))
     if (!is.null(lc)) gchao1 <- gchao1 + scale_color_manual(values=lc)
     chao1 <- ggplotly(gchao1, tooltip = c("text", "x", "y"))
 
@@ -553,30 +569,29 @@ adivboxplot <- function(datafile, outdir, mapfile, amp=NULL, sampdepth = NULL, c
 
 }
 
-#' Pipeline function
-#'
-#' @description Make all 4 types of graphs
 
-#' @param datafile full path to input OTU file (biom or txt file see \link{readindata} for format)
-#' @param outdir  full path to output directory
-#' @param mapfile  full path to map file
-#' @param sampdepth  sampling depth.  default: 10000
-#' @param amp ampvis2 object (output of \link{readindata} used instead of reading in from datafile, mapfile.
-#' @param ... other parameters to pass to \link{readindata}
-#'
-#' @return graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
-#'
-#' This value is used to remove samples before for alpha diversity and PCoA plots.
-#' Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
-#'
-#' @importFrom stats median
-#'
-#' @source [graphs.R](../R/graphs.R)
-#'
-#' @export
-#'
 allgraphs <- function(datafile, outdir, mapfile, sampdepth = 10000, amp = NULL, ...) {
-
+  #' Pipeline function
+  #'
+  #' @description Make all 4 types of graphs
+  #' @param datafile full path to input OTU file (biom or txt file see \link{readindata} for format)
+  #' @param outdir  full path to output directory
+  #' @param mapfile  full path to map file
+  #' @param sampdepth  sampling depth.  default: 10000
+  #' @param amp ampvis2 object (output of \link{readindata} used instead of reading in from datafile, mapfile.
+  #' @param ... other parameters to pass to \link{readindata}
+  #'
+  #' @return graphs are saved to outdir.  See [user doc](../doc/user_doc.md).
+  #'
+  #' This value is used to remove samples before for alpha diversity and PCoA plots.
+  #' Also, to rarefy OTU table for the alpha diversity and Bray-Curtis distance PCoA.
+  #'
+  #' @importFrom stats median
+  #'
+  #' @source [graphs.R](../R/graphs.R)
+  #'
+  #' @export
+  #'
   ## Set initial return value to 0.
   retvalue <- as.integer(0)
 
@@ -728,21 +743,21 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   ## see http://ai-bcbbsptprd01.niaid.nih.gov:8080/browse/NPHL-769
   options(stringsAsFactors = FALSE, scipen = 999, warn=1, show.error.locations= TRUE, error = function() traceback(2), digits.secs = 3)
 
-  if(is.vector(logfilename)){
+  if(length(logfilename) > 1){
     # vector of file paths provided
     sink(file = logfilename[1], append = TRUE)
-    if(length(logfilename) > 1){
       # multiple files provided
       for(l in logfilename[-1]){
         sink(file = l, append = TRUE, split = TRUE)  
       }
-    }
   } else {
     # a single file path provided
-    sink(file = logfilename, append = TRUE)  
+    logconnection <- file(logfilename, open = 'at')
+    sink(file = logconnection, append = TRUE, type='output')
+    sink(file = logconnection, append = TRUE, type = 'message')
   }
 
-  on.exit(closeAllConnections())
+  on.exit(closeAllConnections(), add = TRUE, after = TRUE)
   ## create output directory
   outdir <- file.path(outdir, "graphs")
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
@@ -771,3 +786,45 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
   return(as.integer(0))
 
 }
+
+
+##### MAIN ######
+import::here(docopt, docopt)
+
+comm_args <- commandArgs()
+print(comm_args)
+
+## get path to this script 
+## if running interactively, set scriptdir variable manually to directory that contains this script (graphs.R), utilities.R, and plotlyGrid.R
+## - unclear of pipe |> is available in version of R on instance so this is very wordy
+scriptdir <- grep("--file", comm_args, fixed = T, value = T)
+
+if (length(scriptdir) < 1) {
+  stop("if running interactively, please set scriptdir variable manually to directory that contains this script (graphs.R), utilities.R, and plotlyGrid.R")
+}
+
+scriptdir <- gsub('--file=', '', scriptdir, fixed = T)
+scriptdir <- tools::file_path_as_absolute(dirname(scriptdir))
+## source scripts in this directory
+source(file.path(scriptdir, 'utilities.R'), local = T)
+source(file.path(scriptdir, 'plotlyGrid.R'), local = T)
+
+"Usage: graphs.R [-h] [-l <logfile> -s <sampdepth> --tsvfile --mincount <mincount>] -d <datafile> -m <mapfile> -o <outdir>
+
+-h --help                         show this
+-d --datafile FILE                input ASV/OTU table - either biom or tsv file
+-m --mapfile FILE                 mapping file
+-o --outdir DIR                   output directory
+-l --logfilename FILE             log filename [default: logfile.txt]
+-s --sampdepth N                  Integer. sampling depth [default: 10000]
+--tsvfile                         Logical. Is datafile a tab-delimited text (tsv) file? Default (FALSE) expects biom file.
+--mincount N                      Integer. minimum number of reads to produce graphs [default: 10]" -> doc
+
+args <- docopt(doc, args = comm_args[6:length(comm_args)])
+fargs <- args[((length(args) / 2) + 2):length(args)]
+fargs[c('sampdepth', 'mincount')] <- lapply(fargs[c('sampdepth', 'mincount')], function(x) as.numeric(x))
+fargs$FUN <- 'allgraphs'
+do.call(trygraphwrapper, args = fargs)
+print('hello')
+# fargs$logfilename <- NULL
+# do.call(allgraphs, args = fargs)

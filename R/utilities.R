@@ -104,20 +104,22 @@ shortnames <- function(taxtable) {
 
 }
 
-#' return tables at higher tax level
-#'
-#' @param amp  ampvis2 object
-#' @param taxlevel  taxonomic level at which to sum up the counts
-#' @param keepunclass logical. \code{FALSE} is default and fills in empty \code{taxlevel} with lowest taxonomic ID. \code{TRUE} will label as 'unclassified'
-#'
-#' @return  ampvis2 object with otu table and taxa summed up to the taxlevel
-#'
-#' @importFrom data.table data.table .SD
-#'
-#' @source [utilities.R](../R/utilities.R)
-#'
-highertax <- function(amp, taxlevel, keepunclass=F) {
 
+highertax <- function(amp, taxlevel, keepunclass=F) {
+  #' return tables at higher tax level
+  #'
+  #' @param amp  ampvis2 object
+  #' @param taxlevel  taxonomic level at which to sum up the counts
+  #' @param keepunclass logical. \code{FALSE} is default and fills in empty \code{taxlevel} with lowest taxonomic ID. \code{TRUE} will label as 'unclassified'
+  #'
+  #' @return  ampvis2 object with otu table and taxa summed up to the taxlevel
+  #'
+  #' @importFrom data.table data.table .SD
+  #'
+  #' @source [utilities.R](../R/utilities.R)
+  #'
+  
+  library(data.table)
   otu <- as.matrix(amp$abund)
   tax <- amp$tax
 
@@ -159,22 +161,22 @@ highertax <- function(amp, taxlevel, keepunclass=F) {
   return(amp)
 }
 
-#' Filter low abundant taxa
-#'
-#' @param amp  ampvis2 object
-#' @param level  level at which to filter
-#' @param persamp  percent of samples which must have taxa in common
-#' @param abs  is level an absolute count? if false, will use level as relative percent.
-#' @param toptaxa number of seqvar to include sorted by max count across all samples;
-#' if NULL all will be included.
-#'
-#' @return filtered ampvis2 object
-#'
-#' @source [utilities.R](../R/utilities.R)
-#'
-#' @export
-filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE, toptaxa=NULL) {
 
+filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE, toptaxa=NULL) {
+  #' Filter low abundant taxa
+  #'
+  #' @param amp  ampvis2 object
+  #' @param level  level at which to filter
+  #' @param persamp  percent of samples which must have taxa in common
+  #' @param abs  is level an absolute count? if false, will use level as relative percent.
+  #' @param toptaxa number of seqvar to include sorted by max count across all samples;
+  #' if NULL all will be included.
+  #'
+  #' @return filtered ampvis2 object
+  #'
+  #' @source [utilities.R](../R/utilities.R)
+  #'
+  #' @export
   otu <- as.matrix(amp$abund)
   tax <- amp$tax
   if (abs) {
@@ -205,21 +207,21 @@ filterlowabund <- function(amp, level=0.01, persamp=0, abs=FALSE, toptaxa=NULL) 
 }
 
 
-#' Print ampvis2 object summary
-#'
-#' @param data ampvis2 object
-#'
-#' @return Prints summary stats about ampvis2 object
-#'
-#' @source [utilities.R](../R/utilities.R)
-#'
-#' @description  This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
-#' ':::' internal calling of function in package.
-#'
-#' @importFrom stats median
-#'
-print_ampvis2 <- function(data) {
 
+print_ampvis2 <- function(data) {
+  #' Print ampvis2 object summary
+  #'
+  #' @param data ampvis2 object
+  #'
+  #' @return Prints summary stats about ampvis2 object
+  #'
+  #' @source [utilities.R](../R/utilities.R)
+  #'
+  #' @description  This is a copy of the internal ampvis2 function print.ampvis2.  CRAN does not allow
+  #' ':::' internal calling of function in package.
+  #'
+  #' @importFrom stats median
+  #'
   cat(class(data), "object with", length(data), "elements.\nSummary of OTU table:\n")
   print.table(c(
     Samples = as.character(ncol(data$abund)), OTUs = as.character(nrow(data$abund)),
@@ -253,20 +255,22 @@ print_ampvis2 <- function(data) {
   )
 }
 
-#' Rarefaction curve
-#'
-#' @param data (required) Data list as loaded with amp_load.
-#' @param stepsize Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000)
-#' @param color_by Color curves by a variable in the metadata.
-#'
-#' @return A ggplot2 object.
-#'
-#' @description This function replaces the ampvis2 function amp_rarecurve to fix subsampling labeling bug
-#' in vegan
-#'
-#' @source [utilities.R](../R/utilities.R)
-#'
+
 amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
+  #' Rarefaction curve
+  #'
+  #' @param data (required) Data list as loaded with amp_load.
+  #' @param stepsize Step size for the curves. Lower is prettier but takes more time to generate. (default: 1000)
+  #' @param color_by Color curves by a variable in the metadata.
+  #'
+  #' @return A ggplot2 object.
+  #'
+  #' @description This function replaces the ampvis2 function amp_rarecurve to fix subsampling labeling bug
+  #' in vegan
+  #'
+  #' @source [utilities.R](../R/utilities.R)
+  #'
+  import::here(ggplot2, sym)
   if (class(data) != "ampvis2")
     stop("The provided data is not in ampvis2 format. Use amp_load() to load your data before using ampvis functions. (Or class(data) <- \"ampvis2\", if you know what you are doing.)")
   maxreads <- max(colSums(data$abund))
@@ -306,27 +310,28 @@ amp_rarecurvefix <- function (data, stepsize = 1000, color_by = NULL) {
   metadata_col1name <- colnames(metadata)[1]
   colnames(df)[which(colnames(df) == "SampleID")] <- metadata_col1name
   dfm <- merge(metadata, df, by = metadata_col1name)
-  p <- ggplot2::ggplot(dfm, ggplot2::aes_string(x = "Reads", y = "Species", group = metadata_col1name,
-                              color = color_by)) + ggplot2::geom_line() + ggplot2::theme_classic() +
+  p <- ggplot2::ggplot(dfm, ggplot2::aes(x = Reads, y = Species, group = SampleID,
+                              color = .data[[color_by]] )) + ggplot2::geom_line() + ggplot2::theme_classic() +
     ggplot2::xlab("Sequencing depth (reads)") + ggplot2::ylab("Number of observed OTUs")
   return(p)
 }
 
 
-#' biomformat read_biom
-#'
-#' @param biom_file input biom file name
-#'
-#' @return biom object
-#'
-#' @description This function replaces the biomformat function read_biom to deal with reading in
-#' crappy hdf5 biom file.
-#'
-#' @importFrom jsonlite fromJSON
-#'
+
 read_biom <- function (biom_file)
 {
-
+  #' biomformat read_biom
+  #'
+  #' @param biom_file input biom file name
+  #'
+  #' @return biom object
+  #'
+  #' @description This function replaces the biomformat function read_biom to deal with reading in
+  #' crappy hdf5 biom file.
+  #'
+  #' @importFrom jsonlite fromJSON
+  #'
+  import::here(jsonlite, fromJSON)
   errmsg <- paste0("Both attempts to read input file:\n", biom_file,
                    "\n", "either as JSON (BIOM-v1) or HDF5 (BIOM-v2) failed.\n",
                    "Check file path, file name, file itself, then try again.")
@@ -364,22 +369,23 @@ read_biom <- function (biom_file)
   return(biomformat::biom(x))
 }
 
-#' Convert ampvis2 object to biom
-#' 
-#' @description Converts ampvis2 object to biom and optionally writes file.  Uses 
-#' \link[biomformat]{make_biom} and modifies object to make it validate with 
-#' \url{https://biom-format.org/}.
-#' 
-#' @inheritParams biomformat::make_biom
-#'
-#' @param amp ampvis2 object like from output of \code{\link[ampvis2:amp_load]{ampvis2::amp_load}}
-#' @param file (Optional). File name to write (BIOM V1 json).
-#'
-#' @return invisibly returns \link[biomformat]{biom} object
-#' @export
-#'
+
 ampvis2biom <- function(amp, file=NULL, id=NULL, matrix_element_type=c('int', 'float')) {
-  
+  #' Convert ampvis2 object to biom
+  #' 
+  #' @description Converts ampvis2 object to biom and optionally writes file.  Uses 
+  #' \link[biomformat]{make_biom} and modifies object to make it validate with 
+  #' \url{https://biom-format.org/}.
+  #' 
+  #' @inheritParams biomformat::make_biom
+  #'
+  #' @param amp ampvis2 object like from output of \code{\link[ampvis2:amp_load]{ampvis2::amp_load}}
+  #' @param file (Optional). File name to write (BIOM V1 json).
+  #'
+  #' @return invisibly returns \link[biomformat]{biom} object
+  #' @export
+  #'
+
   biom <- biomformat::make_biom(data = amp$abund, 
                                 observation_metadata = amp$tax,
                                 sample_metadata = amp$metadata,
@@ -394,17 +400,19 @@ ampvis2biom <- function(amp, file=NULL, id=NULL, matrix_element_type=c('int', 'f
   invisible(biom)
 }
 
-#' Log base 10 + 1 scale
-#'
-#' @description Transformation which computes \code{log10(x+1)} scale
-#'
-#' @name log10scale
-#'
-#' @return \code{log10p} returns a scales tranformation object
-#'
-#' @details \code{log10p} is for use with ggplot2 \code{trans} argument in scale function.
-#'
+
 log10p_trans <- function() {
+  #' Log base 10 + 1 scale
+  #'
+  #' @description Transformation which computes \code{log10(x+1)} scale
+  #'
+  #' @name log10scale
+  #'
+  #' @return \code{log10p} returns a scales tranformation object
+  #'
+  #' @details \code{log10p} is for use with ggplot2 \code{trans} argument in scale function.
+  #'
+  
   br <- function(x) {
     x <- x+1
     return(round(scales::log_breaks()(x)))
