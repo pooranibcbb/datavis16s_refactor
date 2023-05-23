@@ -792,7 +792,6 @@ trygraphwrapper <- function(datafile, outdir, mapfile, FUN, logfilename="logfile
 import::here(docopt, docopt)
 
 comm_args <- commandArgs()
-print(comm_args)
 
 ## get path to this script 
 ## if running interactively, set scriptdir variable manually to directory that contains this script (graphs.R), utilities.R, and plotlyGrid.R
@@ -812,9 +811,9 @@ source(file.path(scriptdir, 'plotlyGrid.R'), local = T)
 "Usage: graphs.R [-h] [-l <logfile> -s <sampdepth> --tsvfile --mincount <mincount>] -d <datafile> -m <mapfile> -o <outdir>
 
 -h --help                         show this
--d --datafile FILE                input ASV/OTU table - either biom or tsv file
--m --mapfile FILE                 mapping file
--o --outdir DIR                   output directory
+-d --datafile FILE                input ASV/OTU table - either biom or tsv file. required.
+-m --mapfile FILE                 mapping file. required.
+-o --outdir DIR                   output directory. required.
 -l --logfilename FILE             log filename [default: logfile.txt]
 -s --sampdepth N                  Integer. sampling depth [default: 10000]
 --tsvfile                         Logical. Is datafile a tab-delimited text (tsv) file? Default (FALSE) expects biom file.

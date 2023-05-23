@@ -2,7 +2,7 @@
 
 
 ## CRAN packages
-install.packages(c('BiocManager', 'import', 'ggplot2', 'remotes', 'RColorBrewer', 'scales', 'vegan', 'jsonlite', 'htmltools', 'plotly'), repos = c(CRAN = 'https://mran.microsoft.com/snapshot/2023-03-06/'))
+install.packages(c('BiocManager', 'import', 'ggplot2', 'remotes', 'RColorBrewer', 'scales', 'vegan', 'jsonlite', 'htmltools', 'plotly', 'docopt'), repos = c(CRAN = 'https://mran.microsoft.com/snapshot/2023-03-06/'))
 
 BiocManager::install('biomformat')
 
