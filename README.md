@@ -19,9 +19,23 @@ R package for graphs for Nephele 16S pipelines.
 **Within R**
 
 - There are 4 main functions for making graphs: `adivboxplot`, `morphheatmap`, `pcoaplot`, and `rarefactioncurve`, as well as `allgraphs` which makes all 4. See the [manual](doc/Reference_Manual_datavis16s.md) for the arguments for these functions.
+
 - You can use `readindata` to create an ampvis2 object, and pass that instead of the mapping file and biom file.
 
+- You can import these functions using the R import library, and get help using the R docstring library:
+
+- ```R
+  import::here('R/graphs.R', allgraphs, adivboxplot, morphheatmap, pcoaplot, rarefactioncurve)
+  docstring::docstring(allgraphs)
+  ```
+
+  
+
+
+
 **Command line**
+
+- **IMPORTANT:** To run on the command line, all 3 scripts [graphs.R](R/graphs.R), [utilities.R](R/utilities.R), and [plotlyGrid.R](R/plotlyGrid.R) must be in the *same directory*!
 
 - The script [graphs.R](R/graphs.R) can be run on the command line using Rscript:
 
